@@ -1,0 +1,34 @@
+name: Unit Tests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.x"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Run Tests
+        run: cd $GITHUB_WORKSPACE && ./run_tests.sh
+
+      - name: Run pytest with codecov
+        run: |
+         pip install -r requirements.txt
+         pytest tests/enums tests/lib --cov=lib --cov=tests/enums --cov=tests/lib --cov-report xml:coverage.xml
+
+      - name: Submit Coverage
+        uses: codecov/codecov-action@v4
+        with:
+          fail_ci_if_error: true
+          token: ${{secrets.CODECOV_TOKEN}}
