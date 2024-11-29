@@ -1,12 +1,12 @@
 from unittest.mock import patch, NonCallableMock
 import pytest
 
-from query_blocks.query_parser import QueryParser
+from openstackquery.query_blocks.query_parser import QueryParser
 
 
 @pytest.fixture(name="instance")
-@patch("query_blocks.query_parser.QueryGrouper")
-@patch("query_blocks.query_parser.QuerySorter")
+@patch("openstackquery.query_blocks.query_parser.QueryGrouper")
+@patch("openstackquery.query_blocks.query_parser.QuerySorter")
 def instance_fixture(mock_sorter, mock_grouper):
     """
     Returns an instance of QueryParser with mocked injects

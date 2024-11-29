@@ -1,11 +1,11 @@
 from typing import Dict, List, Tuple
 import pytest
 
-from aliases import PresetPropMappings
-from enums.props.prop_enum import PropEnum
-from enums.query_presets import QueryPresets, QueryPresetsGeneric
-from handlers.client_side_handler import ClientSideHandler
-from handlers.server_side_handler import ServerSideHandler
+from openstackquery.aliases import PresetPropMappings
+from openstackquery.enums.props.prop_enum import PropEnum
+from openstackquery.enums.query_presets import QueryPresets, QueryPresetsGeneric
+from openstackquery.handlers.client_side_handler import ClientSideHandler
+from openstackquery.handlers.server_side_handler import ServerSideHandler
 
 
 @pytest.fixture(scope="function", name="client_side_test_mappings")

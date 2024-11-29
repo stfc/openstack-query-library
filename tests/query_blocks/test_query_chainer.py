@@ -2,9 +2,9 @@ from unittest.mock import MagicMock, patch, call, NonCallableMock
 
 import pytest
 
-from enums.query_presets import QueryPresetsGeneric
-from exceptions.query_chaining_error import QueryChainingError
-from query_blocks.query_chainer import QueryChainer
+from openstackquery.enums.query_presets import QueryPresetsGeneric
+from openstackquery.exceptions.query_chaining_error import QueryChainingError
+from openstackquery.query_blocks.query_chainer import QueryChainer
 from tests.mocks.mocked_props import MockProperties
 
 
@@ -28,9 +28,9 @@ def run_parse_then_query_valid_fixture(instance):
     Fixture that runs a then_query() method test case
     """
 
-    @patch("query_factory.QueryFactory")
-    @patch("api.query_api.QueryAPI")
-    @patch("query_blocks.query_chainer.QueryTypes")
+    @patch("openstackquery.query_factory.QueryFactory")
+    @patch("openstackquery.api.query_api.QueryAPI")
+    @patch("openstackquery.query_blocks.query_chainer.QueryTypes")
     def _run_parse_then_query_valid(
         mock_keep_previous_results,
         mock_query_types_cls,
@@ -220,7 +220,7 @@ def test_parse_then_no_results(instance):
     mock_current_query.to_props.assert_called_once()
 
 
-@patch("query_blocks.query_chainer.QueryTypes")
+@patch("openstackquery.query_blocks.query_chainer.QueryTypes")
 def test_run_append_from_query(mock_query_types, instance):
     """
     tests run_append_from_query method - calls then() to get a new query and runs it, selecting

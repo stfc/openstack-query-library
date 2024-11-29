@@ -19,16 +19,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Run Tests
-        run: cd $GITHUB_WORKSPACE && ./run_tests.sh
-
-      - name: Run pytest with codecov
+      - name: Install dependencies
         run: |
-         pip install -r requirements.txt
-         pytest tests/enums tests/lib --cov=lib --cov=tests/enums --cov=tests/lib --cov-report xml:coverage.xml
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: Submit Coverage
-        uses: codecov/codecov-action@v4
-        with:
-          fail_ci_if_error: true
-          token: ${{secrets.CODECOV_TOKEN}}
+      - name: run tests using pytest
+        run: |
+         cd $GITHUB_WORKSPACE && pytest

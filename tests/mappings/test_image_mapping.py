@@ -1,16 +1,16 @@
 from unittest.mock import patch
 
-from enums.props.server_properties import ServerProperties
-from enums.props.image_properties import ImageProperties
-from enums.query_presets import (
+from openstackquery.enums.props.server_properties import ServerProperties
+from openstackquery.enums.props.image_properties import ImageProperties
+from openstackquery.enums.query_presets import (
     QueryPresetsGeneric,
     QueryPresetsString,
     QueryPresetsInteger,
     QueryPresetsDateTime,
 )
-from handlers.server_side_handler import ServerSideHandler
-from mappings.image_mapping import ImageMapping
-from runners.image_runner import ImageRunner
+from openstackquery.handlers.server_side_handler import ServerSideHandler
+from openstackquery.mappings.image_mapping import ImageMapping
+from openstackquery.runners.image_runner import ImageRunner
 
 
 def test_get_runner_mapping():
@@ -74,7 +74,7 @@ def test_server_side_handler_mappings_any_in(server_side_any_in_mappings):
     )
 
 
-@patch("mappings.image_mapping.TimeUtils")
+@patch("openstackquery.mappings.image_mapping.TimeUtils")
 def test_server_side_handler_mappings_older_than_or_equal_to(
     mock_time_utils, server_side_test_mappings
 ):
@@ -96,7 +96,7 @@ def test_server_side_handler_mappings_older_than_or_equal_to(
     )
 
 
-@patch("mappings.image_mapping.TimeUtils")
+@patch("openstackquery.mappings.image_mapping.TimeUtils")
 def test_server_side_handler_mappings_older_than(
     mock_time_utils, server_side_test_mappings
 ):
@@ -118,7 +118,7 @@ def test_server_side_handler_mappings_older_than(
     )
 
 
-@patch("mappings.image_mapping.TimeUtils")
+@patch("openstackquery.mappings.image_mapping.TimeUtils")
 def test_server_side_handler_mappings_younger_than_or_equal_to(
     mock_time_utils, server_side_test_mappings
 ):
@@ -140,7 +140,7 @@ def test_server_side_handler_mappings_younger_than_or_equal_to(
     )
 
 
-@patch("mappings.image_mapping.TimeUtils")
+@patch("openstackquery.mappings.image_mapping.TimeUtils")
 def test_server_side_handler_mappings_younger_than(
     mock_time_utils, server_side_test_mappings
 ):

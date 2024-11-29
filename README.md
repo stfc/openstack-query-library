@@ -1,6 +1,3 @@
-### Note: This is under active development
-### TODO: The Query Library needs to be moved out of StackStorm and into a standalone repo
-
 # Quick Links
 
 User-related Docs:
@@ -59,3 +56,6 @@ It will address the following issues:
 
 ### 5. Easy to use syntax
 - sql-like syntax makes it easy to use
+
+
+# Installation

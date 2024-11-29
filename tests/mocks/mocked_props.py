@@ -1,6 +1,9 @@
-from enums.props.prop_enum import PropEnum
+from openstackquery.enums.props.prop_enum import PropEnum
 
 # pylint:disable=too-few-public-methods
+
+# We're just using this for testing so we're not worried about implementing abstract methods
+# pylint:disable=abstract-method
 
 
 class MockProperties(PropEnum):

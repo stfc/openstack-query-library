@@ -1,10 +1,7 @@
 from unittest.mock import MagicMock, NonCallableMock, patch
 import pytest
 
-from runners.user_runner import UserRunner
-
-from exceptions.parse_query_error import ParseQueryError
-from exceptions.enum_mapping_error import EnumMappingError
+from openstackquery.runners.user_runner import UserRunner
 
 
 @pytest.fixture(name="instance")
@@ -44,7 +41,7 @@ def test_parse_meta_params_no_from_domain(instance):
     assert res == {"domain_id": mock_domain_id}
 
 
-@patch("runners.runner_utils.RunnerUtils.run_paginated_query")
+@patch("openstackquery.runners.runner_utils.RunnerUtils.run_paginated_query")
 def test_run_query_with_server_side_filters(
     mock_run_paginated_query, instance, mock_marker_prop_func
 ):
@@ -78,7 +75,7 @@ def test_run_query_with_server_side_filters(
     assert res == mock_user_list
 
 
-@patch("runners.runner_utils.RunnerUtils.run_paginated_query")
+@patch("openstackquery.runners.runner_utils.RunnerUtils.run_paginated_query")
 def test_run_query_with_no_server_filters(
     mock_run_paginated_query, instance, mock_marker_prop_func
 ):

@@ -1,10 +1,10 @@
 from unittest.mock import MagicMock, NonCallableMock, call
 
 import pytest
-
-from exceptions.parse_query_error import ParseQueryError
-from runners.runner_utils import RunnerUtils
 from openstack.exceptions import ResourceNotFound, ForbiddenException
+
+from openstackquery.exceptions.parse_query_error import ParseQueryError
+from openstackquery.runners.runner_utils import RunnerUtils
 
 
 def run_paginated_query_test(number_iterations):

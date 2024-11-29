@@ -1,12 +1,12 @@
-from enums.props.project_properties import ProjectProperties
-from enums.props.server_properties import ServerProperties
-from enums.query_presets import (
+from openstackquery.enums.props.project_properties import ProjectProperties
+from openstackquery.enums.props.server_properties import ServerProperties
+from openstackquery.enums.query_presets import (
     QueryPresetsGeneric,
     QueryPresetsString,
 )
-from handlers.server_side_handler import ServerSideHandler
-from mappings.project_mapping import ProjectMapping
-from runners.project_runner import ProjectRunner
+from openstackquery.handlers.server_side_handler import ServerSideHandler
+from openstackquery.mappings.project_mapping import ProjectMapping
+from openstackquery.runners.project_runner import ProjectRunner
 
 
 def test_get_runner_mapping():

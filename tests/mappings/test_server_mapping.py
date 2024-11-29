@@ -1,19 +1,19 @@
 from unittest.mock import patch
 
-from enums.props.flavor_properties import FlavorProperties
-from enums.props.hypervisor_properties import HypervisorProperties
-from enums.props.image_properties import ImageProperties
-from enums.props.project_properties import ProjectProperties
-from enums.props.server_properties import ServerProperties
-from enums.props.user_properties import UserProperties
-from enums.query_presets import (
+from openstackquery.enums.props.flavor_properties import FlavorProperties
+from openstackquery.enums.props.hypervisor_properties import HypervisorProperties
+from openstackquery.enums.props.image_properties import ImageProperties
+from openstackquery.enums.props.project_properties import ProjectProperties
+from openstackquery.enums.props.server_properties import ServerProperties
+from openstackquery.enums.props.user_properties import UserProperties
+from openstackquery.enums.query_presets import (
     QueryPresetsGeneric,
     QueryPresetsDateTime,
     QueryPresetsString,
 )
-from handlers.server_side_handler import ServerSideHandler
-from mappings.server_mapping import ServerMapping
-from runners.server_runner import ServerRunner
+from openstackquery.handlers.server_side_handler import ServerSideHandler
+from openstackquery.mappings.server_mapping import ServerMapping
+from openstackquery.runners.server_runner import ServerRunner
 
 
 def test_get_runner_mapping():
@@ -89,7 +89,7 @@ def test_server_side_handler_mappings_any_in(server_side_any_in_mappings):
     )
 
 
-@patch("mappings.server_mapping.TimeUtils")
+@patch("openstackquery.mappings.server_mapping.TimeUtils")
 def test_server_side_handler_mappings_older_than_or_equal_to(
     mock_time_utils, server_side_test_mappings
 ):
@@ -112,7 +112,7 @@ def test_server_side_handler_mappings_older_than_or_equal_to(
     mock_time_utils.convert_to_timestamp.assert_called_once_with(value="test")
 
 
-@patch("mappings.server_mapping.TimeUtils")
+@patch("openstackquery.mappings.server_mapping.TimeUtils")
 def test_server_side_handler_mappings_younger_than_or_equal_to(
     mock_time_utils, server_side_test_mappings
 ):

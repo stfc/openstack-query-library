@@ -1,10 +1,12 @@
 from unittest.mock import MagicMock, patch, NonCallableMock
 import pytest
 
-from query_blocks.query_builder import QueryBuilder
+from openstackquery.query_blocks.query_builder import QueryBuilder
 
-from exceptions.query_preset_mapping_error import QueryPresetMappingError
-from exceptions.query_property_mapping_error import QueryPropertyMappingError
+from openstackquery.exceptions.query_preset_mapping_error import QueryPresetMappingError
+from openstackquery.exceptions.query_property_mapping_error import (
+    QueryPropertyMappingError,
+)
 
 from tests.mocks.mocked_query_presets import MockQueryPresets
 from tests.mocks.mocked_props import MockProperties
@@ -393,7 +395,7 @@ def test_server_filter_fallback(instance):
     assert res == ["some-client-side-filter"]
 
 
-@patch("query_blocks.query_builder.get_preset_from_string")
+@patch("openstackquery.query_blocks.query_builder.get_preset_from_string")
 def test_parse_where_with_string_aliases(
     mock_get_preset_from_string,
     instance,

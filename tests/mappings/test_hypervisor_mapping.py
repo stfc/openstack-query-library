@@ -1,13 +1,13 @@
-from enums.props.hypervisor_properties import HypervisorProperties
-from enums.props.server_properties import ServerProperties
-from enums.query_presets import (
+from openstackquery.enums.props.hypervisor_properties import HypervisorProperties
+from openstackquery.enums.props.server_properties import ServerProperties
+from openstackquery.enums.query_presets import (
     QueryPresetsGeneric,
     QueryPresetsString,
     QueryPresetsInteger,
 )
-from handlers.server_side_handler import ServerSideHandler
-from mappings.hypervisor_mapping import HypervisorMapping
-from runners.hypervisor_runner import HypervisorRunner
+from openstackquery.handlers.server_side_handler import ServerSideHandler
+from openstackquery.mappings.hypervisor_mapping import HypervisorMapping
+from openstackquery.runners.hypervisor_runner import HypervisorRunner
 
 
 def test_get_runner_mapping():

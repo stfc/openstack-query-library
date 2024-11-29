@@ -1,9 +1,9 @@
-from enums.props.server_properties import ServerProperties
-from enums.props.user_properties import UserProperties
-from enums.query_presets import QueryPresetsGeneric, QueryPresetsString
-from handlers.server_side_handler import ServerSideHandler
-from mappings.user_mapping import UserMapping
-from runners.user_runner import UserRunner
+from openstackquery.enums.props.server_properties import ServerProperties
+from openstackquery.enums.props.user_properties import UserProperties
+from openstackquery.enums.query_presets import QueryPresetsGeneric, QueryPresetsString
+from openstackquery.handlers.server_side_handler import ServerSideHandler
+from openstackquery.mappings.user_mapping import UserMapping
+from openstackquery.runners.user_runner import UserRunner
 
 
 def test_get_runner_mapping():

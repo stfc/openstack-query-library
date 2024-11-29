@@ -1,13 +1,13 @@
-from enums.props.flavor_properties import FlavorProperties
-from enums.props.server_properties import ServerProperties
-from enums.query_presets import (
+from openstackquery.enums.props.flavor_properties import FlavorProperties
+from openstackquery.enums.props.server_properties import ServerProperties
+from openstackquery.enums.query_presets import (
     QueryPresetsGeneric,
     QueryPresetsString,
     QueryPresetsInteger,
 )
-from handlers.server_side_handler import ServerSideHandler
-from mappings.flavor_mapping import FlavorMapping
-from runners.flavor_runner import FlavorRunner
+from openstackquery.handlers.server_side_handler import ServerSideHandler
+from openstackquery.mappings.flavor_mapping import FlavorMapping
+from openstackquery.runners.flavor_runner import FlavorRunner
 
 
 def test_get_runner_mapping():

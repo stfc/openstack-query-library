@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock, NonCallableMock, patch
 import pytest
 
-from runners.hypervisor_runner import HypervisorRunner
+from openstackquery.runners.hypervisor_runner import HypervisorRunner
 
 
 @pytest.fixture(name="instance")
@@ -24,7 +24,7 @@ def test_parse_query_params(instance):
     )
 
 
-@patch("runners.runner_utils.RunnerUtils.run_paginated_query")
+@patch("openstackquery.runners.runner_utils.RunnerUtils.run_paginated_query")
 def test_run_query_no_server_filters(
     mock_run_paginated_query, instance, mock_marker_prop_func
 ):

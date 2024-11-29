@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock, NonCallableMock, patch, call
 import pytest
 
-from query_blocks.query_executor import QueryExecutor
+from openstackquery.query_blocks.query_executor import QueryExecutor
 from tests.mocks.mocked_props import MockProperties
 
 
@@ -20,7 +20,7 @@ def instance_fixture(mock_connection_cls):
     """
     mock_prop_enum_cls = MockProperties
     mock_runner_cls = MagicMock()
-    with patch("query_blocks.query_executor.ResultsContainer"):
+    with patch("openstackquery.query_blocks.query_executor.ResultsContainer"):
         return QueryExecutor(mock_prop_enum_cls, mock_runner_cls, mock_connection_cls)
 
 
@@ -62,7 +62,7 @@ def run_with_openstacksdk_runner_fixture(instance, mock_connection_cls):
     Fixture to run run_with_openstacksdk() test cases with different args
     """
 
-    @patch("runners.runner_utils.RunnerUtils.apply_client_side_filters")
+    @patch("openstackquery.runners.runner_utils.RunnerUtils.apply_client_side_filters")
     def _run_with_openstacksdk_runner(
         mock_server_side_filters,
         use_client_side_filters,
@@ -180,7 +180,7 @@ def test_run_with_openstacksdk_no_filters(run_with_openstacksdk_runner):
     run_with_openstacksdk_runner(None, False)
 
 
-@patch("runners.runner_utils.RunnerUtils.apply_client_side_filters")
+@patch("openstackquery.runners.runner_utils.RunnerUtils.apply_client_side_filters")
 def test_with_subset(mock_apply_client_side_filters, instance):
     """
     Tests run_with_subset

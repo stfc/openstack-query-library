@@ -1,8 +1,8 @@
 from unittest.mock import MagicMock, NonCallableMock, patch
 import pytest
 
-from runners.image_runner import ImageRunner
-from exceptions.parse_query_error import ParseQueryError
+from openstackquery.runners.image_runner import ImageRunner
+from openstackquery.exceptions.parse_query_error import ParseQueryError
 
 
 @pytest.fixture(name="instance")
@@ -45,7 +45,7 @@ def test_parse_meta_params_with_all_projects(instance):
     assert res == {}
 
 
-@patch("runners.runner_utils.RunnerUtils.parse_projects")
+@patch("openstackquery.runners.runner_utils.RunnerUtils.parse_projects")
 def test_parse_meta_params_with_from_projects_as_admin(mock_parse_projects, instance):
     """
     Tests parse_meta_params with valid from_projects argument and as_admin = True
@@ -64,7 +64,7 @@ def test_parse_meta_params_with_from_projects_as_admin(mock_parse_projects, inst
     assert res["projects"] == mock_parse_projects.return_value
 
 
-@patch("runners.runner_utils.RunnerUtils.parse_projects")
+@patch("openstackquery.runners.runner_utils.RunnerUtils.parse_projects")
 def test_parse_meta_params_with_no_args(mock_parse_projects, instance):
     """
     Tests parse_meta_params with no args
@@ -82,7 +82,7 @@ def test_parse_meta_params_with_no_args(mock_parse_projects, instance):
     assert res["projects"] == mock_parse_projects.return_value
 
 
-@patch("runners.runner_utils.RunnerUtils.run_paginated_query")
+@patch("openstackquery.runners.runner_utils.RunnerUtils.run_paginated_query")
 def test_run_query_with_meta_arg_projects_with_server_side_queries(
     mock_run_paginated_query, instance, mock_marker_prop_func
 ):
@@ -115,7 +115,7 @@ def test_run_query_with_meta_arg_projects_with_server_side_queries(
     assert res == ["server1", "server2", "server3", "server4"]
 
 
-@patch("runners.runner_utils.RunnerUtils.run_paginated_query")
+@patch("openstackquery.runners.runner_utils.RunnerUtils.run_paginated_query")
 def test_run_query_no_meta_params(
     mock_run_paginated_query, instance, mock_marker_prop_func
 ):

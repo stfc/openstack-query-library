@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock, NonCallableMock, patch
 import pytest
 
-from runners.project_runner import ProjectRunner
+from openstackquery.runners.project_runner import ProjectRunner
 
 
 @pytest.fixture(name="instance")
@@ -24,7 +24,7 @@ def test_parse_meta_params(instance):
     )
 
 
-@patch("runners.runner_utils.RunnerUtils.run_paginated_query")
+@patch("openstackquery.runners.runner_utils.RunnerUtils.run_paginated_query")
 def test_run_query_no_server_filters(
     mock_run_paginated_query, instance, mock_marker_prop_func
 ):

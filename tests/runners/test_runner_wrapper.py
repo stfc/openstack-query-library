@@ -1,8 +1,8 @@
 from unittest.mock import MagicMock
 import pytest
 
-from exceptions.parse_query_error import ParseQueryError
-from runners.runner_wrapper import RunnerWrapper
+from openstackquery.exceptions.parse_query_error import ParseQueryError
+from openstackquery.runners.runner_wrapper import RunnerWrapper
 
 
 @pytest.fixture(name="instance")

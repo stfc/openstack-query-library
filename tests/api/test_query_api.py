@@ -1,9 +1,9 @@
 from unittest.mock import MagicMock, NonCallableMock, patch
 import pytest
 
-from api.query_api import QueryAPI
+from openstackquery.api.query_api import QueryAPI
 
-from exceptions.parse_query_error import ParseQueryError
+from openstackquery.exceptions.parse_query_error import ParseQueryError
 from tests.mocks.mocked_query_presets import MockQueryPresets
 from tests.mocks.mocked_props import MockProperties
 
@@ -114,7 +114,7 @@ def test_run_invalid_params(instance):
 def test_run_from_subset(instance):
     """
     Tests run method with from subset params
-    method should call executer.run_with_subset
+    method should call executor.run_with_subset
     """
     mock_subset = NonCallableMock()
 
@@ -126,19 +126,19 @@ def test_run_from_subset(instance):
     instance.chainer.forwarded_info = None, None
 
     res = instance.run(from_subset=mock_subset)
-    instance.executer.run_with_subset.assert_called_once_with(
+    instance.executor.run_with_subset.assert_called_once_with(
         subset=mock_subset, client_side_filters=[client_filter, fallback_filter]
     )
 
-    instance.executer.apply_forwarded_results.assert_not_called()
+    instance.executor.apply_forwarded_results.assert_not_called()
     assert res == instance
 
 
-@patch("api.query_api.deepcopy")
+@patch("openstackquery.api.query_api.deepcopy")
 def test_run_from_subset_with_chained_values(mock_deepcopy, instance):
     """
     Tests run method with from subset params and chained values
-    method should call executer.run_with_subset and then executer.apply_forwarded_results
+    method should call executor.run_with_subset and then executor.apply_forwarded_results
     """
     mock_subset = NonCallableMock()
 
@@ -154,11 +154,11 @@ def test_run_from_subset_with_chained_values(mock_deepcopy, instance):
 
     res = instance.run(from_subset=mock_subset)
 
-    instance.executer.run_with_subset.assert_called_once_with(
+    instance.executor.run_with_subset.assert_called_once_with(
         subset=mock_subset, client_side_filters=[client_filter, fallback_filter]
     )
 
-    instance.executer.apply_forwarded_results.assert_called_once_with(
+    instance.executor.apply_forwarded_results.assert_called_once_with(
         mock_link_prop, mock_deepcopy.return_value
     )
     mock_deepcopy.assert_called_once_with(mock_forwarded_vals)
@@ -168,7 +168,7 @@ def test_run_from_subset_with_chained_values(mock_deepcopy, instance):
 def test_run_with_openstacksdk(instance):
     """
     Tests run method with cloud_account param
-    method should call executer.run_with_openstacksdk
+    method should call executor.run_with_openstacksdk
     """
     mock_cloud_account = NonCallableMock()
     mock_kwargs = {"arg1": "val1", "arg2": "val2"}
@@ -176,21 +176,21 @@ def test_run_with_openstacksdk(instance):
     instance.chainer.forwarded_info = None, None
 
     res = instance.run(cloud_account=mock_cloud_account, **mock_kwargs)
-    instance.executer.run_with_openstacksdk.assert_called_once_with(
+    instance.executor.run_with_openstacksdk.assert_called_once_with(
         cloud_account=mock_cloud_account,
         client_side_filters=instance.builder.client_side_filters,
         server_side_filters=instance.builder.server_side_filters,
         **mock_kwargs
     )
-    instance.executer.apply_forwarded_results.assert_not_called()
+    instance.executor.apply_forwarded_results.assert_not_called()
     assert res == instance
 
 
-@patch("api.query_api.deepcopy")
+@patch("openstackquery.api.query_api.deepcopy")
 def test_run_with_openstacksdk_with_chained_values(mock_deepcopy, instance):
     """
     Tests run method with cloud_account param and chained values
-    method should call executer.run_with_openstacksdk and then executer.apply_forwarded_results
+    method should call executor.run_with_openstacksdk and then executor.apply_forwarded_results
     """
     mock_cloud_account = NonCallableMock()
     mock_kwargs = {"arg1": "val1", "arg2": "val2"}
@@ -200,13 +200,13 @@ def test_run_with_openstacksdk_with_chained_values(mock_deepcopy, instance):
     instance.chainer.forwarded_info = mock_link_prop, mock_forwarded_val
 
     res = instance.run(cloud_account=mock_cloud_account, **mock_kwargs)
-    instance.executer.run_with_openstacksdk.assert_called_once_with(
+    instance.executor.run_with_openstacksdk.assert_called_once_with(
         cloud_account=mock_cloud_account,
         client_side_filters=instance.builder.client_side_filters,
         server_side_filters=instance.builder.server_side_filters,
         **mock_kwargs
     )
-    instance.executer.apply_forwarded_results.assert_called_once_with(
+    instance.executor.apply_forwarded_results.assert_called_once_with(
         mock_link_prop, mock_deepcopy.return_value
     )
     mock_deepcopy.assert_called_once_with(mock_forwarded_val)
@@ -254,7 +254,7 @@ def test_to_objects(instance):
     """
     mock_flatten = NonCallableMock()
 
-    instance.executer.has_forwarded_results = False
+    instance.executor.has_forwarded_results = False
 
     res = instance.to_objects(mock_flatten)
     instance.results_container.parse_results.assert_called_once_with(
@@ -274,7 +274,7 @@ def test_to_objects_with_forwarded_results(instance):
     """
     mock_flatten = NonCallableMock()
 
-    instance.executer.has_forwarded_results = True
+    instance.executor.has_forwarded_results = True
 
     res = instance.to_objects(mock_flatten)
     instance.results_container.parse_results.assert_called_once_with(

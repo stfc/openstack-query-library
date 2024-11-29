@@ -1,11 +1,11 @@
 from unittest.mock import call, patch
 import pytest
 
-from enums.props.server_properties import ServerProperties
-from enums.sort_order import SortOrder
-from exceptions.parse_query_error import ParseQueryError
+from openstackquery.enums.props.server_properties import ServerProperties
+from openstackquery.enums.sort_order import SortOrder
+from openstackquery.exceptions.parse_query_error import ParseQueryError
 
-from query_blocks.query_sorter import QuerySorter
+from openstackquery.query_blocks.query_sorter import QuerySorter
 from tests.mocks.mocked_props import MockProperties
 
 

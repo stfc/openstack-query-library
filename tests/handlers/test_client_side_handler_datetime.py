@@ -1,10 +1,10 @@
 from unittest.mock import patch, NonCallableMock, MagicMock, call
 import pytest
 
-from handlers.client_side_handler_datetime import (
+from openstackquery.handlers.client_side_handler_datetime import (
     ClientSideHandlerDateTime,
 )
-from enums.query_presets import QueryPresetsDateTime
+from openstackquery.enums.query_presets import QueryPresetsDateTime
 from tests.mocks.mocked_props import MockProperties
 
 
@@ -27,8 +27,8 @@ def run_prop_test_case_fixture(instance):
     fixture to run a test cases for each client-side filter function
     """
 
-    @patch("time_utils.TimeUtils.get_timestamp_in_seconds")
-    @patch("handlers.client_side_handler_datetime.datetime")
+    @patch("openstackquery.time_utils.TimeUtils.get_timestamp_in_seconds")
+    @patch("openstackquery.handlers.client_side_handler_datetime.datetime")
     def _run_prop_test_case(
         preset_to_test, prop_value, to_compare, mock_datetime, mock_get_timestamp
     ):

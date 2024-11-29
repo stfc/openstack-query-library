@@ -1,8 +1,8 @@
 from unittest.mock import NonCallableMock, MagicMock
 import pytest
 
-from enums.query_presets import QueryPresetsString
-from handlers.client_side_handler_string import ClientSideHandlerString
+from openstackquery.enums.query_presets import QueryPresetsString
+from openstackquery.handlers.client_side_handler_string import ClientSideHandlerString
 from tests.mocks.mocked_props import MockProperties
 
 

@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock, patch, call
 import pytest
 
-from query_blocks.result import Result
+from openstackquery.query_blocks.result import Result
 from tests.mocks.mocked_props import MockProperties
 
 
@@ -42,7 +42,7 @@ def test_as_object():
     assert Result(MockProperties, mock_obj).as_object() == mock_obj
 
 
-@patch("query_blocks.result.Result.get_prop")
+@patch("openstackquery.query_blocks.result.Result.get_prop")
 def test_as_props_no_forwarded_props(mock_get_prop, instance):
     """
     test property getter as_props just gets as_props when no forwarded_props given
@@ -59,7 +59,7 @@ def test_as_props_no_forwarded_props(mock_get_prop, instance):
     }
 
 
-@patch("query_blocks.result.Result.get_prop")
+@patch("openstackquery.query_blocks.result.Result.get_prop")
 def test_as_props_with_forwarded_props(mock_get_prop, instance):
     """
     test property getter as_props gets as_props result and forwarded_props set,

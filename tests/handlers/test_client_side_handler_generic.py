@@ -1,11 +1,11 @@
 from unittest.mock import NonCallableMock, MagicMock
 import pytest
 
-from exceptions.query_preset_mapping_error import QueryPresetMappingError
-from handlers.client_side_handler_generic import (
+from openstackquery.exceptions.query_preset_mapping_error import QueryPresetMappingError
+from openstackquery.handlers.client_side_handler_generic import (
     ClientSideHandlerGeneric,
 )
-from enums.query_presets import QueryPresetsGeneric
+from openstackquery.enums.query_presets import QueryPresetsGeneric
 from tests.mocks.mocked_props import MockProperties
 
 

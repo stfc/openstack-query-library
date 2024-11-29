@@ -2,7 +2,7 @@ import copy
 from unittest.mock import MagicMock, patch, call, NonCallableMock
 import pytest
 
-from query_blocks.results_container import ResultsContainer
+from openstackquery.query_blocks.results_container import ResultsContainer
 from tests.mocks.mocked_props import MockProperties
 
 
@@ -12,7 +12,7 @@ def setup_instance_with_results_fixture():
     Fixture to get setup an instance of ResultsContainer with a set of mock results
     """
 
-    @patch("query_blocks.results_container.Result")
+    @patch("openstackquery.query_blocks.results_container.Result")
     def _setup_instance(results, mock_result_obj):
         """
         sets up a ResultsContainer storing set of results given

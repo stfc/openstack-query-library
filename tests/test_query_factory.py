@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from query_factory import QueryFactory
+from openstackquery.query_factory import QueryFactory
 
 
 @pytest.fixture(name="run_build_query_deps_test_case")
@@ -10,16 +10,16 @@ def run_build_query_deps_test_case_fixture():
     """Fixture for running build_query_deps"""
 
     # pylint:disable=too-many-arguments
-    @patch("query_factory.QueryBuilder")
-    @patch("query_factory.QueryOutput")
-    @patch("query_factory.QueryParser")
-    @patch("query_factory.QueryExecutor")
-    @patch("query_factory.QueryChainer")
-    @patch("query_factory.QueryComponents")
+    @patch("openstackquery.query_factory.QueryBuilder")
+    @patch("openstackquery.query_factory.QueryOutput")
+    @patch("openstackquery.query_factory.QueryParser")
+    @patch("openstackquery.query_factory.QueryExecutor")
+    @patch("openstackquery.query_factory.QueryChainer")
+    @patch("openstackquery.query_factory.QueryComponents")
     def _run_build_query_deps_test_case(
         mock_query_components,
         mock_chainer,
-        mock_executer,
+        mock_executor,
         mock_parser,
         mock_output,
         mock_builder,
@@ -45,7 +45,7 @@ def run_build_query_deps_test_case_fixture():
             chain_mappings=mock_mapping_cls.get_chain_mappings.return_value
         )
 
-        mock_executer.assert_called_once_with(
+        mock_executor.assert_called_once_with(
             prop_enum_cls=mock_prop_mapping,
             runner_cls=mock_mapping_cls.get_runner_mapping.return_value,
         )
@@ -54,7 +54,7 @@ def run_build_query_deps_test_case_fixture():
             mock_output.return_value,
             mock_parser.return_value,
             mock_builder.return_value,
-            mock_executer.return_value,
+            mock_executor.return_value,
             mock_chainer.return_value,
         )
         assert res == mock_query_components.return_value

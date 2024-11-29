@@ -1,6 +1,5 @@
 import pytest
-
-import openstack_query
+import openstackquery
 
 
 @pytest.mark.parametrize(
@@ -16,4 +15,4 @@ import openstack_query
 )
 def test_query_server_import(test_module_name):
     """Tests that query object imports can be done at root level"""
-    assert getattr(openstack_query, test_module_name)
+    assert getattr(openstackquery, test_module_name)

@@ -1,9 +1,9 @@
 from unittest.mock import MagicMock, patch, call, NonCallableMock, mock_open
 import pytest
 
-from exceptions.parse_query_error import ParseQueryError
-from query_blocks.query_output import QueryOutput
-from enums.props.server_properties import ServerProperties
+from openstackquery.exceptions.parse_query_error import ParseQueryError
+from openstackquery.query_blocks.query_output import QueryOutput
+from openstackquery.enums.props.server_properties import ServerProperties
 from tests.mocks.mocked_props import MockProperties
 
 
@@ -174,7 +174,7 @@ def test_to_props_grouped_results_with_flatten_and_group(instance):
     assert res == {"group1": {"prop1": ["val1", "val3"], "prop2": ["val2", "val4"]}}
 
 
-@patch("query_blocks.query_output.tabulate")
+@patch("openstackquery.query_blocks.query_output.tabulate")
 def test_to_html_results_empty(mock_tabulate, instance):
     """
     Tests to_html method with no extra params and empty results
@@ -189,7 +189,7 @@ def test_to_html_results_empty(mock_tabulate, instance):
     assert res == "No results found<br/><br/>"
 
 
-@patch("query_blocks.query_output.tabulate")
+@patch("openstackquery.query_blocks.query_output.tabulate")
 def test_to_html_ungrouped_results(mock_tabulate, instance):
     """
     Tests to_html method with no extra params and ungrouped results
@@ -210,7 +210,7 @@ def test_to_html_ungrouped_results(mock_tabulate, instance):
     assert res == "tabulate-output<br/><br/>"
 
 
-@patch("query_blocks.query_output.tabulate")
+@patch("openstackquery.query_blocks.query_output.tabulate")
 def test_to_html_grouped_results(mock_tabulate, instance):
     """
     Tests to_html method with no extra params and grouped results
@@ -246,7 +246,7 @@ def test_to_html_grouped_results(mock_tabulate, instance):
     )
 
 
-@patch("query_blocks.query_output.tabulate")
+@patch("openstackquery.query_blocks.query_output.tabulate")
 def test_to_html_with_title(mock_tabulate, instance):
     """
     Tests to_html method with title param and ungrouped results
@@ -267,7 +267,7 @@ def test_to_html_with_title(mock_tabulate, instance):
     assert res == ("<b>mock-title:</b><br/>" "tabulate-output<br/><br/>")
 
 
-@patch("query_blocks.query_output.tabulate")
+@patch("openstackquery.query_blocks.query_output.tabulate")
 def test_to_html_with_title_grouped_results(mock_tabulate, instance):
     """
     Tests to_html method with title param and grouped results
@@ -304,7 +304,7 @@ def test_to_html_with_title_grouped_results(mock_tabulate, instance):
     )
 
 
-@patch("query_blocks.query_output.tabulate")
+@patch("openstackquery.query_blocks.query_output.tabulate")
 def test_to_html_with_title_and_group(mock_tabulate, instance):
     """
     Tests to_html method with title and group params and grouped results
@@ -334,7 +334,7 @@ def test_to_html_with_title_and_group(mock_tabulate, instance):
     )
 
 
-@patch("query_blocks.query_output.tabulate")
+@patch("openstackquery.query_blocks.query_output.tabulate")
 def test_to_string_results_empty(mock_tabulate, instance):
     """
     Tests to_string method with no extra params and empty results
@@ -349,7 +349,7 @@ def test_to_string_results_empty(mock_tabulate, instance):
     assert res == "No results found\n\n"
 
 
-@patch("query_blocks.query_output.tabulate")
+@patch("openstackquery.query_blocks.query_output.tabulate")
 def test_to_string_ungrouped_results(mock_tabulate, instance):
     """
     Tests to_string method with no extra params and ungrouped results
@@ -370,7 +370,7 @@ def test_to_string_ungrouped_results(mock_tabulate, instance):
     assert res == "tabulate-output\n\n"
 
 
-@patch("query_blocks.query_output.tabulate")
+@patch("openstackquery.query_blocks.query_output.tabulate")
 def test_to_string_grouped_results(mock_tabulate, instance):
     """
     Tests to_string method with no extra params and grouped results
@@ -405,7 +405,7 @@ def test_to_string_grouped_results(mock_tabulate, instance):
     )
 
 
-@patch("query_blocks.query_output.tabulate")
+@patch("openstackquery.query_blocks.query_output.tabulate")
 def test_to_string_with_title(mock_tabulate, instance):
     """
     Tests to_string method with title param and ungrouped results
@@ -426,7 +426,7 @@ def test_to_string_with_title(mock_tabulate, instance):
     assert res == ("mock-title:\n" "tabulate-output\n\n")
 
 
-@patch("query_blocks.query_output.tabulate")
+@patch("openstackquery.query_blocks.query_output.tabulate")
 def test_to_string_with_title_grouped_results(mock_tabulate, instance):
     """
     Tests to_string method with title param and grouped results
@@ -463,7 +463,7 @@ def test_to_string_with_title_grouped_results(mock_tabulate, instance):
     )
 
 
-@patch("query_blocks.query_output.tabulate")
+@patch("openstackquery.query_blocks.query_output.tabulate")
 def test_to_string_with_title_and_group(mock_tabulate, instance):
     """
     Tests to_string method with title and group params and grouped results
@@ -534,8 +534,8 @@ def test_parse_select_overwrites_old(instance):
 
 
 @patch("builtins.open", new_callable=mock_open)
-@patch("query_blocks.query_output.csv.DictWriter")
-@patch("query_blocks.query_output.Path")
+@patch("openstackquery.query_blocks.query_output.csv.DictWriter")
+@patch("openstackquery.query_blocks.query_output.Path")
 def test_to_csv_ungrouped_results(
     mock_path, mock_dict_writer, mock_open_call, instance
 ):
@@ -575,8 +575,8 @@ def test_to_csv_ungrouped_results(
 
 
 @patch("builtins.open", new_callable=mock_open)
-@patch("query_blocks.query_output.csv.DictWriter")
-@patch("query_blocks.query_output.Path")
+@patch("openstackquery.query_blocks.query_output.csv.DictWriter")
+@patch("openstackquery.query_blocks.query_output.Path")
 def test_to_csv_grouped_results(mock_path, mock_dict_writer, mock_open_call, instance):
     """
     Tests to_csv with grouped results - should call open to write multiple files
@@ -631,7 +631,7 @@ def test_to_csv_grouped_results(mock_path, mock_dict_writer, mock_open_call, ins
     )
 
 
-@patch("query_blocks.query_output.Path")
+@patch("openstackquery.query_blocks.query_output.Path")
 def test_to_csv_results_empty(mock_path, instance):
     """
     Tests to_csv with empty results - should raise Runtime error

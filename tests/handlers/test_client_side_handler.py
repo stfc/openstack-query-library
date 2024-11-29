@@ -2,10 +2,10 @@ from unittest.mock import MagicMock, NonCallableMock, call
 
 import pytest
 
-from exceptions.parse_query_error import ParseQueryError
-from exceptions.query_preset_mapping_error import QueryPresetMappingError
+from openstackquery.exceptions.parse_query_error import ParseQueryError
+from openstackquery.exceptions.query_preset_mapping_error import QueryPresetMappingError
 
-from handlers.client_side_handler import ClientSideHandler
+from openstackquery.handlers.client_side_handler import ClientSideHandler
 
 from tests.mocks.mocked_query_presets import MockQueryPresets
 from tests.mocks.mocked_props import MockProperties
@@ -223,9 +223,7 @@ def test_get_filter_func_prop_invalid(instance):
         )
 
 
-@pytest.mark.parametrize(
-    "error_type", [ParseQueryError, TypeError, NameError]
-)
+@pytest.mark.parametrize("error_type", [ParseQueryError, TypeError, NameError])
 def test_get_filter_func_filter_raises_error(error_type, instance, mock_filter):
     """
     Tests get_filter_func method when filter function raises an error.

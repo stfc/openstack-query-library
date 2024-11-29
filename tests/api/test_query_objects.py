@@ -2,7 +2,7 @@ from unittest.mock import patch, MagicMock
 
 import pytest
 
-from api.query_objects import (
+from openstackquery.api.query_objects import (
     UserQuery,
     ServerQuery,
     FlavorQuery,
@@ -13,8 +13,8 @@ from api.query_objects import (
 )
 
 
-@patch("query_factory.QueryFactory")
-@patch("api.query_api.QueryAPI")
+@patch("openstackquery.query_factory.QueryFactory")
+@patch("openstackquery.api.query_api.QueryAPI")
 def test_get_common(mock_query_api, mock_query_factory):
     """
     tests that function _get_common works
@@ -40,7 +40,7 @@ def run_query_test_case_fixture():
         tests each given query_function calls get_common with expected mapping class
         """
 
-        with patch("api.query_objects.get_common") as mock_get_common:
+        with patch("openstackquery.api.query_objects.get_common") as mock_get_common:
             res = mock_query_func()
             mock_get_common.assert_called_once_with(expected_mapping)
         assert res == mock_get_common.return_value
@@ -53,9 +53,7 @@ def test_server_query(run_query_test_case):
     tests that function ServerQuery works
     should call get_common with ServerMapping
     """
-    with patch(
-        "api.query_objects.ServerMapping"
-    ) as mock_server_mapping:
+    with patch("openstackquery.api.query_objects.ServerMapping") as mock_server_mapping:
         run_query_test_case(ServerQuery, mock_server_mapping)
 
 
@@ -64,7 +62,7 @@ def test_user_query(run_query_test_case):
     tests that function UserQuery works
     should call get_common with UserMapping
     """
-    with patch("api.query_objects.UserMapping") as mock_user_mapping:
+    with patch("openstackquery.api.query_objects.UserMapping") as mock_user_mapping:
         run_query_test_case(UserQuery, mock_user_mapping)
 
 
@@ -73,9 +71,7 @@ def test_flavor_query(run_query_test_case):
     tests that function FlavorQuery works
     should call get_common with FlavorMapping
     """
-    with patch(
-        "api.query_objects.FlavorMapping"
-    ) as mock_flavor_mapping:
+    with patch("openstackquery.api.query_objects.FlavorMapping") as mock_flavor_mapping:
         run_query_test_case(FlavorQuery, mock_flavor_mapping)
 
 
@@ -85,7 +81,7 @@ def test_project_query(run_query_test_case):
     should call get_common with ProjectMapping
     """
     with patch(
-        "api.query_objects.ProjectMapping"
+        "openstackquery.api.query_objects.ProjectMapping"
     ) as mock_project_mapping:
         run_query_test_case(ProjectQuery, mock_project_mapping)
 
@@ -95,9 +91,7 @@ def test_image_query(run_query_test_case):
     tests that function ImageQuery works
     should call get_common with ImageMapping
     """
-    with patch(
-        "api.query_objects.ImageMapping"
-    ) as mock_project_mapping:
+    with patch("openstackquery.api.query_objects.ImageMapping") as mock_project_mapping:
         run_query_test_case(ImageQuery, mock_project_mapping)
 
 
@@ -107,6 +101,6 @@ def test_hypervisor_query(run_query_test_case):
     should call get_common with ProjectMapping
     """
     with patch(
-        "api.query_objects.HypervisorMapping"
+        "openstackquery.api.query_objects.HypervisorMapping"
     ) as mock_project_mapping:
         run_query_test_case(HypervisorQuery, mock_project_mapping)

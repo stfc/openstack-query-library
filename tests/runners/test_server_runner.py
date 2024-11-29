@@ -1,8 +1,8 @@
 from unittest.mock import MagicMock, NonCallableMock, patch
 import pytest
 
-from runners.server_runner import ServerRunner
-from exceptions.parse_query_error import ParseQueryError
+from openstackquery.runners.server_runner import ServerRunner
+from openstackquery.exceptions.parse_query_error import ParseQueryError
 
 
 @pytest.fixture(name="instance")
@@ -45,7 +45,7 @@ def test_parse_meta_params_with_all_projects(instance):
     assert list(res.keys()) == ["all_tenants"]
 
 
-@patch("runners.runner_utils.RunnerUtils.parse_projects")
+@patch("openstackquery.runners.runner_utils.RunnerUtils.parse_projects")
 def test_parse_meta_params_with_from_projects_as_admin(mock_parse_projects, instance):
     """
     Tests parse_meta_params with valid from_projects argument and as_admin = True
@@ -65,7 +65,7 @@ def test_parse_meta_params_with_from_projects_as_admin(mock_parse_projects, inst
     assert res["all_tenants"] is True
 
 
-@patch("runners.runner_utils.RunnerUtils.parse_projects")
+@patch("openstackquery.runners.runner_utils.RunnerUtils.parse_projects")
 def test_parse_meta_params_with_no_args(mock_parse_projects, instance):
     """
     Tests parse_meta_params with no args
@@ -96,7 +96,7 @@ def test_run_query_project_meta_arg_preset_duplication(instance):
         )
 
 
-@patch("runners.runner_utils.RunnerUtils.run_paginated_query")
+@patch("openstackquery.runners.runner_utils.RunnerUtils.run_paginated_query")
 def test_run_query_with_meta_arg_projects_with_server_side_queries(
     mock_run_paginated_query, instance, mock_marker_prop_func
 ):
@@ -129,7 +129,7 @@ def test_run_query_with_meta_arg_projects_with_server_side_queries(
     assert res == ["server1", "server2", "server3", "server4"]
 
 
-@patch("runners.runner_utils.RunnerUtils.run_paginated_query")
+@patch("openstackquery.runners.runner_utils.RunnerUtils.run_paginated_query")
 def test_run_query_meta_arg_all_tenants_no_projects(
     mock_run_paginated_query, instance, mock_marker_prop_func
 ):
@@ -148,7 +148,7 @@ def test_run_query_meta_arg_all_tenants_no_projects(
     assert res == ["server1", "server2"]
 
 
-@patch("runners.runner_utils.RunnerUtils.run_paginated_query")
+@patch("openstackquery.runners.runner_utils.RunnerUtils.run_paginated_query")
 def test_run_query_with_meta_arg_projects_with_no_server_queries(
     mock_run_paginated_query, instance, mock_marker_prop_func
 ):

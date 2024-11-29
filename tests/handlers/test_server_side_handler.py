@@ -2,8 +2,8 @@ from unittest.mock import MagicMock, NonCallableMock
 
 import pytest
 
-from exceptions.query_preset_mapping_error import QueryPresetMappingError
-from handlers.server_side_handler import ServerSideHandler
+from openstackquery.exceptions.query_preset_mapping_error import QueryPresetMappingError
+from openstackquery.handlers.server_side_handler import ServerSideHandler
 from tests.mocks.mocked_props import MockProperties
 from tests.mocks.mocked_query_presets import MockQueryPresets
 

@@ -1,10 +1,10 @@
 from unittest.mock import NonCallableMock, MagicMock
 import pytest
 
-from handlers.client_side_handler_integer import (
+from openstackquery.handlers.client_side_handler_integer import (
     ClientSideHandlerInteger,
 )
-from enums.query_presets import QueryPresetsInteger
+from openstackquery.enums.query_presets import QueryPresetsInteger
 from tests.mocks.mocked_props import MockProperties
 
 

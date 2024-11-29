@@ -1,5 +1,5 @@
 from typing import Dict
-from enums.enum_with_aliases import EnumWithAliases
+from openstackquery.enums.enum_with_aliases import EnumWithAliases
 
 # pylint:disable=too-few-public-methods
 

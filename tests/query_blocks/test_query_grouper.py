@@ -1,10 +1,10 @@
 from unittest.mock import call, patch
 import pytest
 
-from query_blocks.query_grouper import QueryGrouper
-from enums.props.server_properties import ServerProperties
+from openstackquery.query_blocks.query_grouper import QueryGrouper
+from openstackquery.enums.props.server_properties import ServerProperties
 
-from exceptions.parse_query_error import ParseQueryError
+from openstackquery.exceptions.parse_query_error import ParseQueryError
 
 
 from tests.mocks.mocked_props import MockProperties
@@ -85,7 +85,7 @@ def test_parse_group_by_with_string_aliases(mock_results_container):
     instance.parse_group_by(ServerProperties.SERVER_NAME)
     res = instance.run_group_by(mock_obj_list)
     for key, vals in res.items():
-        assert key in res.keys()
+        assert key in res
         assert expected_out[key] == [i.as_object() for i in vals]
 
 
