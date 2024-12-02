@@ -10,6 +10,7 @@ def run_build_query_deps_test_case_fixture():
     """Fixture for running build_query_deps"""
 
     # pylint:disable=too-many-arguments
+    # pylint:disable=too-many-positional-arguments
     @patch("openstackquery.query_factory.QueryBuilder")
     @patch("openstackquery.query_factory.QueryOutput")
     @patch("openstackquery.query_factory.QueryParser")
