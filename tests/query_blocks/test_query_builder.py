@@ -80,7 +80,8 @@ def parse_where_runner_fixture(
     """
     mock_kwargs = {"arg1": "val1", "arg2": "val2"}
 
-    # pylint:disable=too-many-arguments
+    # ignore too-many-arguments warnings
+    # pylint: disable=R0913,R0917
     def _parse_where_runner(
         mock_get_filter_return,
         mock_get_filter_func_return,

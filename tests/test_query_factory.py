@@ -9,7 +9,8 @@ from openstackquery.query_factory import QueryFactory
 def run_build_query_deps_test_case_fixture():
     """Fixture for running build_query_deps"""
 
-    # pylint:disable=too-many-arguments
+    # ignore too-many-arguments warnings
+    # pylint: disable=R0913,R0917
     @patch("openstackquery.query_factory.QueryBuilder")
     @patch("openstackquery.query_factory.QueryOutput")
     @patch("openstackquery.query_factory.QueryParser")
