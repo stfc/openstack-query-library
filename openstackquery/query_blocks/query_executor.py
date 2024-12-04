@@ -1,7 +1,7 @@
 import logging
 import time
 from typing import Optional, Dict, List, Type
-from openstack_connection import OpenstackConnection
+from openstackquery.openstack_connection import OpenstackConnection
 
 from openstackquery.query_blocks.results_container import ResultsContainer
 from openstackquery.runners.runner_wrapper import RunnerWrapper
