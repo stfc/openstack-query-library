@@ -22,7 +22,7 @@ class HypervisorProperties(PropEnum):
     HYPERVISOR_MEMORY_SIZE = auto()
     HYPERVISOR_MEMORY_USED = auto()
     HYPERVISOR_NAME = auto()
-    HYPERVISOR_SERVER_COUNT = auto()
+    # HYPERVISOR_SERVER_COUNT = auto() # Deprecated, use server query
     HYPERVISOR_STATE = auto()
     HYPERVISOR_STATUS = auto()
     HYPERVISOR_VCPUS = auto()
@@ -57,7 +57,7 @@ class HypervisorProperties(PropEnum):
                 "memory_mb_used",
             ],
             HypervisorProperties.HYPERVISOR_NAME: ["name", "host_name"],
-            HypervisorProperties.HYPERVISOR_SERVER_COUNT: ["running_vms"],
+            # HypervisorProperties.HYPERVISOR_SERVER_COUNT: ["running_vms"],
             HypervisorProperties.HYPERVISOR_STATE: ["state"],
             HypervisorProperties.HYPERVISOR_STATUS: ["status"],
             HypervisorProperties.HYPERVISOR_VCPUS: ["vcpus"],
@@ -77,20 +77,36 @@ class HypervisorProperties(PropEnum):
             HypervisorProperties.HYPERVISOR_CURRENT_WORKLOAD: lambda a: a[
                 "current_workload"
             ],
-            HypervisorProperties.HYPERVISOR_DISK_FREE: lambda a: a["free_disk_gb"],
-            HypervisorProperties.HYPERVISOR_DISK_SIZE: lambda a: a["local_gb"],
-            HypervisorProperties.HYPERVISOR_DISK_USED: lambda a: a["local_gb_used"],
+            HypervisorProperties.HYPERVISOR_DISK_FREE: lambda a: a.resources.get(
+                "DISK_GB"
+            ).get("free", None),
+            HypervisorProperties.HYPERVISOR_DISK_SIZE: lambda a: a.resources.get(
+                "DISK_GB"
+            ).get("total", None),
+            HypervisorProperties.HYPERVISOR_DISK_USED: lambda a: a.resources.get(
+                "DISK_GB"
+            ).get("usage", None),
             HypervisorProperties.HYPERVISOR_ID: lambda a: a["id"],
             HypervisorProperties.HYPERVISOR_IP: lambda a: a["host_ip"],
-            HypervisorProperties.HYPERVISOR_MEMORY_FREE: lambda a: a["free_ram_mb"],
-            HypervisorProperties.HYPERVISOR_MEMORY_SIZE: lambda a: a["memory_mb"],
-            HypervisorProperties.HYPERVISOR_MEMORY_USED: lambda a: a["memory_mb_used"],
+            HypervisorProperties.HYPERVISOR_MEMORY_FREE: lambda a: a.resources.get(
+                "MEMORY_MB"
+            ).get("free", None),
+            HypervisorProperties.HYPERVISOR_MEMORY_SIZE: lambda a: a.resources.get(
+                "MEMORY_MB"
+            ).get("total", None),
+            HypervisorProperties.HYPERVISOR_MEMORY_USED: lambda a: a.resources.get(
+                "MEMORY_MB"
+            ).get("usage", None),
             HypervisorProperties.HYPERVISOR_NAME: lambda a: a["name"],
-            HypervisorProperties.HYPERVISOR_SERVER_COUNT: lambda a: a["runnning_vms"],
+            # HypervisorProperties.HYPERVISOR_SERVER_COUNT: lambda a: a["runnning_vms"],
             HypervisorProperties.HYPERVISOR_STATE: lambda a: a["state"],
             HypervisorProperties.HYPERVISOR_STATUS: lambda a: a["status"],
-            HypervisorProperties.HYPERVISOR_VCPUS: lambda a: a["vcpus"],
-            HypervisorProperties.HYPERVISOR_VCPUS_USED: lambda a: a["vcpus_used"],
+            HypervisorProperties.HYPERVISOR_VCPUS: lambda a: a.resources.get(
+                "VCPU"
+            ).get("total", None),
+            HypervisorProperties.HYPERVISOR_VCPUS_USED: lambda a: a.resources.get(
+                "VCPU"
+            ).get("usage", None),
             HypervisorProperties.HYPERVISOR_DISABLED_REASON: lambda a: a["service"][
                 "disabled_reason"
             ],

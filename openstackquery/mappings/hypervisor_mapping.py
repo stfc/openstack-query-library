@@ -81,7 +81,7 @@ class HypervisorMapping(MappingInterface):
             HypervisorProperties.HYPERVISOR_MEMORY_FREE,
             HypervisorProperties.HYPERVISOR_VCPUS,
             HypervisorProperties.HYPERVISOR_VCPUS_USED,
-            HypervisorProperties.HYPERVISOR_SERVER_COUNT,
+            # HypervisorProperties.HYPERVISOR_SERVER_COUNT, # Deprecated, use server query
             HypervisorProperties.HYPERVISOR_CURRENT_WORKLOAD,
         ]
 
