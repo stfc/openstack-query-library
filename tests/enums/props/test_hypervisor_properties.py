@@ -213,25 +213,6 @@ def test_hypervisor_name_serialization(val):
 @pytest.mark.parametrize(
     "val",
     [
-        "hypervisor_server_count",
-        "Hypervisor_Server_Count",
-        "HyPeRvIsOr_SeRvEr_CoUnT",
-        "running_vms",
-    ],
-)
-def test_hypervisor_server_count_serialization(val):
-    """
-    Tests that variants of HYPERVISOR_SERVER_COUNT can be serialized
-    """
-    assert (
-        HypervisorProperties.from_string(val)
-        is HypervisorProperties.HYPERVISOR_SERVER_COUNT
-    )
-
-
-@pytest.mark.parametrize(
-    "val",
-    [
         "hypervisor_state",
         "Hypervisor_State",
         "HyPeRvIsOr_StAtE",
