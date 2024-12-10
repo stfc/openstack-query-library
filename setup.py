@@ -14,6 +14,6 @@ setup(
     long_description=LONG_DESCRIPTION,
     packages=find_packages(),
     python_requires=">=3.8",
-    install_requires=[],
+    install_requires=["openstacksdk", "tabulate"],
     keywords=["python, openstack"],
 )
