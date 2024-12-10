@@ -28,6 +28,7 @@ class HypervisorProperties(PropEnum):
     HYPERVISOR_VCPUS = auto()
     HYPERVISOR_VCPUS_USED = auto()
     HYPERVISOR_DISABLED_REASON = auto()
+    HYPERVISOR_UPTIME = auto()
 
     @staticmethod
     def _get_aliases() -> Dict:
@@ -63,6 +64,7 @@ class HypervisorProperties(PropEnum):
             HypervisorProperties.HYPERVISOR_VCPUS: ["vcpus"],
             HypervisorProperties.HYPERVISOR_VCPUS_USED: ["vcpus_used"],
             HypervisorProperties.HYPERVISOR_DISABLED_REASON: ["disabled_reason"],
+            HypervisorProperties.HYPERVISOR_UPTIME: ["uptime"],
         }
 
     @staticmethod
@@ -110,6 +112,7 @@ class HypervisorProperties(PropEnum):
             HypervisorProperties.HYPERVISOR_DISABLED_REASON: lambda a: a["service"][
                 "disabled_reason"
             ],
+            HypervisorProperties.HYPERVISOR_UPTIME: lambda a: a["uptime"],
         }
         try:
             return mapping[prop]
