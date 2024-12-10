@@ -26,4 +26,10 @@ jobs:
 
       - name: run tests using pytest
         run: |
-         cd $GITHUB_WORKSPACE && pytest
+         cd $GITHUB_WORKSPACE && pytest --cov --cov-report xml:coverage.xml
+
+      - name: Submit Coverage
+        uses: codecov/codecov-action@v5
+        with:
+          fail_ci_if_error: true
+          token: ${{secrets.CODECOV_TOKEN}}
