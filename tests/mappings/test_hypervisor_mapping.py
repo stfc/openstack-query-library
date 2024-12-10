@@ -85,8 +85,6 @@ def test_client_side_handlers_integer(client_side_test_mappings):
         HypervisorProperties.HYPERVISOR_MEMORY_FREE,
         HypervisorProperties.HYPERVISOR_VCPUS,
         HypervisorProperties.HYPERVISOR_VCPUS_USED,
-        HypervisorProperties.HYPERVISOR_SERVER_COUNT,
-        HypervisorProperties.HYPERVISOR_CURRENT_WORKLOAD,
     ]
     handler = HypervisorMapping.get_client_side_handlers().integer_handler
     mappings = {
@@ -103,7 +101,7 @@ def test_get_chain_mappings():
     Tests get_chain_mapping outputs correctly
     """
     expected_mappings = {
-        HypervisorProperties.HYPERVISOR_ID: ServerProperties.HYPERVISOR_ID,
+        HypervisorProperties.HYPERVISOR_NAME: ServerProperties.HYPERVISOR_NAME,
     }
 
     assert HypervisorMapping.get_chain_mappings() == expected_mappings

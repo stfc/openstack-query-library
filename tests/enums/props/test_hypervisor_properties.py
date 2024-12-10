@@ -40,26 +40,6 @@ def test_get_marker_prop_func(mock_get_prop_mapping):
 @pytest.mark.parametrize(
     "val",
     [
-        "hypervisor_current_workload",
-        "Hypervisor_Current_Workload",
-        "HyPeRvIsOr_CuRrEnT_wOrKlOaD",
-        "current_workload",
-        "workload",
-    ],
-)
-def test_hypervisor_current_workload_serialization(val):
-    """
-    Tests that variants of HYPERVISOR_CURRENT_WORKLOAD can be serialized
-    """
-    assert (
-        HypervisorProperties.from_string(val)
-        is HypervisorProperties.HYPERVISOR_CURRENT_WORKLOAD
-    )
-
-
-@pytest.mark.parametrize(
-    "val",
-    [
         "hypervisor_disk_free",
         "Hypervisor_Disk_Free",
         "HyPeRvIsOr_DiSk_FrEe",
@@ -208,25 +188,6 @@ def test_hypervisor_name_serialization(val):
     Tests that variants of HYPERVISOR_NAME can be serialized
     """
     assert HypervisorProperties.from_string(val) is HypervisorProperties.HYPERVISOR_NAME
-
-
-@pytest.mark.parametrize(
-    "val",
-    [
-        "hypervisor_server_count",
-        "Hypervisor_Server_Count",
-        "HyPeRvIsOr_SeRvEr_CoUnT",
-        "running_vms",
-    ],
-)
-def test_hypervisor_server_count_serialization(val):
-    """
-    Tests that variants of HYPERVISOR_SERVER_COUNT can be serialized
-    """
-    assert (
-        HypervisorProperties.from_string(val)
-        is HypervisorProperties.HYPERVISOR_SERVER_COUNT
-    )
 
 
 @pytest.mark.parametrize(

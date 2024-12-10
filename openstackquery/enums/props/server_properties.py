@@ -11,7 +11,7 @@ class ServerProperties(PropEnum):
     """
 
     FLAVOR_ID = auto()
-    HYPERVISOR_ID = auto()
+    HYPERVISOR_NAME = auto()
     IMAGE_ID = auto()
     PROJECT_ID = auto()
     SERVER_CREATION_DATE = auto()
@@ -29,7 +29,7 @@ class ServerProperties(PropEnum):
         A method that returns all valid string alias mappings
         """
         return {
-            ServerProperties.HYPERVISOR_ID: ["host_id", "hv_id"],
+            ServerProperties.HYPERVISOR_NAME: ["hv_name", "hypervisor_name"],
             ServerProperties.SERVER_CREATION_DATE: ["created_at"],
             ServerProperties.SERVER_DESCRIPTION: [
                 "description",
@@ -53,7 +53,7 @@ class ServerProperties(PropEnum):
         """
         mapping = {
             ServerProperties.USER_ID: lambda a: a["user_id"],
-            ServerProperties.HYPERVISOR_ID: lambda a: a["host_id"],
+            ServerProperties.HYPERVISOR_NAME: lambda a: a["hypervisor_hostname"],
             ServerProperties.SERVER_ID: lambda a: a["id"],
             ServerProperties.SERVER_NAME: lambda a: a["name"],
             ServerProperties.SERVER_DESCRIPTION: lambda a: a["description"],

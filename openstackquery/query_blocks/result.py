@@ -36,7 +36,7 @@ class Result:
         """
         try:
             return self._prop_enum_cls.get_prop_mapping(prop)(self._obj_result)
-        except AttributeError:
+        except (AttributeError, KeyError):
             return self._default_prop_value
 
     def update_forwarded_properties(self, forwarded_props: Dict[str, PropValue]):

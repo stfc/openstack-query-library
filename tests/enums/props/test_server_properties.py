@@ -45,13 +45,14 @@ def test_flavor_id_serialization(val):
 
 
 @pytest.mark.parametrize(
-    "val", ["hypervisor_id", "Hypervisor_ID", "HyPerVisor_ID", "host_id", "hv_id"]
+    "val",
+    ["hypervisor_name", "Hypervisor_NAME", "HyPerVisor_NamE", "hv_name", "HV_name"],
 )
 def test_hypervisor_id_serialization(val):
     """
-    Tests that variants of HYPERVISOR_ID can be serialized
+    Tests that variants of HYPERVISOR_NAME can be serialized
     """
-    assert ServerProperties.from_string(val) is ServerProperties.HYPERVISOR_ID
+    assert ServerProperties.from_string(val) is ServerProperties.HYPERVISOR_NAME
 
 
 @pytest.mark.parametrize("val", ["image_id", "Image_ID", "ImaGe_iD"])
