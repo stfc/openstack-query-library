@@ -12,13 +12,15 @@
 
 ## Overview
 
-The Query Library is broken up into 3 main parts.
+The Query Library is broken up into 4 main parts.
 - Query Blocks
   - which contain actual query logic split up into different parts - builder, executer, etc.
 - Mappings
   - contains info that is specific to the query, used to setup query blocks
 - API
   - exposes API methods to the user
+- Runners
+  - which define how to actually run the query
 
 The image below shows how these components relate to each other when invoking a query object via API
 
@@ -29,7 +31,7 @@ The image below shows how these components relate to each other when invoking a 
 
 Query Blocks contain the generic logic of setting up, running and outputting the query results.
 Each Query Block is instantiated and set up using mappings.
-Query block files are located in `openstack_query/query_blocks/` submodule
+Query block files are located in `openstackquery/query_blocks/` submodule
 
 Query Blocks are written so they don't need to be edited when a new feature needs to be written.
 As a developer, you likely won't need to worry about them unless you are fixing bugs/refactoring
@@ -42,9 +44,9 @@ These class sets up the following:
    - and how to get those values from the equivalent Openstack object
  - what preset-property pairs are valid for `where()` calls.
  - what shared common properties (if any) are available between this resource and other resources - for chaining
- - how to actually run the query using openstacksdk
+ - map the query to the corresponding "runner" class
 
-Each Query has a corresponding file called `<name_of_resource>_mapping`. The files is located in `/lib/openstack_query/mappings/`
+Each Query has a corresponding file called `<name_of_resource>_mapping`. The files is located in `openstackquery/mappings/`
 This file is used to configure the above.
 
 
@@ -57,7 +59,8 @@ with openstack.
 The API must be unchanging - as a developer you will not need to interact with this file unless you are adding a new
 API method - e.g. adding a new way to output results
 
-**NOTE: Deleting or Altering a API method requires approval and a good reason since it may break existing workflows**
+**NOTE: Deleting or Altering an API method requires approval from maintainers and a good reason since it may break
+existing workflows**
 
 
 ### Client-Side Filters vs Server-Side Filters

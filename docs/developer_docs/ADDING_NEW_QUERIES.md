@@ -7,7 +7,7 @@ A new subclass of the `PropEnum` class is required to store valid property enums
 resource. To do this, you must:
 1. Identify all available properties for the new query.
    - You can find this information by looking in the openstacksdk api documentation [here](https://docs.openstack.org/openstacksdk/latest/user/index.html#api-documentation).
-2. Create a new file under `/enums/query/props/` called `<resource>_properties.py`, replace `<resource>` with the name of the openstack resource you want to query
+2. Create a new file under `openstackquery/enums/props/` called `<resource>_properties.py`, replace `<resource>` with the name of the openstack resource you want to query
 3. Create the `<resource>Properties` class definition
    - class must inherit from `PropEnum` abstract base class and implement abstract methods.
 
@@ -49,7 +49,7 @@ A new subclass of the `RunnerWrapper` class is required to store how to actually
 will also be the place where we can define extra parameters that can be used to fine-tune the query.
 
 To add a Runner Class:
-1. Create a new file under `/openstack_query/runners/` called `<resource>_runner.py` replace `<resource>` with openstack resource name you want to query
+1. Create a new file under `/openstackquery/runners/` called `<resource>_runner.py` replace `<resource>` with openstack resource name you want to query
 2.  Create the `<resource>Runner` class definition
    - class must inherit from `RunnerWrapper` abstract base class and implement abstract methods.
 
@@ -116,10 +116,10 @@ see `runners/server_runner.py` to see the implementation details.
 A new subclass of the `MappingInterface` class is required to store query mappings.
 
 To add a Mapping Class:
-1. Create a new file under `/openstack_query/mappings/` called `<resource>_mapping.py` replace `<resource>` with openstack resource name you want to query
+1. Create a new file under `/openstackquery/mappings/` called `<resource>_mapping.py` replace `<resource>` with openstack resource name you want to query
 2.  Create the `<resource>Mapping` class definition
    - class must inherit from `MappingInterface` abstract base class and implement abstract methods.
-3. Update the enum holding query types `/enums/query/query_types.py` and add a Enum mapping to this Mapping class.
+3. Update the enum holding query types `/enums/query_types.py` and add a Enum mapping to this Mapping class.
 4. (Optional) Add alias mappings for the query type - see [Adding Aliases](ADDING_ALIASES.md)
 
 ### 3a. Set the Prop Enum class
@@ -232,7 +232,7 @@ To add a server-side filter you must:
 Now that the functionality has been added, you can make it available by creating a function in `query_objects` which
 will call `QueryFactory` with the `ResourceMapping` class we just created.
 
-e.g. Add this function to `openstack_query/api/query_objects.py` (as usual, replace `Resource` with the name of the openstack resource your querying)
+e.g. Add this function to `openstackquery/api/query_objects.py` (as usual, replace `Resource` with the name of the openstack resource your querying)
 ```python
 def ResourceQuery() -> QueryAPI:
    """
@@ -243,7 +243,7 @@ def ResourceQuery() -> QueryAPI:
 
 ```
 
-Then add this import to the top-level `__init__.py` - in `openstack_query/__init__.py`
+Then add this import to the top-level `__init__.py` - in `openstackquery/__init__.py`
 ```python
 from .api.query_objects import ResourceQuery
 ```
@@ -251,8 +251,6 @@ from .api.query_objects import ResourceQuery
 Now you can use the new functionality like so
 
 ```python
-from enums.query.props.resource_properties import ResourceProperties
-from openstack_query import ResourceQuery
-
-ResourceQuery().where(...).select(ResourceProperties.PROP_1).run("prod", meta_param1="abc", meta_param2="def")
+from openstackquery import ResourceQuery
+ResourceQuery().where(...).select("prop_1").run("prod", meta_param1="abc", meta_param2="def")
 ```

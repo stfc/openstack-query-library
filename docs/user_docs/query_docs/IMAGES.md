@@ -11,35 +11,29 @@ See [Openstack Docs](https://docs.openstack.org/api-ref/image/v2/index.html) for
 To Query for Images using the Query Library, you can import `ImageQuery()` like so:
 
 ```python
-from openstack_query import ImageQuery
+from openstackquery import ImageQuery
 ```
 
 `ImageQuery()` can then be used to setup and run queries - see [API.md](../API.md) for details on API calls
 
 ## Properties
 
-The Valid property enum for `ImageQuery` is `ImageProperties`. You can import `ImageProperties` like so:
+An `Image` has the following properties:
 
-```python
-from enums.query.props.image_properties import ImageProperties
-```
+| Return Type  | Property Name(s) (case-insensitive) | Description                                                         |
+|--------------|-------------------------------------|---------------------------------------------------------------------|
+| `string` (x) | "created_at"                        | The timestamp when this image was created.                          |
+| `int`        | "progress"                          | Image creation percentage, 0 to 100. 100 once Image is created      |
+| `string`     | "id", "uuid"                        | ID of the image                                                     |
+| `string` (x) | "updated_at"                        | The timestamp when this image was last updated                      |
+| `int`        | "min_ram", "ram"                    | The minimum disk size in GB that is required to boot the image.     |
+| `int`        | "min_disk", "disk"                  | The minimum amount of RAM in MB that is required to boot the image. |
+| `string`     | "name"                              | Name of the Image                                                   |
+| `int`        | "size"                              | The size of the image data, in bytes.                               |
+| `string`     | "status"                            | Image status                                                        |
 
-`ImageProperties` exposes the following properties:
-
-| Property Enum           | Type         | Aliases (case-insensitive) | Description                                                         |
-|-------------------------|--------------|----------------------------|---------------------------------------------------------------------|
-| IMAGE_CREATION_DATE     | `string` (x) | "created_at"               | The timestamp when this image was created.                          |
-| IMAGE_CREATION_PROGRESS | `int`        | "progress"                 | Image creation percentage, 0 to 100. 100 once Image is created      |
-| IMAGE_ID                | `string`     | "id", "uuid"               | ID of the image                                                     |
-| IMAGE_LAST_UPDATED_DATE | `string` (x) | "updated_at"               | The timestamp when this image was last updated                      |
-| IMAGE_MINIMUM_DISK      | `int`        | "min_ram", "ram"           | The minimum disk size in GB that is required to boot the image.     |
-| IMAGE_MINIMUM_RAM       | `int`        | "min_disk", "disk"         | The minimum amount of RAM in MB that is required to boot the image. |
-| IMAGE_NAME              | `string`     | "name"                     | Name of the Image                                                   |
-| IMAGE_SIZE              | `int`        | "size"                     | The size of the image data, in bytes.                               |
-| IMAGE_STATUS            | `string`     | "status"                   | Image status                                                        |
-
+(x) - These are UTC timestamps in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format
 Any of these properties can be used for any of the API methods that takes a property - like `select`, `where`, `sort_by` etc
-Alternatively, you can pass property aliases (passed as string) instead (currently WIP)
 
 ## Chaining
 This section details valid mappings you can use to chain onto other queries or from other queries to chain into a `ImageQuery` object.
@@ -48,9 +42,9 @@ This applies to API calls `then` and `append_from` - see [API.md](../API.md) for
 ## Query Alias
 The aliases that can be used for the query when chaining are listed below:
 
-| Query Enum             | Aliases (case-insensitive |
-|------------------------|---------------------------|
-| QueryTypes.IMAGE_QUERY | "image", "images"         |
+| Aliases (case-insensitive)                     |
+|------------------------------------------------|
+| "image", "images", "image_query", "imagequery" |
 
 
 
@@ -58,17 +52,17 @@ The aliases that can be used for the query when chaining are listed below:
 A `ImageQuery` can be chained to other queries.
 The following shared-common properties are listed below (as well as the Query object they map to):
 
-| Prop 1                   | Prop 2                    | Type        | Maps                          | Documentation            |
-|--------------------------|---------------------------|-------------|-------------------------------|--------------------------|
-| ImageProperties.IMAGE_ID | ServerProperties.IMAGE_ID | One-to-Many | `ImageQuery` to `ServerQuery` | [SERVERS.md](SERVERS.md) |
+| Prop 1 | Prop 2     | Type        | Maps                          | Documentation            |
+|--------|------------|-------------|-------------------------------|--------------------------|
+| "id"   | "image_id" | One-to-Many | `ImageQuery` to `ServerQuery` | [SERVERS.md](SERVERS.md) |
 
 
 ## Chaining to
-Chaining from other `ImageQuery` requires passing `IMAGE_QUERY` or any of the aliases mentioned above as the `query_type`
+Chaining from other `ImageQuery` requires passing `image_query` or any of the aliases mentioned above as the `query_type`
 
-| From          | Prop 1              | Prop 2               | Type        | Documentation            |
-|---------------|---------------------|----------------------|-------------|--------------------------|
-| `ServerQuery` | ImageQuery.IMAGE_ID | ServerQuery.IMAGE_ID | Many-to-One | [SERVERS.md](SERVERS.md) |
+| From          | Prop 1 | Prop 2     | Type        | Documentation            |
+|---------------|--------|------------|-------------|--------------------------|
+| `ServerQuery` | "id"   | "image_id" | Many-to-One | [SERVERS.md](SERVERS.md) |
 
 
 ## run() meta-parameters
@@ -82,7 +76,7 @@ Chaining from other `ImageQuery` requires passing `IMAGE_QUERY` or any of the al
 | `as_admin: Bool`           | Yes, default = False | If True, will run the query as an admin - this may be required to query outside of given project context set in clouds.yaml. <br/><br /> Make sure that the clouds.yaml context user has admin privileges                                                                 |
 
 
-To query on all projects remember to call `run()` like so:
+To query on all projects call `run()` like so:
 ```python
     ImageQuery.run(as_admin=True, all_projects=True)
 ```

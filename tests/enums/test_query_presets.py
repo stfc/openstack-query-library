@@ -36,7 +36,7 @@ def test_not_equal_to_serialization(preset_string):
 
 
 @pytest.mark.parametrize(
-    "preset_string", ["greater_than", "Greater_Than", "GrEaTer_ThAn"]
+    "preset_string", ["greater_than", "Greater_Than", "GrEaTer_ThAn", ">"]
 )
 def test_greater_than_serialization(preset_string):
     """
@@ -54,6 +54,7 @@ def test_greater_than_serialization(preset_string):
         "greater_than_or_equal_to",
         "Greater_Than_Or_Equal_To",
         "GrEaTer_ThAn_Or_EqUaL_tO",
+        ">=",
     ],
 )
 def test_greater_than_or_equal_to_serialization(preset_string):
@@ -66,7 +67,7 @@ def test_greater_than_or_equal_to_serialization(preset_string):
     )
 
 
-@pytest.mark.parametrize("preset_string", ["less_than", "Less_Than", "LeSs_ThAn"])
+@pytest.mark.parametrize("preset_string", ["less_than", "Less_Than", "LeSs_ThAn", "<"])
 def test_less_than_serialization(preset_string):
     """
     Tests that variants of LESS_THAN can be serialized
@@ -78,7 +79,7 @@ def test_less_than_serialization(preset_string):
 
 @pytest.mark.parametrize(
     "preset_string",
-    ["less_than_or_equal_to", "Less_Than_Or_Equal_To", "LeSs_ThAn_Or_EqUaL_tO"],
+    ["less_than_or_equal_to", "Less_Than_Or_Equal_To", "LeSs_ThAn_Or_EqUaL_tO", "<="],
 )
 def test_less_than_or_equal_to_serialization(preset_string):
     """
@@ -90,7 +91,9 @@ def test_less_than_or_equal_to_serialization(preset_string):
     )
 
 
-@pytest.mark.parametrize("preset_string", ["older_than", "Older_Than", "OlDeR_ThAn"])
+@pytest.mark.parametrize(
+    "preset_string", ["older_than", "Older_Than", "OlDeR_ThAn", ">"]
+)
 def test_older_than_serialization(preset_string):
     """
     Tests that variants of OLDER_THAN can be serialized
@@ -103,7 +106,12 @@ def test_older_than_serialization(preset_string):
 
 @pytest.mark.parametrize(
     "preset_string",
-    ["older_than_or_equal_to", "Older_Than_Or_Equal_To", "OlDeR_ThAn_Or_EqUaL_To"],
+    [
+        "older_than_or_equal_to",
+        "Older_Than_Or_Equal_To",
+        "OlDeR_ThAn_Or_EqUaL_To",
+        ">=",
+    ],
 )
 def test_older_than_or_equal_to_serialization(preset_string):
     """
@@ -116,7 +124,7 @@ def test_older_than_or_equal_to_serialization(preset_string):
 
 
 @pytest.mark.parametrize(
-    "preset_string", ["younger_than", "Younger_Than", "YoUnGeR_ThAn"]
+    "preset_string", ["younger_than", "Younger_Than", "YoUnGeR_ThAn", "<"]
 )
 def test_younger_than_serialization(preset_string):
     """
@@ -134,6 +142,7 @@ def test_younger_than_serialization(preset_string):
         "younger_than_or_equal_to",
         "Younger_Than_Or_Equal_To",
         "YoUngEr_ThAn_Or_EqUaL_To",
+        "<=",
     ],
 )
 def test_younger_than_or_equal_to_serialization(preset_string):
