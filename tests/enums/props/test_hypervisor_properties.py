@@ -280,3 +280,21 @@ def test_hypervisor_disabled_reason_serialization(val):
         HypervisorProperties.from_string(val)
         is HypervisorProperties.HYPERVISOR_DISABLED_REASON
     )
+
+
+@pytest.mark.parametrize(
+    "val",
+    [
+        "HYPERVISOR_UPTIME_DAYS",
+        "Hypervisor_Uptime_Days",
+        "HyPeRvIsOr_UpTiMe_DaYs",
+    ],
+)
+def test_hypervisor_uptime_days_serialization(val):
+    """
+    Tests that variants of HYPERVISOR_UPTIME_DAYS can be serialized
+    """
+    assert (
+        HypervisorProperties.from_string(val)
+        is HypervisorProperties.HYPERVISOR_UPTIME_DAYS
+    )
