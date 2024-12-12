@@ -49,7 +49,7 @@ A new subclass of the `RunnerWrapper` class is required to store how to actually
 will also be the place where we can define extra parameters that can be used to fine-tune the query.
 
 To add a Runner Class:
-1. Create a new file under `/openstackquery/runners/` called `<resource>_runner.py` replace `<resource>` with openstack resource name you want to query
+1. Create a new file under `openstackquery/runners/` called `<resource>_runner.py` replace `<resource>` with openstack resource name you want to query
 2.  Create the `<resource>Runner` class definition
    - class must inherit from `RunnerWrapper` abstract base class and implement abstract methods.
 
@@ -116,10 +116,10 @@ see `runners/server_runner.py` to see the implementation details.
 A new subclass of the `MappingInterface` class is required to store query mappings.
 
 To add a Mapping Class:
-1. Create a new file under `/openstackquery/mappings/` called `<resource>_mapping.py` replace `<resource>` with openstack resource name you want to query
+1. Create a new file under `openstackquery/mappings/` called `<resource>_mapping.py` replace `<resource>` with openstack resource name you want to query
 2.  Create the `<resource>Mapping` class definition
    - class must inherit from `MappingInterface` abstract base class and implement abstract methods.
-3. Update the enum holding query types `/enums/query_types.py` and add a Enum mapping to this Mapping class.
+3. Update the enum holding query types `openstackquery/enums/query_types.py` and add a Enum mapping to this Mapping class.
 4. (Optional) Add alias mappings for the query type - see [Adding Aliases](ADDING_ALIASES.md)
 
 ### 3a. Set the Prop Enum class
