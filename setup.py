@@ -7,13 +7,13 @@ LONG_DESCRIPTION = (
 
 setup(
     name="openstackquery",
-    version="0.1.3",
+    version="0.1.4",
     author="Anish Mudaraddi",
     author_email="<anish.mudaraddi@stfc.ac.uk>",
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     packages=find_packages(),
     python_requires=">=3.8",
-    install_requires=["openstacksdk", "tabulate"],
+    install_requires=["openstacksdk", "tabulate", "osc-placement"],
     keywords=["python, openstack"],
 )
