@@ -1,6 +1,6 @@
 # Adding New Preset To An Existing Preset Group
 
-## **1. Add the preset name to the corresponding enum class in `/lib/enums/query/query_presets.py`**
+## **1. Add the preset name to the corresponding enum class in `openstackquery/enums/query_presets.py`**
 
 e.g.
 ```python
@@ -16,7 +16,7 @@ class QueryPresetsGeneric(QueryPresets):
 
 (Optional) Add alias mappings for the preset - see [Adding Aliases](ADDING_ALIASES.md)
 
-## **2. Edit the corresponding handler class in `/lib/openstack_query/handlers/client_side_handler_<preset-group>.py`.**
+## **2. Edit the corresponding handler class in `openstackquery/handlers/client_side_handler_<preset-group>.py`.**
 
 Here you must:
 - add a 'client-side' filter function as a method
@@ -67,9 +67,9 @@ Here you must:
 1. Evaluate which Query class should be able to use your new preset
 2. For each Query class you've chosen, evaluate which property(ies) the preset should work on
 3. Add chosen mappings to `get_client_side_handlers` method in the Mappings class for each chosen Query
-   - these are located in `mappings/<query-resource>_mapping.py`
+   - these are located in `openstackquery/mappings/<query-resource>_mapping.py`
 
-e.g. Adding Mappings for `QueryPresetsGeneric.NEW_PRESET` to `ServerQuery`. Editing `mappings/server_mapping.py`
+e.g. Adding Mappings for `QueryPresetsGeneric.NEW_PRESET` to `ServerQuery`. Editing `openstackquery/mappings/server_mapping.py`
 ```python
 
 class ServerMapping(MappingInterface):
@@ -131,19 +131,19 @@ class ServerMapping(MappingInterface):
 As stated above - presets are grouped based on the datatype of the property the act on. If you need another preset
 group - you can add one like so:
 
-1. Create a new preset group class in `/lib/enums/query/query_presets.py`
+1. Create a new preset group class in `openstackquery/enums/query_presets.py`
     - it inherits from base class QueryPresets
 
 
-2. Create new client side handler in `/lib/openstack_query/handlers/client_side_handler_<preset>.py`
-   - it inherits from base class `ClientSideHandler` - `/lib/openstack_query/handlers/client_side_handler.py`.
+2. Create new client side handler in `openstackquery/handlers/client_side_handler_<preset>.py`
+   - it inherits from base class `ClientSideHandler` - `openstackquery/handlers/client_side_handler.py`.
 
 
 3. Add your preset as a attribute in query_client_side_handlers dataclass
-   - located in `/lib/structs/query/query_client_side_handlers.py`
+   - located in `openstackquery/structs/query_client_side_handlers.py`
 
 
 4. Follow steps mentioned above to add new presets to the new preset group class you've created
 
-5. Edit `QueryPresets` type declaration at the bottom of the file `/lib/enums/query/query_presets.py` and add your new
-preset ffclass to it
+5. Edit `QueryPresets` type declaration at the bottom of the file `openstackquery/enums/query_presets.py` and add your new
+preset class to it

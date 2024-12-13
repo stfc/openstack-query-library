@@ -44,7 +44,12 @@ class QueryPresetsInteger(EnumWithAliases):
         """
         A method that returns all valid string alias mappings
         """
-        return {}
+        return {
+            QueryPresetsInteger.LESS_THAN: ["<"],
+            QueryPresetsInteger.GREATER_THAN: [">"],
+            QueryPresetsInteger.GREATER_THAN_OR_EQUAL_TO: [">="],
+            QueryPresetsInteger.LESS_THAN_OR_EQUAL_TO: ["<="],
+        }
 
 
 class QueryPresetsDateTime(EnumWithAliases):
@@ -62,7 +67,12 @@ class QueryPresetsDateTime(EnumWithAliases):
         """
         A method that returns all valid string alias mappings
         """
-        return {}
+        return {
+            QueryPresetsDateTime.YOUNGER_THAN: ["<"],
+            QueryPresetsDateTime.OLDER_THAN: [">"],
+            QueryPresetsDateTime.OLDER_THAN_OR_EQUAL_TO: [">="],
+            QueryPresetsDateTime.YOUNGER_THAN_OR_EQUAL_TO: ["<="],
+        }
 
 
 class QueryPresetsString(EnumWithAliases):

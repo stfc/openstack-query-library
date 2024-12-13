@@ -31,16 +31,31 @@ class QueryTypes(EnumWithAliases):
             QueryTypes.FLAVOR_QUERY: [
                 "flavor",
                 "flavors",
+                "flavorquery",
             ],
             QueryTypes.PROJECT_QUERY: [
                 "project",
                 "projects",
+                "projectquery",
             ],
             QueryTypes.SERVER_QUERY: [
                 "server",
                 "servers",
+                "serverquery",
             ],
-            QueryTypes.USER_QUERY: ["user", "users"],
-            QueryTypes.IMAGE_QUERY: ["image", "images"],
-            QueryTypes.HYPERVISOR_QUERY: ["hypervisor", "hypervisors"],
+            QueryTypes.USER_QUERY: [
+                "user",
+                "users",
+                "userquery",
+            ],
+            QueryTypes.IMAGE_QUERY: [
+                "image",
+                "images",
+                "imagequery",
+            ],
+            QueryTypes.HYPERVISOR_QUERY: [
+                "hypervisor",
+                "hypervisors",
+                "hypervisorquery",
+            ],
         }

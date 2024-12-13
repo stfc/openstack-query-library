@@ -12,6 +12,7 @@ from openstackquery.exceptions.parse_query_error import ParseQueryError
         "flavor_query",
         "flavor",
         "flavors",
+        "flavorquery",
     ],
 )
 def test_flavor_query_serialization(query_type):
@@ -29,6 +30,7 @@ def test_flavor_query_serialization(query_type):
         "server_query",
         "server",
         "servers",
+        "serverquery",
     ],
 )
 def test_server_query_serialization(query_type):
@@ -46,6 +48,7 @@ def test_server_query_serialization(query_type):
         "project_query",
         "project",
         "projects",
+        "projectquery",
     ],
 )
 def test_project_query_serialization(query_type):
@@ -57,13 +60,7 @@ def test_project_query_serialization(query_type):
 
 @pytest.mark.parametrize(
     "query_type",
-    [
-        "User_Query",
-        "UsEr_QuEry",
-        "user_query",
-        "user",
-        "users",
-    ],
+    ["User_Query", "UsEr_QuEry", "user_query", "user", "users", "userquery"],
 )
 def test_user_query_serialization(query_type):
     """
@@ -74,13 +71,7 @@ def test_user_query_serialization(query_type):
 
 @pytest.mark.parametrize(
     "query_type",
-    [
-        "Image_Query",
-        "ImAgE_QuEry",
-        "image_query",
-        "image",
-        "images",
-    ],
+    ["Image_Query", "ImAgE_QuEry", "image_query", "image", "images", "imagequery"],
 )
 def test_image_query_serialization(query_type):
     """
@@ -97,6 +88,7 @@ def test_image_query_serialization(query_type):
         "hypervisor_query",
         "hypervisor",
         "hypervisors",
+        "hypervisorquery",
     ],
 )
 def test_hypervisor_query_serialization(query_type):
