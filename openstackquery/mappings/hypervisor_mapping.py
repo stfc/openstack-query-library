@@ -5,13 +5,9 @@ from openstackquery.enums.props.server_properties import ServerProperties
 from openstackquery.enums.query_presets import (
     QueryPresetsGeneric,
     QueryPresetsString,
-    QueryPresetsInteger,
 )
 from openstackquery.handlers.client_side_handler_generic import (
     ClientSideHandlerGeneric,
-)
-from openstackquery.handlers.client_side_handler_integer import (
-    ClientSideHandlerInteger,
 )
 from openstackquery.handlers.client_side_handler_string import ClientSideHandlerString
 from openstackquery.handlers.server_side_handler import ServerSideHandler
@@ -72,19 +68,6 @@ class HypervisorMapping(MappingInterface):
         corresponding to valid preset-property pairs. These filter functions can be used to filter results after
         listing all hypervisors.
         """
-        integer_props = [
-            HypervisorProperties.HYPERVISOR_DISK_USED,
-            HypervisorProperties.HYPERVISOR_DISK_FREE,
-            HypervisorProperties.HYPERVISOR_DISK_SIZE,
-            HypervisorProperties.HYPERVISOR_MEMORY_SIZE,
-            HypervisorProperties.HYPERVISOR_MEMORY_USED,
-            HypervisorProperties.HYPERVISOR_MEMORY_FREE,
-            HypervisorProperties.HYPERVISOR_VCPUS,
-            HypervisorProperties.HYPERVISOR_VCPUS_USED,
-            # HypervisorProperties.HYPERVISOR_SERVER_COUNT, # Deprecated, use server query
-            # HypervisorProperties.HYPERVISOR_CURRENT_WORKLOAD,
-        ]
-
         return QueryClientSideHandlers(
             # set generic query preset mappings
             generic_handler=ClientSideHandlerGeneric(
@@ -108,12 +91,5 @@ class HypervisorMapping(MappingInterface):
             # set datetime query preset mappings
             datetime_handler=None,
             # set integer query preset mappings
-            integer_handler=ClientSideHandlerInteger(
-                {
-                    QueryPresetsInteger.LESS_THAN: integer_props,
-                    QueryPresetsInteger.GREATER_THAN: integer_props,
-                    QueryPresetsInteger.LESS_THAN_OR_EQUAL_TO: integer_props,
-                    QueryPresetsInteger.GREATER_THAN_OR_EQUAL_TO: integer_props,
-                }
-            ),
+            integer_handler=None,
         )
