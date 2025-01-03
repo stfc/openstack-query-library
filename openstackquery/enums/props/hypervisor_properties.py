@@ -13,21 +13,11 @@ class HypervisorProperties(PropEnum):
     An enum class for all hypervisor properties
     """
 
-    # HYPERVISOR_CURRENT_WORKLOAD = auto()
-    HYPERVISOR_DISK_FREE = auto()
-    HYPERVISOR_DISK_SIZE = auto()
-    HYPERVISOR_DISK_USED = auto()
     HYPERVISOR_ID = auto()
     HYPERVISOR_IP = auto()
-    HYPERVISOR_MEMORY_FREE = auto()
-    HYPERVISOR_MEMORY_SIZE = auto()
-    HYPERVISOR_MEMORY_USED = auto()
     HYPERVISOR_NAME = auto()
-    # HYPERVISOR_SERVER_COUNT = auto() # Deprecated, use server query
     HYPERVISOR_STATE = auto()
     HYPERVISOR_STATUS = auto()
-    HYPERVISOR_VCPUS = auto()
-    HYPERVISOR_VCPUS_USED = auto()
     HYPERVISOR_DISABLED_REASON = auto()
     HYPERVISOR_UPTIME_DAYS = auto()
 
@@ -37,33 +27,11 @@ class HypervisorProperties(PropEnum):
         A method that returns all valid string alias mappings
         """
         return {
-            # HypervisorProperties.HYPERVISOR_CURRENT_WORKLOAD: [
-            #     "current_workload",
-            #     "workload",
-            # ],
-            HypervisorProperties.HYPERVISOR_DISK_FREE: [
-                "local_disk_free",
-                "free_disk_gb",
-            ],
-            HypervisorProperties.HYPERVISOR_DISK_SIZE: ["local_disk_size", "local_gb"],
-            HypervisorProperties.HYPERVISOR_DISK_USED: [
-                "local_disk_used",
-                "local_gb_used",
-            ],
             HypervisorProperties.HYPERVISOR_ID: ["id", "uuid", "host_id"],
             HypervisorProperties.HYPERVISOR_IP: ["ip", "host_ip"],
-            HypervisorProperties.HYPERVISOR_MEMORY_FREE: ["memory_free", "free_ram_mb"],
-            HypervisorProperties.HYPERVISOR_MEMORY_SIZE: ["memory_size", "memory_mb"],
-            HypervisorProperties.HYPERVISOR_MEMORY_USED: [
-                "memory_used",
-                "memory_mb_used",
-            ],
             HypervisorProperties.HYPERVISOR_NAME: ["name", "host_name"],
-            # HypervisorProperties.HYPERVISOR_SERVER_COUNT: ["running_vms"],
             HypervisorProperties.HYPERVISOR_STATE: ["state"],
             HypervisorProperties.HYPERVISOR_STATUS: ["status"],
-            HypervisorProperties.HYPERVISOR_VCPUS: ["vcpus"],
-            HypervisorProperties.HYPERVISOR_VCPUS_USED: ["vcpus_used"],
             HypervisorProperties.HYPERVISOR_DISABLED_REASON: ["disabled_reason"],
             HypervisorProperties.HYPERVISOR_UPTIME_DAYS: ["uptime"],
         }
@@ -77,39 +45,12 @@ class HypervisorProperties(PropEnum):
         :param prop: A HypervisorProperty Enum for which a function may exist for
         """
         mapping = {
-            # HypervisorProperties.HYPERVISOR_CURRENT_WORKLOAD: lambda a: a[
-            #     "current_workload"
-            # ],
-            HypervisorProperties.HYPERVISOR_DISK_FREE: lambda a: a.resources["DISK_GB"][
-                "free"
-            ],
-            HypervisorProperties.HYPERVISOR_DISK_SIZE: lambda a: a.resources["DISK_GB"][
-                "total"
-            ],
-            HypervisorProperties.HYPERVISOR_DISK_USED: lambda a: a.resources["DISK_GB"][
-                "usage"
-            ],
             HypervisorProperties.HYPERVISOR_ID: lambda a: a["id"],
             HypervisorProperties.HYPERVISOR_IP: lambda a: a["host_ip"],
-            HypervisorProperties.HYPERVISOR_MEMORY_FREE: lambda a: a.resources[
-                "MEMORY_MB"
-            ]["free"],
-            HypervisorProperties.HYPERVISOR_MEMORY_SIZE: lambda a: a.resources[
-                "MEMORY_MB"
-            ]["total"],
-            HypervisorProperties.HYPERVISOR_MEMORY_USED: lambda a: a.resources[
-                "MEMORY_MB"
-            ]["usage"],
             HypervisorProperties.HYPERVISOR_NAME: lambda a: a["name"],
             # HypervisorProperties.HYPERVISOR_SERVER_COUNT: lambda a: a["runnning_vms"],
             HypervisorProperties.HYPERVISOR_STATE: lambda a: a["state"],
             HypervisorProperties.HYPERVISOR_STATUS: lambda a: a["status"],
-            HypervisorProperties.HYPERVISOR_VCPUS: lambda a: a.resources["VCPU"][
-                "total"
-            ],
-            HypervisorProperties.HYPERVISOR_VCPUS_USED: lambda a: a.resources["VCPU"][
-                "usage"
-            ],
             HypervisorProperties.HYPERVISOR_DISABLED_REASON: lambda a: a["service"][
                 "disabled_reason"
             ],
