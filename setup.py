@@ -7,9 +7,9 @@ LONG_DESCRIPTION = (
 
 setup(
     name="openstackquery",
-    version="0.1.7",
-    author="Anish Mudaraddi",
-    author_email="<anish.mudaraddi@stfc.ac.uk>",
+    version="1.0.0",
+    author="STFC Cloud Team",
+    author_email="<cloud-support@stfc.ac.uk>",
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     packages=find_packages(),
