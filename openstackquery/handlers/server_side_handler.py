@@ -87,6 +87,8 @@ class ServerSideHandler(HandlerBase):
         try:
             filters = filter_func(**params)
         except (KeyError, TypeError) as err:
+            # Dev note: your lambda must take "value" as the lambda
+            # argument if you arrive here adding new mappings
             raise QueryPresetMappingError(
                 "Preset Argument Error: failed to build server-side openstacksdk filters for preset:prop: "
                 f"'{preset.name}':'{prop.name}' "
