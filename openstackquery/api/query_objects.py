@@ -5,6 +5,7 @@ from openstackquery.mappings.flavor_mapping import FlavorMapping
 from openstackquery.mappings.hypervisor_mapping import HypervisorMapping
 from openstackquery.mappings.image_mapping import ImageMapping
 from openstackquery.mappings.mapping_interface import MappingInterface
+from openstackquery.mappings.placement_mapping import PlacementMapping
 from openstackquery.mappings.project_mapping import ProjectMapping
 from openstackquery.mappings.server_mapping import ServerMapping
 from openstackquery.mappings.user_mapping import UserMapping
@@ -70,3 +71,10 @@ def HypervisorQuery() -> "QueryAPI":
     Simple helper function to setup a query using a factory
     """
     return get_common(HypervisorMapping)
+
+
+def PlacementQuery() -> "QueryAPI":
+    """
+    Simple helper function to setup a query using a factory
+    """
+    return get_common(PlacementMapping)
