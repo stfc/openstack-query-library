@@ -153,7 +153,7 @@ class ClientSideHandler(HandlerBase):
         """
         try:
             item_prop = selected_prop_func(item)
-        except AttributeError:
+        except (AttributeError, KeyError):
             return False
         if not filter_func_kwargs:
             filter_func_kwargs = {}
