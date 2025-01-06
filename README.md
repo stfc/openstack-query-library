@@ -59,3 +59,27 @@ It will address the following issues:
 
 
 # Installation
+## Download and install the project
+To install it, follow these instructions
+
+    neo@matrix ~ $ git clone https://github.com/stfc/openstack-query-library.git
+    neo@matrix ~ $ cd openstack-query-library
+    neo@matrix ~ $ python3 -m pip install .
+
+To verify the installation was done successfully:
+
+    neo@matrix ~ $ python3 -m pip list | grep openstackquery
+    openstackquery           0.1.4
+
+## Get credentials
+In order to use the library, you will need your Cloud credentials on your computer. 
+Documentation can be found [here](https://stfc.atlassian.net/wiki/spaces/CLOUDKB/pages/211583200/Python+SDK#Setting-Up-Clouds.yaml)
+
+
+
+
+
+
+
+    
+
