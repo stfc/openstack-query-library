@@ -1,5 +1,23 @@
 # Usage
-The following document contains different ways to use the query library
+The following document contains different ways to use the query library.
+
+The examples assume:
+* you do not have admin privileges for the OpenStack service
+* the name of your Cloud domain is `prod`
+
+You can find the actual Cloud domain name in your `clouds.yaml` file.
+
+If you have admin privileges, the queries can be performed for all projects in OpenStack. For that, just replace the lines
+
+```python
+query.run("prod")
+```
+
+by
+
+```python
+query.run("prod", as_admin=True, all_projects=True)
+```
 
 ## Simple Query
 Find Errored and Shutoff VMs
@@ -16,9 +34,8 @@ query.select("name", "id")
 # Where - define a preset ("any in" = match any value given), a property to apply it to (server status) and value/s to look for (ERROR, SHUTOFF)
 query.where("any_in", "status", values=["ERROR", "SHUTOFF"])
 
-# Run - this will run the query in the "prod" cloud domain and with meta-params as_admin and all_projects.
-# This will run the query as an admin and will find VMs on every available project
-query.run("prod", as_admin=True, all_projects=True)
+# Run - this will run the query in the "prod" cloud domain and will find VMs in your project set in `clouds.yaml`.
+query.run("prod")
 
 # Group By - This will group the results by a property - project_id
 # NOTE: group by property and selected property are completely independent
@@ -47,7 +64,7 @@ query.where("any_in", "status", values=["ERROR", "SHUTOFF"])
 query.where("older_than", "last_updated_date", days=60)
 
 
-query.run("prod", as_admin=True, all_projects=True)
+query.run("prod")
 query.group_by("id")
 print(query.to_string())
 ```
@@ -81,7 +98,7 @@ server_query = user_query.then("SERVER_QUERY", keep_previous_results=True)
 server_query.select("name", "id")
 server_query.where("any_in", "status", values=["ERROR", "SHUTOFF"])
 server_query.where("older_than", "last_updated_date", days=60)
-server_query.run("prod", as_admin=True, all_projects=True)
+server_query.run("prod")
 server_query.group_by("project_id")
 
 # These results will contain VM associated values for user_name and user_email
@@ -109,7 +126,7 @@ server_query = user_query.then("SERVER_QUERY", keep_previous_results=True)
 server_query.select("name", "id")
 server_query.where("any_in", "status", values=["ERROR", "SHUTOFF"])
 server_query.where("older_than", "last_updated_date", days=60)
-server_query.run("prod", as_admin=True, all_projects=True)
+server_query.run("prod")
 
 # We need to get project name by running append_from()
 # append_from() command below is the same as doing the following:
