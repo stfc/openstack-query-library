@@ -5,6 +5,8 @@ a query in a declarative way.
 
 This document describes how to use the SQL-like API to run Openstack Queries
 
+Remember to replace `query.run("openstack-domain", as_admin=True, all_projects=True)` by `query.run("openstack-domain")` if you don't have admin privileges in the OpenStack service. 
+
 ## Querying on Resources
 
 The query library currently supports queries on the following Openstack resources
