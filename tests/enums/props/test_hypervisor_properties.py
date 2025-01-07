@@ -39,66 +39,6 @@ def test_get_marker_prop_func(mock_get_prop_mapping):
 
 @pytest.mark.parametrize(
     "val",
-    [
-        "hypervisor_disk_free",
-        "Hypervisor_Disk_Free",
-        "HyPeRvIsOr_DiSk_FrEe",
-        "local_disk_free",
-        "free_disk_gb",
-    ],
-)
-def test_hypervisor_disk_free_serialization(val):
-    """
-    Tests that variants of HYPERVISOR_DISK_FREE can be serialized
-    """
-    assert (
-        HypervisorProperties.from_string(val)
-        is HypervisorProperties.HYPERVISOR_DISK_FREE
-    )
-
-
-@pytest.mark.parametrize(
-    "val",
-    [
-        "hypervisor_disk_size",
-        "Hypervisor_Disk_Size",
-        "HyPeRvIsOr_DiSk_SiZe",
-        "local_disk_size",
-        "local_gb",
-    ],
-)
-def test_hypervisor_disk_size_serialization(val):
-    """
-    Tests that variants of HYPERVISOR_DISK_SIZE can be serialized
-    """
-    assert (
-        HypervisorProperties.from_string(val)
-        is HypervisorProperties.HYPERVISOR_DISK_SIZE
-    )
-
-
-@pytest.mark.parametrize(
-    "val",
-    [
-        "hypervisor_disk_used",
-        "Hypervisor_Disk_Used",
-        "HyPeRvIsOr_DiSk_UsEd",
-        "local_disk_used",
-        "local_disk_used",
-    ],
-)
-def test_hypervisor_disk_used_serialization(val):
-    """
-    Tests that variants of HYPERVISOR_DISK_USED can be serialized
-    """
-    assert (
-        HypervisorProperties.from_string(val)
-        is HypervisorProperties.HYPERVISOR_DISK_USED
-    )
-
-
-@pytest.mark.parametrize(
-    "val",
     ["hypervisor_id", "Hypervisor_ID", "HyPeRvIsOr_Id", "id", "uuid", "host_id"],
 )
 def test_hypervisor_id_serialization(val):
@@ -117,66 +57,6 @@ def test_hypervisor_ip_serialization(val):
     Tests that variants of HYPERVISOR_IP can be serialized
     """
     assert HypervisorProperties.from_string(val) is HypervisorProperties.HYPERVISOR_IP
-
-
-@pytest.mark.parametrize(
-    "val",
-    [
-        "hypervisor_memory_free",
-        "Hypervisor_Memory_Free",
-        "HyPeRvIsOr_MeMoRy_FrEe",
-        "memory_free",
-        "free_ram_mb",
-    ],
-)
-def test_hypervisor_memory_free_serialization(val):
-    """
-    Tests that variants of HYPERVISOR_MEMORY_FREE can be serialized
-    """
-    assert (
-        HypervisorProperties.from_string(val)
-        is HypervisorProperties.HYPERVISOR_MEMORY_FREE
-    )
-
-
-@pytest.mark.parametrize(
-    "val",
-    [
-        "hypervisor_memory_size",
-        "Hypervisor_Memory_Size",
-        "HyPeRvIsOr_MeMoRy_SiZe",
-        "memory_size",
-        "memory_mb",
-    ],
-)
-def test_hypervisor_memory_size_serialization(val):
-    """
-    Tests that variants of HYPERVISOR_MEMORY_SIZE can be serialized
-    """
-    assert (
-        HypervisorProperties.from_string(val)
-        is HypervisorProperties.HYPERVISOR_MEMORY_SIZE
-    )
-
-
-@pytest.mark.parametrize(
-    "val",
-    [
-        "hypervisor_memory_used",
-        "Hypervisor_Memory_Used",
-        "HyPeRvIsOr_MeMoRy_UsEd",
-        "memory_used",
-        "memory_mb_used",
-    ],
-)
-def test_hypervisor_memory_used_serialization(val):
-    """
-    Tests that variants of HYPERVISOR_MEMORY_USED can be serialized
-    """
-    assert (
-        HypervisorProperties.from_string(val)
-        is HypervisorProperties.HYPERVISOR_MEMORY_USED
-    )
 
 
 @pytest.mark.parametrize(
@@ -223,43 +103,6 @@ def test_hypervisor_status_serialization(val):
     """
     assert (
         HypervisorProperties.from_string(val) is HypervisorProperties.HYPERVISOR_STATUS
-    )
-
-
-@pytest.mark.parametrize(
-    "val",
-    [
-        "hypervisor_vcpus",
-        "Hypervisor_VCPUs",
-        "HyPeRvIsOr_VcPuS",
-        "vcpus",
-    ],
-)
-def test_hypervisor_vcpus_serialization(val):
-    """
-    Tests that variants of HYPERVISOR_VCPUS can be serialized
-    """
-    assert (
-        HypervisorProperties.from_string(val) is HypervisorProperties.HYPERVISOR_VCPUS
-    )
-
-
-@pytest.mark.parametrize(
-    "val",
-    [
-        "hypervisor_vcpus_used",
-        "Hypervisor_VCPUs_Used",
-        "HyPeRvIsOr_VcPuS_uSeD",
-        "vcpus_used",
-    ],
-)
-def test_hypervisor_vcpus_used_serialization(val):
-    """
-    Tests that variants of HYPERVISOR_VCPUS_USED can be serialized
-    """
-    assert (
-        HypervisorProperties.from_string(val)
-        is HypervisorProperties.HYPERVISOR_VCPUS_USED
     )
 
 

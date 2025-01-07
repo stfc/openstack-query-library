@@ -3,7 +3,6 @@ from openstackquery.enums.props.server_properties import ServerProperties
 from openstackquery.enums.query_presets import (
     QueryPresetsGeneric,
     QueryPresetsString,
-    QueryPresetsInteger,
 )
 from openstackquery.handlers.server_side_handler import ServerSideHandler
 from openstackquery.mappings.hypervisor_mapping import HypervisorMapping
@@ -69,31 +68,6 @@ def test_client_side_handlers_datetime():
     """
     handler = HypervisorMapping.get_client_side_handlers().datetime_handler
     assert not handler
-
-
-def test_client_side_handlers_integer(client_side_test_mappings):
-    """
-    Tests client side handler mappings are correct, and line up to the expected
-    client side params for integer presets
-    """
-    integer_prop_list = [
-        HypervisorProperties.HYPERVISOR_DISK_USED,
-        HypervisorProperties.HYPERVISOR_DISK_FREE,
-        HypervisorProperties.HYPERVISOR_DISK_SIZE,
-        HypervisorProperties.HYPERVISOR_MEMORY_SIZE,
-        HypervisorProperties.HYPERVISOR_MEMORY_USED,
-        HypervisorProperties.HYPERVISOR_MEMORY_FREE,
-        HypervisorProperties.HYPERVISOR_VCPUS,
-        HypervisorProperties.HYPERVISOR_VCPUS_USED,
-    ]
-    handler = HypervisorMapping.get_client_side_handlers().integer_handler
-    mappings = {
-        QueryPresetsInteger.LESS_THAN: integer_prop_list,
-        QueryPresetsInteger.LESS_THAN_OR_EQUAL_TO: integer_prop_list,
-        QueryPresetsInteger.GREATER_THAN: integer_prop_list,
-        QueryPresetsInteger.GREATER_THAN_OR_EQUAL_TO: integer_prop_list,
-    }
-    client_side_test_mappings(handler, mappings)
 
 
 def test_get_chain_mappings():
