@@ -1,0 +1,62 @@
+$ ./cli.py
+Welcome to the OpenStack interactive shell.
+Type 'help' or '?' to list commands.
+
+(openstack) ?
+
+Documented commands (type help <topic>):
+========================================
+help  q  quit  run  set
+
+(openstack) ? set
+
+        Set a resource or set properties for the currently selected resource.
+
+        Usage:
+          set resource <servers|users|projects|flavors|hypervisors>
+          set properties <comma_separated_list_of_properties>
+          set domain
+
+(openstack) ? set resource
+Usage:
+  set resource <servers|users|projects|flavors|hypervisors>
+
+Description:
+  - Selects the type of resource you want to work with.
+
+(openstack) ? set properties
+You must set a resource first before setting properties.
+
+Usage:
+  set properties <prop1, prop2, ...>
+
+Description:
+  - Sets properties on the currently selected resource.
+  - Properties must be valid for that resource.
+  - Comma-separated, whitespace is ignored.
+
+(openstack) set resource servers
+Resource set to servers.
+(openstack) ? set properties
+Valid properties for the current resource:
+  flavor_id [type: string] - The ID of the Flavor the Server is using
+  hypervisor_name [type: string] - Name of the Hypervisor
+  image_id [type: string] - The ID of the Image the Server is using
+  project_id [type: string] - The ID of the Project
+  created_at [type: string] - Timestamp of creation.
+  description [type: string] - User-provided server description.
+  desc [type: string] - User-provided server description.
+  id [type: string] - Unique ID assigned to the server.
+  uuid [type: string] - Unique ID assigned to the server.
+  updated_at [type: string] - Last updated timestamp.
+  vm_name [type: string] - User-provided name for the server.
+  name [type: string] - User-provided name for the server.
+  vm_status [type: string] - State of this server.
+  status [type: string] - State of this server.
+  user_id [type: string] - ID of the owner of the server.
+  ips [type: string] - IP addresses associated with the server.
+  vm_ips [type: string] - IP addresses associated with the server.
+  server_ips [type: string] - IP addresses associated with the server.
+(openstack) q
+Quitting the OpenStack shell...
+

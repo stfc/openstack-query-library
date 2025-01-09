@@ -1,0 +1,42 @@
+$ ./cli.py
+Welcome to the OpenStack interactive shell.
+Type 'help' or '?' to list commands.
+
+(openstack) set resource servers
+Resource set to servers.
+(openstack) set properties name, id
+openstackquery.api.query_api - DEBUG - selected props are now: ['SERVER_NAME', 'SERVER_ID']
+Properties set to: name, id
+(openstack) set domain openstack
+Domain set to: openstack
+(openstack) run
+openstackquery.query_blocks.query_executor - DEBUG - openstack connection established - using cloud account 'openstack'
+openstackquery.runners.server_runner - WARNING - Query will only work on the scoped project id: ce3c1ed2fb19421e9bf0291a14e13256
+openstackquery.runners.runner_utils - DEBUG - running conn.identity.find_project(ce3c1ed2fb19421e9bf0291a14e13256, ignore_missing=False)
+openstackquery.query_blocks.query_executor - DEBUG - running query 1 / 1
+openstackquery.runners.server_runner - DEBUG - running query on 1 projects
+openstackquery.runners.server_runner - DEBUG - running query on project 1 / 1 (id: ce3c1ed2fb19421e9bf0291a14e13256)
+openstackquery.runners.server_runner - DEBUG - running openstacksdk command conn.compute.servers (project_id=ce3c1ed2fb19421e9bf0291a14e13256)
+openstackquery.runners.runner_utils - DEBUG - starting page loop, completed 1 loops
+openstackquery.runners.runner_utils - DEBUG - page loop terminated
+openstackquery.query_blocks.query_executor - INFO - Query Complete! Found 7 items. Time elapsed: 2.1897 seconds
++----------------------------------------+--------------------------------------+
+| server_name                            | server_id                            |
++========================================+======================================+
+| Gitlab CI CD Pipeline Image Builder VM | 7e9a1ee7-938f-480a-a973-5611876b9910 |
++----------------------------------------+--------------------------------------+
+| FTS-official-rpm-test                  | f9335de8-0f69-4724-b7f4-27263e972417 |
++----------------------------------------+--------------------------------------+
+| test_openstack_python                  | 009eedc7-d69b-4796-86e5-a3da0f7bbb40 |
++----------------------------------------+--------------------------------------+
+| test_openstack_python                  | c596d083-4ecf-42ba-9105-60dfbbd7d008 |
++----------------------------------------+--------------------------------------+
+| fts-rpm-build-rocky9                   | 9acd6c69-64b0-4d01-9195-73a066a9688a |
++----------------------------------------+--------------------------------------+
+| test fts rocky 9                       | 84dad552-245f-423d-9dca-5ab620c8fc39 |
++----------------------------------------+--------------------------------------+
+| docker_build_sandbox                   | 33971f2f-5af7-4538-b82c-be59901686e5 |
++----------------------------------------+--------------------------------------+
+
+
+Query run successfully.
