@@ -441,6 +441,16 @@ class OpenStackShell(cmd.Cmd):
         self.prompt = f'{self.query.resource_type}/{self.query.project}/> '
 
     def do_select(self, args):
+        """
+        Use a SQL-like nomenclature to get some properties. 
+        It replaces the following commands:
+            set properties 
+            set project 
+            run
+
+        Usage:
+            select <properties> from <project>
+        """
 
         # Split by the keyword " from " first, since it must appear in all valid commands
         from_parts = args.split(" from ", 1)
