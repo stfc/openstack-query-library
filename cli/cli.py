@@ -17,11 +17,12 @@ class QueryBaseCLI:
     valid_properties = []
 
     def __init__(self):
+        self.resource_type = None
         # Initialize an empty list of properties
         self.properties = []
         # Initialize a placeholder for the query object (to be set by subclasses)
         self.query = None
-        self.domain = None
+        self.project = None
 
     def validate_properties(self, property_list):
         """
@@ -57,7 +58,7 @@ class QueryBaseCLI:
         """
         executes the actual query
         """
-        self.query.run(self.domain)
+        self.query.run(self.project)
         print(self.query.to_string()) # FIXME !! This should be in a separate method
 
 
@@ -91,6 +92,7 @@ class ServerQueryCLI(QueryBaseCLI):
         # Initialize the base class
         super().__init__()
         # Create a ServerQuery object for performing server queries
+        self.resource_type = "servers"
         self.query = ServerQuery()
 
 
@@ -100,7 +102,7 @@ class UserQueryCLI(QueryBaseCLI):
     """
     # Define valid properties for user queries
     valid_properties = [
-        {"name": "domain_id", "return type": "string", "description": "The ID for the domain which owns the user"},
+        {"name": "project_id", "return type": "string", "description": "The ID for the project which owns the user"},
         {"name": "description", "return type": "string", "description": "The description of this user."},
         {"name": "desc", "return type": "string", "description": "The description of this user."},
         {"name": "email", "return type": "string", "description": "The email address of this user."},
@@ -109,14 +111,15 @@ class UserQueryCLI(QueryBaseCLI):
         {"name": "user_email_address", "return type": "string", "description": "The email address of this user."},
         {"name": "id", "return type": "string", "description": "Unique ID assigned to the user."},
         {"name": "uuid", "return type": "string", "description": "Unique ID assigned to the user."},
-        {"name": "name", "return type": "string", "description": "Unique username within the domain."},
-        {"name": "username", "return type": "string", "description": "Unique username within the domain."},
+        {"name": "name", "return type": "string", "description": "Unique username within the project."},
+        {"name": "username", "return type": "string", "description": "Unique username within the project."},
     ]
 
     def __init__(self):
         # Initialize the base class
         super().__init__()
         # Create a UserQuery object for performing user queries
+        self.resource_type = "users"
         self.query = UserQuery()
 
 
@@ -128,12 +131,12 @@ class ProjectQueryCLI(QueryBaseCLI):
     valid_properties = [
         {"name": "description", "return type": "string", "description": "Project description."},
         {"name": "desc", "return type": "string", "description": "Project description."},
-        {"name": "domain_id", "return type": "string", "description": "ID of the domain owning the project."},
+        {"name": "project_id", "return type": "string", "description": "ID of the project owning the project."},
         {"name": "project_id", "return type": "string", "description": "Unique ID assigned to the project."},
         {
-            "name": "is_domain",
+            "name": "is_project",
             "return type": "boolean",
-            "description": "Indicates whether the project also acts as a domain.",
+            "description": "Indicates whether the project also acts as a project.",
         },
         {
             "name": "is_enabled",
@@ -148,6 +151,7 @@ class ProjectQueryCLI(QueryBaseCLI):
         # Initialize the base class
         super().__init__()
         # Create a ProjectQuery object for performing project queries
+        self.resource_type = "projects"
         self.query = ProjectQuery()
 
 
@@ -189,6 +193,7 @@ class FlavorQueryCLI(QueryBaseCLI):
         # Initialize the base class
         super().__init__()
         # Create a FlavorQuery object for performing flavor queries
+        self.resource_type = "flavors"
         self.query = FlavorQuery()
 
 
@@ -232,6 +237,7 @@ class HypervisorQueryCLI(QueryBaseCLI):
         # Initialize the base class
         super().__init__()
         # Create a HypervisorQuery object for performing hypervisor queries
+        self.resource_type = "hypervisors"
         self.query = HypervisorQuery()
 
 # -----------------------------------------------------------------------
@@ -243,25 +249,31 @@ class OpenStackShell(cmd.Cmd):
         "Welcome to the OpenStack interactive shell.\n"
         "Type 'help' or '?' to list commands.\n"
     )
-    # Prompt displayed for each user input
-    prompt = "(openstack) "
 
     def __init__(self):
         # Initialize the cmd.Cmd base class
         super().__init__()
         # Store an active resource object (e.g., ServerQueryCLI()) when set
+        self.prompt = "> "
         self.query = None
+
+    def loop(self):
+        try:
+            self.cmdloop()
+        except Exception as ex:
+            print(ex)
+            self.cmdloop()
 
 
     def do_help(self, arg):
         """
-        Displays help for commands and includes usage for setting domain.
+        Displays help for commands and includes usage for setting project.
         Usage:
           help               - Show general help.
           help set           - Show help for 'set' command usage.
           help set properties
           help set resource
-          help set domain
+          help set project
           help run              - Show help for 'run' command usage.
         """
         # If no argument is provided, show default help
@@ -271,14 +283,14 @@ class OpenStackShell(cmd.Cmd):
             # Convert user input to lower case for easy comparison
             command_help = arg.strip().lower()
 
-            # If the user specifically wants help with "set domain", show usage info
-            if command_help == "set domain":
+            # If the user specifically wants help with "set project", show usage info
+            if command_help == "set project":
                 print(textwrap.dedent("""\
                     Usage:
-                      set domain <domain_value>
+                      set project <project_value>
 
                     Description:
-                      - Sets a domain value for the currently selected resource.
+                      - Sets a project value for the currently selected resource.
                       - You must have a resource selected first.
                 """))
             # If the user wants help on "set properties"
@@ -319,9 +331,9 @@ class OpenStackShell(cmd.Cmd):
                       run
 
                     Description:
-                      - Executes the query based on previously set resource and domain.
-                      - Must be called after 'set resource' and 'set domain'.
-                      - If resource or domain is not set, an error is shown.
+                      - Executes the query based on previously set resource and project.
+                      - Must be called after 'set resource' and 'set project'.
+                      - If resource or project is not set, an error is shown.
                 """))
 
             else:
@@ -336,7 +348,7 @@ class OpenStackShell(cmd.Cmd):
         Usage:
           set resource <servers|users|projects|flavors|hypervisors>
           set properties <comma_separated_list_of_properties>
-          set domain
+          set project
         """
         # Split arguments on the first space
         args = arg.split(None, 1)
@@ -354,8 +366,8 @@ class OpenStackShell(cmd.Cmd):
             self._set_resource(options)
         elif mode == "properties":
             self._set_properties(options)
-        elif mode == "domain":
-            self._set_domain(options)
+        elif mode == "project":
+            self._set_project(options)
         else:
             print("Unknown set command. Try: help set")
 
@@ -381,6 +393,7 @@ class OpenStackShell(cmd.Cmd):
         # Instantiate the appropriate class and assign it
         self.query = resource_map[resource_name]()
         print(f"Resource set to {resource_name}.")
+        self.prompt = f'{self.query.resource_type}/> '
 
     def _set_properties(self, props_str):
         # If no resource is currently set, inform the user
@@ -407,39 +420,57 @@ class OpenStackShell(cmd.Cmd):
             print("ERROR:", e)
 
 
-    def _set_domain(self, domain_str):
+    def _set_project(self, project_str):
         """
-        Sets the domain for the currently selected resource by updating
-        the `domain` attribute in the QueryBaseCLI instance.
+        Sets the project for the currently selected resource by updating
+        the `project` attribute in the QueryBaseCLI instance.
 
-        :param domain_str: The domain value to set.
+        :param project_str: The project value to set.
         """
         # Check if a resource has been set first
         if self.query is None:
             # If no resource is selected, print an error and return
-            print("ERROR: No resource set. Please set a resource before setting domain.")
+            print("ERROR: No resource set. Please set a resource before setting project.")
             return
 
-        # Assign the domain value to the current query object's domain attribute
-        self.query.domain = domain_str
+        # Assign the project value to the current query object's project attribute
+        self.query.project = project_str
 
-        # Confirm that the domain has been set
-        print(f"Domain set to: {domain_str}")
+        # Confirm that the project has been set
+        print(f"Project set to: {project_str}")
+        self.prompt = f'{self.query.resource_type}/{self.query.project}/> '
 
+    def do_select(self, args):
+
+        # Split by the keyword " from " first, since it must appear in all valid commands
+        from_parts = args.split(" from ", 1)
+        # If we fail to get two parts, it's invalid because "from" is mandatory
+        if len(from_parts) < 2:
+            print("ERROR: Missing 'from' clause. Usage: select <properties> from <project>")
+            return
+
+        # The first part of from_parts is the <properties>
+        properties = from_parts[0].strip()
+        # The second part is the remainder (which may contain project, where, group)
+        project = from_parts[1].strip()
+
+        self._set_properties(properties)
+        self._set_project(project)
+        self.do_run(args)
 
     def do_run(self, arg):
         """
         Executes the 'run' command, which triggers self.query.run() if
-        both resource and domain have been set.
+        both resource and project have been set.
         """
         # If no resource has been selected, print an error
         if self.query is None:
             print("ERROR: No resource set. Please run 'set resource' before 'run'.")
             return
 
-        # If the domain attribute is not set in the query object, print an error
-        if not getattr(self.query, "domain", None):
-            print("ERROR: No domain set. Please run 'set domain' before 'run'.")
+        # If the project attribute is not set in the query object, print an error
+        if not getattr(self.query, "project", None):
+            print("ERROR: No project set. Please run 'set project' before 'run'.")
             return
 
         # Otherwise, execute the query's run method
@@ -451,7 +482,7 @@ class OpenStackShell(cmd.Cmd):
 #    def do_test(self, arg):
 #        print("testing")
 #        print(self.query.properties)
-#        print(self.query.domain)
+#        print(self.query.project)
 
     def do_quit(self, arg):
         """Quit the shell."""
@@ -464,5 +495,6 @@ class OpenStackShell(cmd.Cmd):
 
 
 if __name__ == '__main__':
-    OpenStackShell().cmdloop()
+    #OpenStackShell().cmdloop()
+    OpenStackShell().loop()
 
