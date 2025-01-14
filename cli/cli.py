@@ -493,11 +493,11 @@ class OpenStackShell(cmd.Cmd):
         self.query.run()
         print("Query run successfully.")
 
-    def do_list(self, arg):
-        print("foo")
-
-    def help_list(self):
-        print("This is the help for list")
+#    def do_list(self, arg):
+#        print("foo")
+#
+#    def help_list(self):
+#        print("This is the help for list")
 
     def do_quit(self, arg):
         """Quit the shell."""
@@ -514,6 +514,6 @@ class OpenStackShell(cmd.Cmd):
         return
 
 if __name__ == '__main__':
-    OpenStackShell().cmdloop()
-    #OpenStackShell().loop()
+    #OpenStackShell().cmdloop()
+    OpenStackShell().loop()
 
