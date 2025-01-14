@@ -23,6 +23,7 @@ class QueryBaseCLI:
         # Initialize a placeholder for the query object (to be set by subclasses)
         self.query = None
         self.project = None
+        self.group_by = None
 
     def validate_properties(self, property_list):
         """
@@ -51,14 +52,19 @@ class QueryBaseCLI:
         Sets the validated properties.
         """
         # Assign the property list to the object's properties
-        self.properties = property_list
-        self.query.select(*self.properties)
+        if property_list == ['*']:
+            self.query.select_all()
+        else:
+            self.properties = property_list
+            self.query.select(*self.properties)
 
     def run(self):
         """
         executes the actual query
         """
         self.query.run(self.project)
+        if self.group_by:
+            self.query.group_by(self.group_by)
         print(self.query.to_string()) # FIXME !! This should be in a separate method
 
 
@@ -86,6 +92,7 @@ class ServerQueryCLI(QueryBaseCLI):
         {"name": "ips", "return type": "string", "description": "IP addresses associated with the server."},
         {"name": "vm_ips", "return type": "string", "description": "IP addresses associated with the server."},
         {"name": "server_ips", "return type": "string", "description": "IP addresses associated with the server."},
+        {"name": "*", "return type": "string", "description": "returns everything"}
     ]
 
     def __init__(self):
@@ -113,6 +120,7 @@ class UserQueryCLI(QueryBaseCLI):
         {"name": "uuid", "return type": "string", "description": "Unique ID assigned to the user."},
         {"name": "name", "return type": "string", "description": "Unique username within the project."},
         {"name": "username", "return type": "string", "description": "Unique username within the project."},
+        {"name": "*", "return type": "string", "description": "returns everything"}
     ]
 
     def __init__(self):
@@ -133,18 +141,11 @@ class ProjectQueryCLI(QueryBaseCLI):
         {"name": "desc", "return type": "string", "description": "Project description."},
         {"name": "project_id", "return type": "string", "description": "ID of the project owning the project."},
         {"name": "project_id", "return type": "string", "description": "Unique ID assigned to the project."},
-        {
-            "name": "is_project",
-            "return type": "boolean",
-            "description": "Indicates whether the project also acts as a project.",
-        },
-        {
-            "name": "is_enabled",
-            "return type": "boolean",
-            "description": "Indicates whether users can authorize against this project.",
-        },
+        {"name": "is_project", "return type": "boolean", "description": "Indicates whether the project also acts as a project." },
+        {"name": "is_enabled", "return type": "boolean", "description": "Indicates whether users can authorize against this project."},
         {"name": "name", "return type": "string", "description": "Name of the project."},
         {"name": "parent_id", "return type": "string", "description": "ID of the parent project."},
+        {"name": "*", "return type": "string", "description": "returns everything"}
     ]
 
     def __init__(self):
@@ -170,16 +171,8 @@ class FlavorQueryCLI(QueryBaseCLI):
         {"name": "ephemeral_disk_size", "return type": "int", "description": "Size of ephemeral disk attached."},
         {"name": "id", "return type": "string", "description": "Unique ID assigned to the flavor."},
         {"name": "uuid", "return type": "string", "description": "Unique ID assigned to the flavor."},
-        {
-            "name": "is_disabled",
-            "return type": "boolean",
-            "description": "True if flavor is disabled, False if not.",
-        },
-        {
-            "name": "is_public",
-            "return type": "boolean",
-            "description": "True if flavor is public, False if not.",
-        },
+        {"name": "is_disabled", "return type": "boolean", "description": "True if flavor is disabled, False if not."},
+        {"name": "is_public", "return type": "boolean", "description": "True if flavor is public, False if not."},
         {"name": "name", "return type": "string", "description": "Name of the flavor."},
         {"name": "ram", "return type": "int", "description": "Amount of RAM (in MB)."},
         {"name": "ram_size", "return type": "int", "description": "Amount of RAM (in MB)."},
@@ -187,6 +180,7 @@ class FlavorQueryCLI(QueryBaseCLI):
         {"name": "swap_size", "return type": "int", "description": "Size of swap partition(s)."},
         {"name": "vcpu", "return type": "int", "description": "Number of virtual CPUs."},
         {"name": "vcpus", "return type": "int", "description": "Number of virtual CPUs."},
+        {"name": "*", "return type": "string", "description": "returns everything"}
     ]
 
     def __init__(self):
@@ -231,6 +225,7 @@ class HypervisorQueryCLI(QueryBaseCLI):
         {"name": "vcpus_used", "return type": "int", "description": "Number of vCPUs in use."},
         {"name": "disabled_reason", "return type": "string", "description": "Reason the hypervisor is disabled, if any."},
         {"name": "uptime", "return type": "string", "description": "The hypervisor's total uptime info."},
+        {"name": "*", "return type": "string", "description": "returns everything"}
     ]
 
     def __init__(self):
@@ -440,33 +435,43 @@ class OpenStackShell(cmd.Cmd):
         print(f"Project set to: {project_str}")
         self.prompt = f'{self.query.resource_type}/{self.query.project}/> '
 
-    def do_select(self, args):
+    def do_group_by(self, arg):
+        self._group_by(arg)
+
+    def _group_by(self, arg):
+        self.query.group_by = arg
+
+   
+    def do_select(self, arg):
         """
-        Use a SQL-like nomenclature to get some properties. 
-        It replaces the following commands:
-            set properties 
-            set project 
-            run
-
-        Usage:
-            select <properties> from <project>
+        Handles the 'select' command with a simplified SQL-like syntax using regular expressions.
+        Possible formats:
+          select <properties> from <project>
+          select <properties> from <project> where <condition>
+          select <properties> from <project> group <rule>
+          select <properties> from <project> where <condition> group <rule>
         """
+        properties = None
+        project = None
+        where_rule = None
+        group_by_rule = None
 
-        # Split by the keyword " from " first, since it must appear in all valid commands
-        from_parts = args.split(" from ", 1)
-        # If we fail to get two parts, it's invalid because "from" is mandatory
-        if len(from_parts) < 2:
-            print("ERROR: Missing 'from' clause. Usage: select <properties> from <project>")
-            return
+        parts = arg.split(' group_by ')
+        if len(parts) == 2:
+            group_by_rule = parts[1]
+        arg = parts[0]
 
-        # The first part of from_parts is the <properties>
-        properties = from_parts[0].strip()
-        # The second part is the remainder (which may contain project, where, group)
-        project = from_parts[1].strip()
+        parts = arg.split(' from ')
+        properties = parts[0]
+        project = parts[1]
 
         self._set_properties(properties)
         self._set_project(project)
-        self.do_run(args)
+        if group_by_rule:
+            self._group_by(group_by_rule)
+        self.do_run(arg)
+
+
 
     def do_run(self, arg):
         """
@@ -488,11 +493,11 @@ class OpenStackShell(cmd.Cmd):
         self.query.run()
         print("Query run successfully.")
 
+    def do_list(self, arg):
+        print("foo")
 
-#    def do_test(self, arg):
-#        print("testing")
-#        print(self.query.properties)
-#        print(self.query.project)
+    def help_list(self):
+        print("This is the help for list")
 
     def do_quit(self, arg):
         """Quit the shell."""
@@ -503,8 +508,12 @@ class OpenStackShell(cmd.Cmd):
         """Alias for quit."""
         return self.do_quit(arg)
 
+    def emptyline(self):
+        # Override the emptyline method
+        # Simply return without doing anything
+        return
 
 if __name__ == '__main__':
-    #OpenStackShell().cmdloop()
-    OpenStackShell().loop()
+    OpenStackShell().cmdloop()
+    #OpenStackShell().loop()
 
