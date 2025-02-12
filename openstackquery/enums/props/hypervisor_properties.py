@@ -5,6 +5,7 @@ from openstackquery.enums.props.prop_enum import PropEnum, PropFunc
 from openstackquery.exceptions.query_property_mapping_error import (
     QueryPropertyMappingError,
 )
+from openstackquery.time_utils import TimeUtils
 
 
 class HypervisorProperties(PropEnum):
@@ -112,8 +113,8 @@ class HypervisorProperties(PropEnum):
             HypervisorProperties.HYPERVISOR_DISABLED_REASON: lambda a: a["service"][
                 "disabled_reason"
             ],
-            HypervisorProperties.HYPERVISOR_UPTIME_DAYS: lambda a: int(
-                a["uptime"].strip().split(" ")[2]
+            HypervisorProperties.HYPERVISOR_UPTIME_DAYS: lambda a: TimeUtils.extract_uptime(
+                a["uptime"]
             ),
         }
         try:

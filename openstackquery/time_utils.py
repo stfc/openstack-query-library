@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import re
 
 
 class TimeUtils:
@@ -47,3 +48,25 @@ class TimeUtils:
         return datetime.fromtimestamp(current_time - time_in_seconds).strftime(
             "%Y-%m-%dT%H:%M:%SZ"
         )
+
+    @staticmethod
+    def extract_uptime(uptime_string: str):
+        # Regular expression to match the uptime part
+        uptime_pattern = re.compile(r"up\s+((\d+ days?,\s*)?(\d+:\d+))")
+        try:
+            match = uptime_pattern.search(uptime_string)
+        except TypeError:
+            return None
+        if match:
+            uptime_string = match.group(1)
+            days = 0
+            if "days" in uptime_string:
+                days_part, time_part = uptime_string.split(" days, ")
+                days += int(days_part)
+            else:
+                time_part = uptime_string
+
+            hours, minutes = map(int, time_part.split(":"))
+            days += hours / 24 + minutes / 1440
+            return round(days, 2)
+        return None
