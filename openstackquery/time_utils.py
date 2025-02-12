@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import re
+from typing import Optional
 
 
 class TimeUtils:
@@ -50,8 +51,16 @@ class TimeUtils:
         )
 
     @staticmethod
-    def extract_uptime(uptime_string: str):
-        # Regular expression to match the uptime part
+    def extract_uptime(uptime_string: str) -> Optional[float]:
+        """
+        Extracts number of days uptime from the string returned by the uptime
+        command
+
+        :param uptime_string: String returned by the uptime command
+        :type uptime_string: str
+        :return: Number of days uptime if found in string
+        :rtype: float | None
+        """
         uptime_pattern = re.compile(r"up\s+((\d+ days?,\s*)?(\d+:\d+))")
         try:
             match = uptime_pattern.search(uptime_string)
