@@ -112,3 +112,13 @@ def test_extract_uptime_less_than_day():
     res = TimeUtils.extract_uptime(mock_string)
 
     assert res == 0.25
+
+
+def test_extract_uptime_is_one_day():
+    """
+    Test extraction when less than a day uptime
+    """
+    mock_string = "17:13:49 up 1 day,  7:03,  0 users,  load average: 0.00, 0.01, 0.00"
+    res = TimeUtils.extract_uptime(mock_string)
+
+    assert res == 1.29
