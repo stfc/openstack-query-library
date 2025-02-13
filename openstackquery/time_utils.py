@@ -72,6 +72,9 @@ class TimeUtils:
             if "days" in uptime_string:
                 days_part, time_part = uptime_string.split(" days, ")
                 days += int(days_part)
+            elif "day" in uptime_string:
+                days_part, time_part = uptime_string.split(" day, ")
+                days += int(days_part)
             else:
                 time_part = uptime_string
 
