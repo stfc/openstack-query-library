@@ -70,6 +70,9 @@ def test_convert_to_timestamp():
 
 
 def test_extract_uptime():
+    """
+    Test successful extraction of number of days uptime
+    """
     mock_string = (
         "17:13:49 up 394 days,  7:03,  0 users,  load average: 1.90, 1.70, 1.95"
     )
@@ -80,6 +83,9 @@ def test_extract_uptime():
 
 
 def test_extract_uptime_not_string():
+    """
+    Test extraction returns None when not a string
+    """
     mock_not_string = None
 
     res = TimeUtils.extract_uptime(mock_not_string)
@@ -88,6 +94,9 @@ def test_extract_uptime_not_string():
 
 
 def test_extract_uptime_empty_string():
+    """
+    Test extraction from empty string returns None
+    """
     mock_string = " "
 
     res = TimeUtils.extract_uptime(mock_string)
@@ -96,6 +105,9 @@ def test_extract_uptime_empty_string():
 
 
 def test_extract_uptime_less_than_day():
+    """
+    Test extraction when less than a day uptime
+    """
     mock_string = "17:13:49 up  5:57,  0 users,  load average: 0.00, 0.01, 0.00"
     res = TimeUtils.extract_uptime(mock_string)
 
