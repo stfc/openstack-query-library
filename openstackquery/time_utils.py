@@ -69,10 +69,12 @@ class TimeUtils:
         if match:
             uptime_string = match.group(1)
             days = 0
-            days_part, time_part = uptime_string.split(" day" + ("s" if "days" in uptime_string else "") + ", ")
-            days += int(days_part)
-            else:
-                time_part = uptime_string
+            time_part = uptime_string
+            if "day" in uptime_string:
+                days_part, time_part = uptime_string.split(
+                    " day" + ("s" if "days" in uptime_string else "") + ", "
+                )
+                days += int(days_part)
 
             hours, minutes = map(int, time_part.split(":"))
             days += hours / 24 + minutes / 1440
