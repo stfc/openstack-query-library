@@ -9,6 +9,30 @@ from openstackquery.exceptions.query_property_mapping_error import (
 from tests.mocks.mocked_props import MockProperties
 
 
+@pytest.mark.parametrize(
+    "expected_prop,test_values",
+    [
+        (
+            ProjectProperties.PROJECT_DESCRIPTION,
+            ["project_description", "description", "desc"],
+        ),
+        (ProjectProperties.PROJECT_DOMAIN_ID, ["project_domain_id", "domain_id"]),
+        (ProjectProperties.PROJECT_ID, ["project_id", "id", "uuid"]),
+        (ProjectProperties.PROJECT_IS_DOMAIN, ["project_is_domain", "is_domain"]),
+        (
+            ProjectProperties.PROJECT_IS_ENABLED,
+            ["project_is_enabled", "is_enabled", "ram"],
+        ),
+        (ProjectProperties.PROJECT_NAME, ["project_name", "name"]),
+        (ProjectProperties.PROJECT_PARENT_ID, ["project_parent_id", "parent_id"]),
+    ],
+)
+def test_property_serialization(expected_prop, test_values, property_variant_generator):
+    """Test all property name formats can be correctly serialized."""
+    for variant in property_variant_generator(test_values):
+        assert ProjectProperties.from_string(variant) is expected_prop
+
+
 @pytest.mark.parametrize("prop", list(ProjectProperties))
 def test_get_prop_mapping(prop):
     """
@@ -35,81 +59,3 @@ def test_get_marker_prop_func(mock_get_prop_mapping):
     val = ProjectProperties.get_marker_prop_func()
     mock_get_prop_mapping.assert_called_once_with(ProjectProperties.PROJECT_ID)
     assert val == mock_get_prop_mapping.return_value
-
-
-@pytest.mark.parametrize(
-    "val",
-    [
-        "project_description",
-        "Project_Description",
-        "PrOjEcT_DeScRiPtIoN",
-        "description",
-        "desc",
-    ],
-)
-def test_project_description_serialization(val):
-    """
-    Tests that variants of PROJECT_DESCRIPTION can be serialized
-    """
-    assert ProjectProperties.from_string(val) is ProjectProperties.PROJECT_DESCRIPTION
-
-
-@pytest.mark.parametrize(
-    "val", ["project_domain_id", "Project_Domain_Id", "PrOjEcT_DoMaIn_Id", "domain_id"]
-)
-def test_project_domain_id_serialization(val):
-    """
-    Tests that variants of PROJECT_DOMAIN_ID can be serialized
-    """
-    assert ProjectProperties.from_string(val) is ProjectProperties.PROJECT_DOMAIN_ID
-
-
-@pytest.mark.parametrize(
-    "val", ["project_id", "Project_Id", "PrOjEcT_Id", "id", "uuid"]
-)
-def test_project_id_serialization(val):
-    """
-    Tests that variants of PROJECT_ID can be serialized
-    """
-    assert ProjectProperties.from_string(val) is ProjectProperties.PROJECT_ID
-
-
-@pytest.mark.parametrize(
-    "val", ["project_is_domain", "Project_Is_Domain", "PrOjEcT_Is_DoMaIn", "is_domain"]
-)
-def test_project_is_domain_serialization(val):
-    """
-    Tests that variants of PROJECT_IS_DOMAIN can be serialized
-    """
-    assert ProjectProperties.from_string(val) is ProjectProperties.PROJECT_IS_DOMAIN
-
-
-@pytest.mark.parametrize(
-    "val",
-    ["project_is_enabled", "Project_Is_Enabled", "PrOjEcT_Is_EnAbLeD", "is_enabled"],
-)
-def test_project_is_enabled_serialization(val):
-    """
-    Tests that variants of PROJECT_IS_ENABLED can be serialized
-    """
-    assert ProjectProperties.from_string(val) is ProjectProperties.PROJECT_IS_ENABLED
-
-
-@pytest.mark.parametrize(
-    "val", ["project_name", "Project_Name", "PrOjEcT_NaMe", "name"]
-)
-def test_project_name_serialization(val):
-    """
-    Tests that variants of PROJECT_NAME can be serialized
-    """
-    assert ProjectProperties.from_string(val) is ProjectProperties.PROJECT_NAME
-
-
-@pytest.mark.parametrize(
-    "val", ["project_parent_id", "Project_Parent_Id", "PrOjEcT_PaReNt_Id", "parent_id"]
-)
-def test_project_parent_id_serialization(val):
-    """
-    Tests that variants of PROJECT_NAME can be serialized
-    """
-    assert ProjectProperties.from_string(val) is ProjectProperties.PROJECT_PARENT_ID
