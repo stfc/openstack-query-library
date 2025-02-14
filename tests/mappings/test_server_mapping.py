@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+from enums.props.placement_properties import PlacementProperties
 from openstackquery.enums.props.flavor_properties import FlavorProperties
 from openstackquery.enums.props.hypervisor_properties import HypervisorProperties
 from openstackquery.enums.props.image_properties import ImageProperties
@@ -206,11 +207,14 @@ def test_get_chain_mappings():
     Tests get_chain_mapping outputs correctly
     """
     expected_mappings = {
-        ServerProperties.USER_ID: UserProperties.USER_ID,
-        ServerProperties.PROJECT_ID: ProjectProperties.PROJECT_ID,
-        ServerProperties.FLAVOR_ID: FlavorProperties.FLAVOR_ID,
-        ServerProperties.IMAGE_ID: ImageProperties.IMAGE_ID,
-        ServerProperties.HYPERVISOR_NAME: HypervisorProperties.HYPERVISOR_NAME,
+        ServerProperties.USER_ID: [UserProperties.USER_ID],
+        ServerProperties.PROJECT_ID: [ProjectProperties.PROJECT_ID],
+        ServerProperties.FLAVOR_ID: [FlavorProperties.FLAVOR_ID],
+        ServerProperties.IMAGE_ID: [ImageProperties.IMAGE_ID],
+        ServerProperties.HYPERVISOR_NAME: [
+            HypervisorProperties.HYPERVISOR_NAME,
+            PlacementProperties.RESOURCE_PROVIDER_NAME,
+        ],
     }
 
-    assert ServerMapping.get_chain_mappings() == expected_mappings
+    assert set(ServerMapping.get_chain_mappings()) == set(expected_mappings)

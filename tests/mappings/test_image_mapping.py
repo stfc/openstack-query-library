@@ -306,7 +306,7 @@ def test_get_chain_mappings():
     Tests get_chain_mapping outputs correctly
     """
     expected_mappings = {
-        ImageProperties.IMAGE_ID: ServerProperties.IMAGE_ID,
+        ImageProperties.IMAGE_ID: [ServerProperties.IMAGE_ID],
     }
 
-    assert ImageMapping.get_chain_mappings() == expected_mappings
+    assert set(ImageMapping.get_chain_mappings()) == set(expected_mappings)

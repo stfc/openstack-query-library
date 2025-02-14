@@ -17,8 +17,8 @@ logger = logging.getLogger(__name__)
 
 class PlacementRunner(RunnerWrapper):
     """
-    Runner class for openstack Hypervisor resource
-    HypervisorRunner encapsulates running any openstacksdk Hypervisor commands
+    Runner class for openstack Placement resource provider
+    PlacementRunner gets HV resource info from Placement API
     """
 
     RESOURCE_TYPE = ResourceProvider

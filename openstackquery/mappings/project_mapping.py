@@ -1,5 +1,6 @@
 from typing import Type
 
+from aliases import QueryChainMappings
 from openstackquery.structs.query_client_side_handlers import QueryClientSideHandlers
 
 from openstackquery.enums.props.project_properties import ProjectProperties
@@ -26,12 +27,12 @@ class ProjectMapping(MappingInterface):
     """
 
     @staticmethod
-    def get_chain_mappings():
+    def get_chain_mappings() -> QueryChainMappings:
         """
         Should return a dictionary containing property pairs mapped to query mappings.
         This is used to define how to chain results from this query to other possible queries
         """
-        return {ProjectProperties.PROJECT_ID: ServerProperties.PROJECT_ID}
+        return {ProjectProperties.PROJECT_ID: [ServerProperties.PROJECT_ID]}
 
     @staticmethod
     def get_runner_mapping() -> Type[ProjectRunner]:

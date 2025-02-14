@@ -9,6 +9,7 @@ from openstackquery.api.query_objects import (
     ProjectQuery,
     ImageQuery,
     HypervisorQuery,
+    PlacementQuery,
     get_common,
 )
 
@@ -97,10 +98,21 @@ def test_image_query(run_query_test_case):
 
 def test_hypervisor_query(run_query_test_case):
     """
-    tests that function ProjectQuery works
-    should call get_common with ProjectMapping
+    tests that function HypervisorQuery works
+    should call get_common with HypervisorMapping
     """
     with patch(
         "openstackquery.api.query_objects.HypervisorMapping"
     ) as mock_project_mapping:
         run_query_test_case(HypervisorQuery, mock_project_mapping)
+
+
+def test_placement_query(run_query_test_case):
+    """
+    tests that function PlacementQuery works
+    should call get_common with PlacementMapping
+    """
+    with patch(
+        "openstackquery.api.query_objects.PlacementMapping"
+    ) as mock_project_mapping:
+        run_query_test_case(PlacementQuery, mock_project_mapping)

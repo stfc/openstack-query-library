@@ -1,5 +1,7 @@
 from typing import Type
 
+from aliases import QueryChainMappings
+from enums.props.placement_properties import PlacementProperties
 from openstackquery.enums.props.hypervisor_properties import HypervisorProperties
 from openstackquery.enums.props.server_properties import ServerProperties
 from openstackquery.enums.query_presets import (
@@ -26,12 +28,17 @@ class HypervisorMapping(MappingInterface):
     """
 
     @staticmethod
-    def get_chain_mappings():
+    def get_chain_mappings() -> QueryChainMappings:
         """
         Should return a dictionary containing property pairs mapped to query mappings.
         This is used to define how to chain results from this query to other possible queries
         """
-        return {HypervisorProperties.HYPERVISOR_NAME: ServerProperties.HYPERVISOR_NAME}
+        return {
+            HypervisorProperties.HYPERVISOR_NAME: [
+                PlacementProperties.RESOURCE_PROVIDER_NAME,
+                ServerProperties.HYPERVISOR_NAME,
+            ]
+        }
 
     @staticmethod
     def get_runner_mapping() -> Type[RunnerWrapper]:

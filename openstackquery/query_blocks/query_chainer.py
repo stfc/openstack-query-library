@@ -1,6 +1,6 @@
 from typing import Tuple, List, Optional, Union, Dict
 
-from openstackquery.aliases import PropValue
+from openstackquery.aliases import PropValue, QueryChainMappings
 from openstackquery.enums.props.prop_enum import PropEnum
 from openstackquery.enums.query_presets import QueryPresetsGeneric
 from openstackquery.enums.query_types import QueryTypes
@@ -12,7 +12,7 @@ class QueryChainer:
     Helper class to handle chaining queries together
     """
 
-    def __init__(self, chain_mappings):
+    def __init__(self, chain_mappings: QueryChainMappings):
         self._chain_mappings = chain_mappings
 
         self._forwarded_values: Optional[Dict[PropValue, List[Dict]]] = None
@@ -38,7 +38,7 @@ class QueryChainer:
         self._forwarded_values = forwarded_values
         self._link_prop = prop
 
-    def get_chaining_props(self) -> List[QueryTypes]:
+    def get_chaining_props(self) -> List[PropEnum]:
         """
         Gets a list of all supported props that can be used to chain to other queries
         """
@@ -59,11 +59,11 @@ class QueryChainer:
         (if mapping exists)
         :param next_query: next Query QueryTypes
         """
-
-        new_query_props = next_query.value.get_prop_mapping()
-        for start_chain_prop, check_prop in self._chain_mappings.items():
-            if check_prop in new_query_props:
-                return start_chain_prop, check_prop
+        target_props = next_query.value.get_prop_mapping()
+        for current_prop, valid_next_props in self._chain_mappings.items():
+            for target_prop in target_props:
+                if target_prop in valid_next_props:
+                    return current_prop, target_prop
         return None
 
     @staticmethod

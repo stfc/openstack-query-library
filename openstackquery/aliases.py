@@ -1,4 +1,4 @@
-from typing import List, Callable, Any, Dict, Union, Literal
+from typing import List, Callable, Any, Dict, Union, Literal, Optional
 from openstack.identity.v3.project import Project
 
 from openstackquery.enums.props.prop_enum import PropEnum
@@ -87,3 +87,12 @@ GroupRanges = Dict[str, List[PropValue]]
 # a type alias for grouped and parsed outputs. A dicitonary of grouped prop-value as key and list of values
 # that belong to that group
 GroupedReturn = Dict[PropValue, List[Dict]]
+
+# a type alias for query chain mappings. Defines common preset-property pairs between query types to allow
+# chaining between queries
+#   - The key is a PropEnum belonging to current query type
+#   - The value is a list of PropEnums that hold the same information but belong to different query types
+# by running a second query on the second query type where the values of the shared properties match
+#   - we can chain queries together.
+# Not all query types will have chain mappings
+QueryChainMappings = Optional[Dict[PropEnum, List[PropEnum]]]

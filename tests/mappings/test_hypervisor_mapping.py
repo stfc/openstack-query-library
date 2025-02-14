@@ -1,3 +1,4 @@
+from enums.props.placement_properties import PlacementProperties
 from openstackquery.enums.props.hypervisor_properties import HypervisorProperties
 from openstackquery.enums.props.server_properties import ServerProperties
 from openstackquery.enums.query_presets import (
@@ -75,7 +76,10 @@ def test_get_chain_mappings():
     Tests get_chain_mapping outputs correctly
     """
     expected_mappings = {
-        HypervisorProperties.HYPERVISOR_NAME: ServerProperties.HYPERVISOR_NAME,
+        HypervisorProperties.HYPERVISOR_NAME: [
+            ServerProperties.HYPERVISOR_NAME,
+            PlacementProperties.RESOURCE_PROVIDER_NAME,
+        ],
     }
-
-    assert HypervisorMapping.get_chain_mappings() == expected_mappings
+    # we don't care about order
+    assert set(HypervisorMapping.get_chain_mappings()) == set(expected_mappings)

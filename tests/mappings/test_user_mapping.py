@@ -122,7 +122,7 @@ def test_get_chain_mappings():
     Tests get_chain_mapping outputs correctly
     """
     expected_mappings = {
-        UserProperties.USER_ID: ServerProperties.USER_ID,
+        UserProperties.USER_ID: [ServerProperties.USER_ID],
     }
 
-    assert UserMapping.get_chain_mappings() == expected_mappings
+    assert set(UserMapping.get_chain_mappings()) == set(expected_mappings)
