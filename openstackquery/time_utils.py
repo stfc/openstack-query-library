@@ -54,29 +54,45 @@ class TimeUtils:
     def extract_uptime(uptime_string: str) -> Optional[float]:
         """
         Extracts number of days uptime from the string returned by the uptime
-        command
+        command. Handles formats:
+        - "X days, HH:MM"
+        - "HH:MM"
+        - "X min"
 
         :param uptime_string: String returned by the uptime command
         :type uptime_string: str
         :return: Number of days uptime if found in string
         :rtype: float | None
         """
-        uptime_pattern = re.compile(r"up\s+((\d+ days?,\s*)?(\d+:\d+))")
+        # Pattern matches both "X days, HH:MM" and "HH:MM" and "X min" formats
+        uptime_pattern = re.compile(
+            r"up\s+(?:(\d+)\s*days?,\s*)?(?:(\d+):(\d+)|(\d+)\s*min)"
+        )
+
         try:
             match = uptime_pattern.search(uptime_string)
         except TypeError:
+            # datetime string is not what we expect
             return None
-        if match:
-            uptime_string = match.group(1)
-            days = 0
-            time_part = uptime_string
-            if "day" in uptime_string:
-                days_part, time_part = uptime_string.split(
-                    " day" + ("s" if "days" in uptime_string else "") + ", "
-                )
-                days += int(days_part)
 
-            hours, minutes = map(int, time_part.split(":"))
+        if not match:
+            return None
+
+        days = 0
+
+        # Check if we matched days
+        if match.group(1):
+            days = int(match.group(1))
+
+        # Check if we matched HH:MM format
+        if match.group(2) and match.group(3):
+            hours = int(match.group(2))
+            minutes = int(match.group(3))
             days += hours / 24 + minutes / 1440
-            return round(days, 2)
-        return None
+
+        # Check if we matched minutes format
+        elif match.group(4):
+            minutes = int(match.group(4))
+            days += minutes / 1440
+
+        return round(days, 2)

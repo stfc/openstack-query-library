@@ -69,56 +69,31 @@ def test_convert_to_timestamp():
     assert out == "timestamp-out"
 
 
-def test_extract_uptime():
-    """
-    Test successful extraction of number of days uptime
-    """
-    mock_string = (
-        "17:13:49 up 394 days,  7:03,  0 users,  load average: 1.90, 1.70, 1.95"
-    )
-
-    res = TimeUtils.extract_uptime(mock_string)
-
-    assert res == 394.29
-
-
 def test_extract_uptime_not_string():
     """
     Test extraction returns None when not a string
     """
-    mock_not_string = None
-
-    res = TimeUtils.extract_uptime(mock_not_string)
-
-    assert res is None
+    assert TimeUtils.extract_uptime(None) is None
 
 
-def test_extract_uptime_empty_string():
+@pytest.mark.parametrize(
+    "mock_string,expected_result",
+    [
+        # Test extraction when greater than a day
+        (
+            "17:13:49 up 394 days,  7:03,  0 users,  load average: 1.90, 1.70, 1.95",
+            394.29,
+        ),
+        # Test extraction when HH:MM uptime format (less than a day)
+        ("17:13:49 up  5:57,  0 users,  load average: 0.00, 0.01, 0.00", 0.25),
+        # Test extraction when HH:MM uptime format (less than a day)
+        ("17:13:49 up 1 day,  7:03,  0 users,  load average: 0.00, 0.01, 0.00", 1.29),
+        # Test extraction when less than a hour uptime
+        ("15:48:54 up 30 min,  1 user,  load average: 0.06, 0.39, 0.25", 0.02),
+    ],
+)
+def test_extract_uptime(mock_string, expected_result):
     """
     Test extraction from empty string returns None
     """
-    mock_string = " "
-
-    res = TimeUtils.extract_uptime(mock_string)
-
-    assert res is None
-
-
-def test_extract_uptime_less_than_day():
-    """
-    Test extraction when less than a day uptime
-    """
-    mock_string = "17:13:49 up  5:57,  0 users,  load average: 0.00, 0.01, 0.00"
-    res = TimeUtils.extract_uptime(mock_string)
-
-    assert res == 0.25
-
-
-def test_extract_uptime_is_one_day():
-    """
-    Test extraction when less than a day uptime
-    """
-    mock_string = "17:13:49 up 1 day,  7:03,  0 users,  load average: 0.00, 0.01, 0.00"
-    res = TimeUtils.extract_uptime(mock_string)
-
-    assert res == 1.29
+    assert TimeUtils.extract_uptime(mock_string) == expected_result
