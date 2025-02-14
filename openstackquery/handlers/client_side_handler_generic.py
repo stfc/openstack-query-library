@@ -1,5 +1,5 @@
 from typing import Any, List
-from openstackquery.aliases import PresetPropMappings, PropValue
+from openstackquery.aliases import ClientSidePresetPropertyMappings, PropValue
 
 from openstackquery.enums.query_presets import QueryPresetsGeneric
 from openstackquery.handlers.client_side_handler import ClientSideHandler
@@ -14,7 +14,7 @@ class ClientSideHandlerGeneric(ClientSideHandler):
     Filter functions which map to QueryPresetsGeneric are defined here
     """
 
-    def __init__(self, preset_prop_mappings: PresetPropMappings):
+    def __init__(self, preset_prop_mappings: ClientSidePresetPropertyMappings):
         filter_mappings = {
             QueryPresetsGeneric.ANY_IN: self._prop_any_in,
             QueryPresetsGeneric.EQUAL_TO: self._prop_equal_to,

@@ -1,7 +1,7 @@
 import re
 
 from typing import Union
-from openstackquery.aliases import PresetPropMappings
+from openstackquery.aliases import ClientSidePresetPropertyMappings
 
 from openstackquery.enums.query_presets import QueryPresetsString
 from openstackquery.handlers.client_side_handler import ClientSideHandler
@@ -16,7 +16,7 @@ class ClientSideHandlerString(ClientSideHandler):
     Filter functions which map to QueryPresetsString are defined here
     """
 
-    def __init__(self, preset_prop_mappings: PresetPropMappings):
+    def __init__(self, preset_prop_mappings: ClientSidePresetPropertyMappings):
         filter_mappings = {
             QueryPresetsString.MATCHES_REGEX: self._prop_matches_regex,
         }

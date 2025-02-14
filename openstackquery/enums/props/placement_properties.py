@@ -48,8 +48,8 @@ class PlacementProperties(PropEnum):
     @staticmethod
     def get_prop_mapping(prop) -> Optional[PropFunc]:
         """
-        Method that returns the property function if function mapping exists for a given Hypervisor Enum
-        how to get specified property from a ResourceProviderUsage object
+        Method that returns the property function if function mapping exists for a given PlacementProperties Enum.
+        property function defined how to get a specified property from the ResourceProviderUsage object
         :param prop: A HypervisorProperty Enum for which a function may exist for
         """
         mapping = {

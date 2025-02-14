@@ -1,5 +1,5 @@
 from typing import Union
-from openstackquery.aliases import PresetPropMappings
+from openstackquery.aliases import ClientSidePresetPropertyMappings
 
 from openstackquery.enums.query_presets import QueryPresetsInteger
 from openstackquery.handlers.client_side_handler import ClientSideHandler
@@ -14,7 +14,7 @@ class ClientSideHandlerInteger(ClientSideHandler):
     Filter functions which map to QueryPresetsInteger are defined here
     """
 
-    def __init__(self, preset_prop_mappings: PresetPropMappings):
+    def __init__(self, preset_prop_mappings: ClientSidePresetPropertyMappings):
         filter_mappings = {
             QueryPresetsInteger.GREATER_THAN: self._prop_greater_than,
             QueryPresetsInteger.LESS_THAN: self._prop_less_than,

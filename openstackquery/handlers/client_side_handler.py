@@ -7,12 +7,12 @@ from openstackquery.exceptions.query_preset_mapping_error import QueryPresetMapp
 from openstackquery.handlers.handler_base import HandlerBase
 from openstackquery.aliases import (
     FilterFunc,
-    PresetPropMappings,
+    ClientSidePresetPropertyMappings,
     ClientSideFilterFunc,
     PropFunc,
     FilterParams,
     OpenstackResourceObj,
-    PresetToFilterFunc,
+    ClientSideFilterMappings,
 )
 
 from openstackquery.enums.query_presets import QueryPresets
@@ -30,8 +30,8 @@ class ClientSideHandler(HandlerBase):
 
     def __init__(
         self,
-        filter_mappings: PresetToFilterFunc,
-        preset_prop_mappings: PresetPropMappings,
+        filter_mappings: ClientSideFilterMappings,
+        preset_prop_mappings: ClientSidePresetPropertyMappings,
     ):
         self._filter_function_mappings = preset_prop_mappings
         self._filter_functions = filter_mappings
