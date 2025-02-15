@@ -31,6 +31,7 @@ class PlacementProperties(PropEnum):
                 "resource_provider_id",
                 "resource_provider_uuid",
                 "id",
+                "uuid",
             ],
             PlacementProperties.RESOURCE_PROVIDER_NAME: [
                 "resource_name",

@@ -116,6 +116,9 @@ class PlacementRunner(RunnerWrapper):
         :param conn: An OpenstackConnection object - used to connect to openstacksdk
         :param filter_kwargs: An Optional list of filter kwargs to pass to the openstacksdk command
         """
+        if not filter_kwargs:
+            filter_kwargs = {}
+
         logger.debug(
             "running openstacksdk command conn.placement.resource_providers(%s)",
             ",".join(f"{key}={value}" for key, value in filter_kwargs.items()),
