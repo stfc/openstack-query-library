@@ -68,8 +68,8 @@ def test_run_query_no_server_filters(
     assert res[1].usage == mock_hv2_rpusage
 
 
-@pytest.fixture
-def mock_inventory_responses():
+@pytest.fixture(name="mock_inventory_responses")
+def mock_inventory_responses_fixture():
     """
     func to replace conn.placement.resource_provider_inventories, returning known "total" values
     """
