@@ -28,6 +28,30 @@ from tests.mocks.mocked_props import MockProperties
             ["hypervisor_disabled_reason", "disabled_reason"],
         ),
         (HypervisorProperties.HYPERVISOR_UPTIME_DAYS, ["hypervisor_uptime_days"]),
+        (HypervisorProperties.VCPUS_AVAIL, ["vcpus_avail"]),
+        (
+            HypervisorProperties.MEMORY_MB_AVAIL,
+            ["memory_mb_avail", "memory_avail", "memory_free", "free_ram_mb"],
+        ),
+        (
+            HypervisorProperties.DISK_GB_AVAIL,
+            ["disk_gb_avail", "disk_avail", "local_disk_free", "free_disk_gb"],
+        ),
+        (HypervisorProperties.VCPUS_USED, ["vcpus_used"]),
+        (HypervisorProperties.MEMORY_MB_USED, ["memory_mb_used", "memory_used"]),
+        (
+            HypervisorProperties.DISK_GB_USED,
+            ["disk_gb_used", "disk_used", "local_disk_used", "local_gb_used"],
+        ),
+        (
+            HypervisorProperties.DISK_GB_SIZE,
+            ["disk_gb_size", "disk", "local_disk", "local_gb"],
+        ),
+        (
+            HypervisorProperties.MEMORY_MB_SIZE,
+            ["memory_mb_size", "memory_size", "memory_mb", "memory", "ram"],
+        ),
+        (HypervisorProperties.VCPUS, ["vcpus"]),
     ],
 )
 def test_property_serialization(expected_prop, test_values, property_variant_generator):

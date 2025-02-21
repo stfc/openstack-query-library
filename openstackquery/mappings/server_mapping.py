@@ -1,7 +1,6 @@
 from typing import Type
 
 from aliases import QueryChainMappings
-from enums.props.placement_properties import PlacementProperties
 from openstackquery.structs.query_client_side_handlers import QueryClientSideHandlers
 
 from openstackquery.enums.props.server_properties import ServerProperties
@@ -51,7 +50,6 @@ class ServerMapping(MappingInterface):
             ServerProperties.IMAGE_ID: [ImageProperties.IMAGE_ID],
             ServerProperties.HYPERVISOR_NAME: [
                 HypervisorProperties.HYPERVISOR_NAME,
-                PlacementProperties.RESOURCE_PROVIDER_NAME,
             ],
         }
 

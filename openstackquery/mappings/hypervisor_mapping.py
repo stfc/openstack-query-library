@@ -1,17 +1,19 @@
 from typing import Type
 
 from aliases import QueryChainMappings
-from enums.props.placement_properties import PlacementProperties
 from openstackquery.enums.props.hypervisor_properties import HypervisorProperties
 from openstackquery.enums.props.server_properties import ServerProperties
 from openstackquery.enums.query_presets import (
     QueryPresetsGeneric,
     QueryPresetsString,
+    QueryPresetsInteger,
 )
 from openstackquery.handlers.client_side_handler_generic import (
     ClientSideHandlerGeneric,
 )
 from openstackquery.handlers.client_side_handler_string import ClientSideHandlerString
+from openstackquery.handlers.client_side_handler_integer import ClientSideHandlerInteger
+
 from openstackquery.handlers.server_side_handler import ServerSideHandler
 from openstackquery.mappings.mapping_interface import MappingInterface
 
@@ -35,7 +37,6 @@ class HypervisorMapping(MappingInterface):
         """
         return {
             HypervisorProperties.HYPERVISOR_NAME: [
-                PlacementProperties.RESOURCE_PROVIDER_NAME,
                 ServerProperties.HYPERVISOR_NAME,
             ]
         }
@@ -75,6 +76,18 @@ class HypervisorMapping(MappingInterface):
         corresponding to valid preset-property pairs. These filter functions can be used to filter results after
         listing all hypervisors.
         """
+        integer_prop_list = [
+            HypervisorProperties.VCPUS_AVAIL,
+            HypervisorProperties.MEMORY_MB_AVAIL,
+            HypervisorProperties.DISK_GB_AVAIL,
+            HypervisorProperties.VCPUS_USED,
+            HypervisorProperties.MEMORY_MB_USED,
+            HypervisorProperties.DISK_GB_USED,
+            HypervisorProperties.VCPUS,
+            HypervisorProperties.DISK_GB_SIZE,
+            HypervisorProperties.DISK_GB_SIZE,
+        ]
+
         return QueryClientSideHandlers(
             # set generic query preset mappings
             generic_handler=ClientSideHandlerGeneric(
@@ -98,5 +111,12 @@ class HypervisorMapping(MappingInterface):
             # set datetime query preset mappings
             datetime_handler=None,
             # set integer query preset mappings
-            integer_handler=None,
+            integer_handler=ClientSideHandlerInteger(
+                {
+                    QueryPresetsInteger.LESS_THAN: integer_prop_list,
+                    QueryPresetsInteger.LESS_THAN_OR_EQUAL_TO: integer_prop_list,
+                    QueryPresetsInteger.GREATER_THAN: integer_prop_list,
+                    QueryPresetsInteger.GREATER_THAN_OR_EQUAL_TO: integer_prop_list,
+                }
+            ),
         )

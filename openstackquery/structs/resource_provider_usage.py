@@ -10,13 +10,13 @@ class ResourceProviderUsage:
     usage and total information until upstream updates its resource provider class.
     """
 
-    # Lower case to maintain compatibility with existing ResourceProvider object
-    name: str
-    id: str
-
     vcpu_avail: int
     memory_mb_avail: int
     disk_gb_avail: int
+
+    vcpus: int
+    memory_mb_size: int
+    disk_gb_size: int
 
     vcpu_used: int
     memory_mb_used: int

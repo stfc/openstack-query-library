@@ -1,9 +1,9 @@
-from enums.props.placement_properties import PlacementProperties
 from openstackquery.enums.props.hypervisor_properties import HypervisorProperties
 from openstackquery.enums.props.server_properties import ServerProperties
 from openstackquery.enums.query_presets import (
     QueryPresetsGeneric,
     QueryPresetsString,
+    QueryPresetsInteger,
 )
 from openstackquery.handlers.server_side_handler import ServerSideHandler
 from openstackquery.mappings.hypervisor_mapping import HypervisorMapping
@@ -62,6 +62,33 @@ def test_client_side_handlers_string(client_side_test_mappings):
     client_side_test_mappings(handler, mappings)
 
 
+def test_client_side_handlers_integer(client_side_test_mappings):
+    """
+    Tests client side handler mappings are correct
+    shouldn't create an integer handler because there are no integer related properties for Server
+    """
+    integer_prop_list = [
+        HypervisorProperties.VCPUS_AVAIL,
+        HypervisorProperties.MEMORY_MB_AVAIL,
+        HypervisorProperties.DISK_GB_AVAIL,
+        HypervisorProperties.VCPUS_USED,
+        HypervisorProperties.MEMORY_MB_USED,
+        HypervisorProperties.DISK_GB_USED,
+        HypervisorProperties.VCPUS,
+        HypervisorProperties.DISK_GB_SIZE,
+        HypervisorProperties.DISK_GB_SIZE,
+    ]
+
+    handler = HypervisorMapping.get_client_side_handlers().integer_handler
+    mappings = {
+        QueryPresetsInteger.LESS_THAN: integer_prop_list,
+        QueryPresetsInteger.GREATER_THAN: integer_prop_list,
+        QueryPresetsInteger.GREATER_THAN_OR_EQUAL_TO: integer_prop_list,
+        QueryPresetsInteger.LESS_THAN_OR_EQUAL_TO: integer_prop_list,
+    }
+    client_side_test_mappings(handler, mappings)
+
+
 def test_client_side_handlers_datetime():
     """
     Tests client side handler mappings are correct, and line up to the expected
@@ -78,7 +105,6 @@ def test_get_chain_mappings():
     expected_mappings = {
         HypervisorProperties.HYPERVISOR_NAME: [
             ServerProperties.HYPERVISOR_NAME,
-            PlacementProperties.RESOURCE_PROVIDER_NAME,
         ],
     }
     # we don't care about order

@@ -1,6 +1,5 @@
 from unittest.mock import patch
 
-from enums.props.placement_properties import PlacementProperties
 from openstackquery.enums.props.flavor_properties import FlavorProperties
 from openstackquery.enums.props.hypervisor_properties import HypervisorProperties
 from openstackquery.enums.props.image_properties import ImageProperties
@@ -213,7 +212,6 @@ def test_get_chain_mappings():
         ServerProperties.IMAGE_ID: [ImageProperties.IMAGE_ID],
         ServerProperties.HYPERVISOR_NAME: [
             HypervisorProperties.HYPERVISOR_NAME,
-            PlacementProperties.RESOURCE_PROVIDER_NAME,
         ],
     }
 

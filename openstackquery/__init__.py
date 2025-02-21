@@ -7,7 +7,6 @@ from openstackquery.api.query_objects import (
     ProjectQuery,
     ImageQuery,
     HypervisorQuery,
-    PlacementQuery,
 )
 
 # Create logger

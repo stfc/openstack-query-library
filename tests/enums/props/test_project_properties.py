@@ -21,7 +21,7 @@ from tests.mocks.mocked_props import MockProperties
         (ProjectProperties.PROJECT_IS_DOMAIN, ["project_is_domain", "is_domain"]),
         (
             ProjectProperties.PROJECT_IS_ENABLED,
-            ["project_is_enabled", "is_enabled", "ram"],
+            ["project_is_enabled", "is_enabled"],
         ),
         (ProjectProperties.PROJECT_NAME, ["project_name", "name"]),
         (ProjectProperties.PROJECT_PARENT_ID, ["project_parent_id", "parent_id"]),
