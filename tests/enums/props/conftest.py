@@ -13,13 +13,3 @@ def property_variant_generator():
         return variants
 
     return _generate_variants
-
-
-@pytest.fixture(scope="function", name="property_variant_test_params")
-def property_variant_test_params(property_test_cases):
-    """Fixture that generates the test parameters for parametrize test."""
-    return [
-        (prop, value)
-        for prop, values in property_test_cases.items()
-        for value in values
-    ]
