@@ -3,8 +3,9 @@ from abc import ABC, abstractmethod
 
 from aliases import QueryChainMappings
 from openstackquery.enums.props.prop_enum import PropEnum
-from openstackquery.structs.query_client_side_handlers import QueryClientSideHandlers
 from openstackquery.runners.runner_wrapper import RunnerWrapper
+
+from openstackquery.handlers.client_side_handler import ClientSideHandler
 from openstackquery.handlers.server_side_handler import ServerSideHandler
 
 
@@ -32,11 +33,10 @@ class MappingInterface(ABC):
 
     @staticmethod
     @abstractmethod
-    def get_client_side_handlers() -> QueryClientSideHandlers:
+    def get_client_side_handler() -> ClientSideHandler:
         """
-        Should return a dataclass where each attribute maps to a client-side filter handler. These objects can be used
-        to get a filter function to filter a list of openstack resource objects after gathering them using openstacksdk
-        command
+        This function returns a client-side handler object which can be used to handle filtering results locally.
+        This function maps which properties are valid for each filter preset.
         """
 
     @staticmethod

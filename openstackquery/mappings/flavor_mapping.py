@@ -1,24 +1,12 @@
 from typing import Type
-
 from aliases import QueryChainMappings
-from openstackquery.structs.query_client_side_handlers import QueryClientSideHandlers
 
 from openstackquery.enums.props.server_properties import ServerProperties
 from openstackquery.enums.props.flavor_properties import FlavorProperties
-from openstackquery.enums.query_presets import (
-    QueryPresetsGeneric,
-    QueryPresetsInteger,
-    QueryPresetsString,
-)
+from openstackquery.enums.query_presets import QueryPresets
 
 from openstackquery.handlers.server_side_handler import ServerSideHandler
-from openstackquery.handlers.client_side_handler_generic import (
-    ClientSideHandlerGeneric,
-)
-from openstackquery.handlers.client_side_handler_integer import (
-    ClientSideHandlerInteger,
-)
-from openstackquery.handlers.client_side_handler_string import ClientSideHandlerString
+from openstackquery.handlers.client_side_handler import ClientSideHandler
 
 from openstackquery.mappings.mapping_interface import MappingInterface
 from openstackquery.runners.flavor_runner import FlavorRunner
@@ -66,17 +54,17 @@ class FlavorMapping(MappingInterface):
         """
         return ServerSideHandler(
             {
-                QueryPresetsGeneric.EQUAL_TO: {
+                QueryPresets.EQUAL_TO: {
                     FlavorProperties.FLAVOR_IS_PUBLIC: lambda value: {
                         "is_public": value
                     }
                 },
-                QueryPresetsGeneric.NOT_EQUAL_TO: {
+                QueryPresets.NOT_EQUAL_TO: {
                     FlavorProperties.FLAVOR_IS_PUBLIC: lambda value: {
                         "is_public": not value
                     }
                 },
-                QueryPresetsInteger.LESS_THAN_OR_EQUAL_TO: {
+                QueryPresets.LESS_THAN_OR_EQUAL_TO: {
                     FlavorProperties.FLAVOR_DISK: lambda value: {"minDisk": int(value)},
                     FlavorProperties.FLAVOR_RAM: lambda value: {"minRam": int(value)},
                 },
@@ -84,13 +72,11 @@ class FlavorMapping(MappingInterface):
         )
 
     @staticmethod
-    def get_client_side_handlers() -> QueryClientSideHandlers:
+    def get_client_side_handler() -> ClientSideHandler:
         """
-        method to configure a set of client-side handlers which can be used to get local filter functions
-        corresponding to valid preset-property pairs. These filter functions can be used to filter results after
-        listing all servers.
+        This function returns a client-side handler object which can be used to handle filtering results locally.
+        This function maps which properties are valid for each filter preset.
         """
-
         integer_prop_list = [
             FlavorProperties.FLAVOR_RAM,
             FlavorProperties.FLAVOR_DISK,
@@ -98,30 +84,17 @@ class FlavorMapping(MappingInterface):
             FlavorProperties.FLAVOR_SWAP,
             FlavorProperties.FLAVOR_VCPU,
         ]
-
-        return QueryClientSideHandlers(
+        return ClientSideHandler(
             # set generic query preset mappings
-            generic_handler=ClientSideHandlerGeneric(
-                {
-                    QueryPresetsGeneric.EQUAL_TO: ["*"],
-                    QueryPresetsGeneric.NOT_EQUAL_TO: ["*"],
-                    QueryPresetsGeneric.ANY_IN: ["*"],
-                    QueryPresetsGeneric.NOT_ANY_IN: ["*"],
-                }
-            ),
-            # set string query preset mappings
-            string_handler=ClientSideHandlerString(
-                {QueryPresetsString.MATCHES_REGEX: [FlavorProperties.FLAVOR_NAME]}
-            ),
-            # set datetime query preset mappings
-            datetime_handler=None,
-            # set integer query preset mappings
-            integer_handler=ClientSideHandlerInteger(
-                {
-                    QueryPresetsInteger.LESS_THAN: integer_prop_list,
-                    QueryPresetsInteger.LESS_THAN_OR_EQUAL_TO: integer_prop_list,
-                    QueryPresetsInteger.GREATER_THAN: integer_prop_list,
-                    QueryPresetsInteger.GREATER_THAN_OR_EQUAL_TO: integer_prop_list,
-                }
-            ),
+            {
+                QueryPresets.EQUAL_TO: ["*"],
+                QueryPresets.NOT_EQUAL_TO: ["*"],
+                QueryPresets.ANY_IN: ["*"],
+                QueryPresets.NOT_ANY_IN: ["*"],
+                QueryPresets.MATCHES_REGEX: [FlavorProperties.FLAVOR_NAME],
+                QueryPresets.LESS_THAN: integer_prop_list,
+                QueryPresets.LESS_THAN_OR_EQUAL_TO: integer_prop_list,
+                QueryPresets.GREATER_THAN: integer_prop_list,
+                QueryPresets.GREATER_THAN_OR_EQUAL_TO: integer_prop_list,
+            }
         )

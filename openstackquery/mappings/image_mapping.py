@@ -3,28 +3,14 @@ from typing import Type
 from aliases import QueryChainMappings
 from openstackquery.enums.props.image_properties import ImageProperties
 from openstackquery.enums.props.server_properties import ServerProperties
-from openstackquery.enums.query_presets import (
-    QueryPresetsGeneric,
-    QueryPresetsDateTime,
-    QueryPresetsInteger,
-    QueryPresetsString,
-)
-from openstackquery.handlers.client_side_handler_datetime import (
-    ClientSideHandlerDateTime,
-)
-from openstackquery.handlers.client_side_handler_generic import (
-    ClientSideHandlerGeneric,
-)
-from openstackquery.handlers.client_side_handler_integer import (
-    ClientSideHandlerInteger,
-)
-from openstackquery.handlers.client_side_handler_string import ClientSideHandlerString
+from openstackquery.enums.query_presets import QueryPresets
+
+from openstackquery.handlers.client_side_handler import ClientSideHandler
 from openstackquery.handlers.server_side_handler import ServerSideHandler
 
 from openstackquery.mappings.mapping_interface import MappingInterface
 from openstackquery.runners.image_runner import ImageRunner
 from openstackquery.time_utils import TimeUtils
-from openstackquery.structs.query_client_side_handlers import QueryClientSideHandlers
 
 
 class ImageMapping(MappingInterface):
@@ -67,11 +53,11 @@ class ImageMapping(MappingInterface):
         """
         return ServerSideHandler(
             {
-                QueryPresetsGeneric.EQUAL_TO: {
+                QueryPresets.EQUAL_TO: {
                     ImageProperties.IMAGE_NAME: lambda value: {"name": value},
                     ImageProperties.IMAGE_STATUS: lambda value: {"status": value},
                 },
-                QueryPresetsGeneric.ANY_IN: {
+                QueryPresets.ANY_IN: {
                     ImageProperties.IMAGE_NAME: lambda values: [
                         {"name": value} for value in values
                     ],
@@ -79,7 +65,7 @@ class ImageMapping(MappingInterface):
                         {"status": value} for value in values
                     ],
                 },
-                QueryPresetsDateTime.OLDER_THAN: {
+                QueryPresets.OLDER_THAN: {
                     ImageProperties.IMAGE_CREATION_DATE: lambda func=TimeUtils.convert_to_timestamp, **kwargs: {
                         "created_at": f"lt:{func(**kwargs)}"
                     },
@@ -87,7 +73,7 @@ class ImageMapping(MappingInterface):
                         "updated_at": f"lt:{func(**kwargs)}"
                     },
                 },
-                QueryPresetsDateTime.OLDER_THAN_OR_EQUAL_TO: {
+                QueryPresets.OLDER_THAN_OR_EQUAL_TO: {
                     ImageProperties.IMAGE_CREATION_DATE: lambda func=TimeUtils.convert_to_timestamp, **kwargs: {
                         "created_at": f"lte:{func(**kwargs)}"
                     },
@@ -95,7 +81,7 @@ class ImageMapping(MappingInterface):
                         "updated_at": f"lte:{func(**kwargs)}"
                     },
                 },
-                QueryPresetsDateTime.YOUNGER_THAN: {
+                QueryPresets.YOUNGER_THAN: {
                     ImageProperties.IMAGE_CREATION_DATE: lambda func=TimeUtils.convert_to_timestamp, **kwargs: {
                         "created_at": f"gt:{func(**kwargs)}"
                     },
@@ -103,7 +89,7 @@ class ImageMapping(MappingInterface):
                         "updated_at": f"gt:{func(**kwargs)}"
                     },
                 },
-                QueryPresetsDateTime.YOUNGER_THAN_OR_EQUAL_TO: {
+                QueryPresets.YOUNGER_THAN_OR_EQUAL_TO: {
                     ImageProperties.IMAGE_CREATION_DATE: lambda func=TimeUtils.convert_to_timestamp, **kwargs: {
                         "created_at": f"gte:{func(**kwargs)}"
                     },
@@ -111,21 +97,20 @@ class ImageMapping(MappingInterface):
                         "updated_at": f"gte:{func(**kwargs)}"
                     },
                 },
-                QueryPresetsInteger.GREATER_THAN_OR_EQUAL_TO: {
+                QueryPresets.GREATER_THAN_OR_EQUAL_TO: {
                     ImageProperties.IMAGE_SIZE: lambda value: {"size_min": int(value)}
                 },
-                QueryPresetsInteger.LESS_THAN_OR_EQUAL_TO: {
+                QueryPresets.LESS_THAN_OR_EQUAL_TO: {
                     ImageProperties.IMAGE_SIZE: lambda value: {"size_max": int(value)}
                 },
             }
         )
 
     @staticmethod
-    def get_client_side_handlers() -> QueryClientSideHandlers:
+    def get_client_side_handler() -> ClientSideHandler:
         """
-        method to configure a set of client-side handlers which can be used to get local filter functions
-        corresponding to valid preset-property pairs. These filter functions can be used to filter results after
-        listing all servers.
+        This function returns a client-side handler object which can be used to handle filtering results locally.
+        This function maps which properties are valid for each filter preset.
         """
         integer_prop_list = [
             ImageProperties.IMAGE_SIZE,
@@ -138,36 +123,20 @@ class ImageMapping(MappingInterface):
             ImageProperties.IMAGE_LAST_UPDATED_DATE,
         ]
 
-        return QueryClientSideHandlers(
-            # set generic query preset mappings
-            generic_handler=ClientSideHandlerGeneric(
-                {
-                    QueryPresetsGeneric.EQUAL_TO: ["*"],
-                    QueryPresetsGeneric.NOT_EQUAL_TO: ["*"],
-                    QueryPresetsGeneric.ANY_IN: ["*"],
-                    QueryPresetsGeneric.NOT_ANY_IN: ["*"],
-                }
-            ),
-            # set string query preset mappings
-            string_handler=ClientSideHandlerString(
-                {QueryPresetsString.MATCHES_REGEX: [ImageProperties.IMAGE_NAME]}
-            ),
-            # set datetime query preset mappings
-            datetime_handler=ClientSideHandlerDateTime(
-                {
-                    QueryPresetsDateTime.YOUNGER_THAN: date_prop_list,
-                    QueryPresetsDateTime.YOUNGER_THAN_OR_EQUAL_TO: date_prop_list,
-                    QueryPresetsDateTime.OLDER_THAN: date_prop_list,
-                    QueryPresetsDateTime.OLDER_THAN_OR_EQUAL_TO: date_prop_list,
-                }
-            ),
-            # set integer query preset mappings
-            integer_handler=ClientSideHandlerInteger(
-                {
-                    QueryPresetsInteger.LESS_THAN: integer_prop_list,
-                    QueryPresetsInteger.LESS_THAN_OR_EQUAL_TO: integer_prop_list,
-                    QueryPresetsInteger.GREATER_THAN: integer_prop_list,
-                    QueryPresetsInteger.GREATER_THAN_OR_EQUAL_TO: integer_prop_list,
-                }
-            ),
+        return ClientSideHandler(
+            {
+                QueryPresets.EQUAL_TO: ["*"],
+                QueryPresets.NOT_EQUAL_TO: ["*"],
+                QueryPresets.ANY_IN: ["*"],
+                QueryPresets.NOT_ANY_IN: ["*"],
+                QueryPresets.MATCHES_REGEX: [ImageProperties.IMAGE_NAME],
+                QueryPresets.YOUNGER_THAN: date_prop_list,
+                QueryPresets.YOUNGER_THAN_OR_EQUAL_TO: date_prop_list,
+                QueryPresets.OLDER_THAN: date_prop_list,
+                QueryPresets.OLDER_THAN_OR_EQUAL_TO: date_prop_list,
+                QueryPresets.LESS_THAN: integer_prop_list,
+                QueryPresets.LESS_THAN_OR_EQUAL_TO: integer_prop_list,
+                QueryPresets.GREATER_THAN: integer_prop_list,
+                QueryPresets.GREATER_THAN_OR_EQUAL_TO: integer_prop_list,
+            }
         )

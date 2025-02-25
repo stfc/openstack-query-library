@@ -12,21 +12,10 @@ from tests.mocks.mocked_query_presets import MockQueryPresets
 from tests.mocks.mocked_props import MockProperties
 
 
-@pytest.fixture(name="mock_invalid_client_handler")
-def mock_invalid_client_handler_fixture():
+@pytest.fixture(name="mock_client_side_handler")
+def mock_client_handler_fixture():
     """
-    Return a client handler - mocks one handler which does not contain preset
-    """
-    mock_invalid_client_handler = MagicMock()
-    mock_invalid_client_handler.preset_known.return_value = False
-    mock_invalid_client_handler.check_supported.return_value = False
-    return mock_invalid_client_handler
-
-
-@pytest.fixture(name="mock_valid_client_handler")
-def mock_valid_client_handler_fixture():
-    """
-    Return a client handler - mocks one handler which does contain preset
+    Return a client handler
     """
 
     def _mock_preset_known(preset):
@@ -52,26 +41,22 @@ def mock_valid_server_handler_fixture():
 
 
 @pytest.fixture(name="instance")
-def instance_fixture(
-    mock_server_side_handler, mock_invalid_client_handler, mock_valid_client_handler
-):
+def instance_fixture(mock_server_side_handler, mock_client_side_handler):
     """
     Returns an instance with mocked client_side_handlers and
     server_side_handler injects
     """
 
-    client_handlers = [mock_invalid_client_handler, mock_valid_client_handler]
-
     return QueryBuilder(
         prop_enum_cls=MockProperties,
-        client_side_handlers=client_handlers,
+        client_side_handler=mock_client_side_handler,
         server_side_handler=mock_server_side_handler,
     )
 
 
 @pytest.fixture(name="parse_where_runner")
 def parse_where_runner_fixture(
-    instance, mock_server_side_handler, mock_valid_client_handler
+    instance, mock_server_side_handler, mock_client_side_handler
 ):
     """
     This is a helper function that runs test cases of parse_where, where we expect it to complete successfully,
@@ -101,7 +86,7 @@ def parse_where_runner_fixture(
             - if left blank it creates a new instance
         """
         mock_server_side_handler.get_filters.return_value = mock_get_filter_return
-        mock_valid_client_handler.get_filter_func.return_value = (
+        mock_client_side_handler.get_filter_func.return_value = (
             mock_get_filter_func_return
         )
 
@@ -110,7 +95,7 @@ def parse_where_runner_fixture(
                 MockQueryPresets.ITEM_1, MockProperties.PROP_1, mock_kwargs
             )
 
-        mock_valid_client_handler.get_filter_func.assert_called_once_with(
+        mock_client_side_handler.get_filter_func.assert_called_once_with(
             preset=MockQueryPresets.ITEM_1,
             prop=MockProperties.PROP_1,
             prop_func=mock_get_prop_mapping.return_value,
@@ -333,14 +318,12 @@ def test_parse_where_multi_filter_set_conflicting_add_multi(
 
 def test_parse_where_preset_unknown(instance):
     """
-    Tests that parse_where errors if no handler found which supports given preset
+    Tests that parse_where errors if given preset not supported
     """
 
     # when preset_known returns false
-    with patch.object(MockProperties, "get_prop_mapping") as mock_prop_func:
-        with pytest.raises(QueryPresetMappingError):
-            instance.parse_where(MockQueryPresets.ITEM_2, MockProperties.PROP_1)
-    mock_prop_func.assert_called_once_with(MockProperties.PROP_1)
+    with pytest.raises(QueryPresetMappingError):
+        instance.parse_where(MockQueryPresets.ITEM_2, MockProperties.PROP_1)
 
 
 def test_parse_where_preset_misconfigured(instance):
@@ -350,10 +333,8 @@ def test_parse_where_preset_misconfigured(instance):
     """
 
     # when preset_known returns True, but client_side filter missing
-    with patch.object(MockProperties, "get_prop_mapping") as mock_prop_func:
-        with pytest.raises(QueryPresetMappingError):
-            instance.parse_where(MockQueryPresets.ITEM_3, MockProperties.PROP_1)
-    mock_prop_func.assert_called_once_with(MockProperties.PROP_1)
+    with pytest.raises(QueryPresetMappingError):
+        instance.parse_where(MockQueryPresets.ITEM_3, MockProperties.PROP_1)
 
 
 def test_parse_where_prop_invalid(instance):
@@ -396,12 +377,12 @@ def test_server_filter_fallback(instance):
     assert res == ["some-client-side-filter"]
 
 
-@patch("openstackquery.query_blocks.query_builder.get_preset_from_string")
+@patch("openstackquery.query_blocks.query_builder.QueryPresets")
 def test_parse_where_with_string_aliases(
-    mock_get_preset_from_string,
+    mock_query_presets,
     instance,
     mock_server_side_handler,
-    mock_valid_client_handler,
+    mock_client_side_handler,
 ):
     """
     tests parse_where works when using string aliases as input for preset and prop.
@@ -411,12 +392,12 @@ def test_parse_where_with_string_aliases(
     mock_kwargs = {"arg1": "val1"}
 
     mock_server_side_handler.get_filters.return_value = mock_server_filters
-    mock_valid_client_handler.get_filter_func.return_value = mock_client_filter_func
+    mock_client_side_handler.get_filter_func.return_value = mock_client_filter_func
 
     mock_prop_from_string = MagicMock()
     mock_prop_from_string.return_value = MockProperties.PROP_1
 
-    mock_get_preset_from_string.return_value = MockQueryPresets.ITEM_1
+    mock_query_presets.from_string.return_value = MockQueryPresets.ITEM_1
 
     mock_get_prop_mapping = MagicMock()
 
@@ -427,10 +408,10 @@ def test_parse_where_with_string_aliases(
     ):
         instance.parse_where("mock-preset", "mock-prop", mock_kwargs)
 
-    mock_get_preset_from_string.assert_called_once_with("mock-preset")
+    mock_query_presets.from_string.assert_called_once_with("mock-preset")
     mock_prop_from_string.assert_called_once_with("mock-prop")
 
-    mock_valid_client_handler.get_filter_func.assert_called_once_with(
+    mock_client_side_handler.get_filter_func.assert_called_once_with(
         preset=MockQueryPresets.ITEM_1,
         prop=MockProperties.PROP_1,
         prop_func=mock_get_prop_mapping.return_value,
