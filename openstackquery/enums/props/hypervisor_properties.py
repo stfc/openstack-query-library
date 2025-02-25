@@ -102,12 +102,12 @@ class HypervisorProperties(PropEnum):
                 a.hv["uptime"]
             ),
             HypervisorProperties.VCPUS: lambda a: a.usage.vcpus,
-            HypervisorProperties.VCPUS_AVAIL: lambda a: a.usage.vcpu_avail,
+            HypervisorProperties.VCPUS_AVAIL: lambda a: a.usage.vcpus_avail,
             HypervisorProperties.MEMORY_MB_SIZE: lambda a: a.usage.memory_mb_size,
             HypervisorProperties.MEMORY_MB_AVAIL: lambda a: a.usage.memory_mb_avail,
             HypervisorProperties.DISK_GB_SIZE: lambda a: a.usage.disk_gb_size,
             HypervisorProperties.DISK_GB_AVAIL: lambda a: a.usage.disk_gb_avail,
-            HypervisorProperties.VCPUS_USED: lambda a: a.usage.vcpu_used,
+            HypervisorProperties.VCPUS_USED: lambda a: a.usage.vcpus_used,
             HypervisorProperties.MEMORY_MB_USED: lambda a: a.usage.memory_mb_used,
             HypervisorProperties.DISK_GB_USED: lambda a: a.usage.disk_gb_used,
         }

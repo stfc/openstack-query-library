@@ -97,10 +97,10 @@ def mock_inventory_responses_fixture():
             },
             "expected_results": {
                 "foo": ResourceProviderUsage(
-                    vcpu_used=4,
+                    vcpus_used=4,
                     memory_mb_used=8192,
                     disk_gb_used=100,
-                    vcpu_avail=16,
+                    vcpus_avail=16,
                     memory_mb_avail=32768,
                     disk_gb_avail=500,
                     vcpus=20,
@@ -116,10 +116,10 @@ def mock_inventory_responses_fixture():
             "inventories": {},
             "expected_results": {
                 "foo": ResourceProviderUsage(
-                    vcpu_used=0,
+                    vcpus_used=0,
                     memory_mb_used=0,
                     disk_gb_used=0,
-                    vcpu_avail=0,
+                    vcpus_avail=0,
                     memory_mb_avail=0,
                     disk_gb_avail=0,
                     vcpus=0,
@@ -144,10 +144,10 @@ def mock_inventory_responses_fixture():
             },
             "expected_results": {
                 f"provider-{i}": ResourceProviderUsage(
-                    vcpu_used=4,
+                    vcpus_used=4,
                     memory_mb_used=8192,
                     disk_gb_used=100,
-                    vcpu_avail=32,
+                    vcpus_avail=32,
                     memory_mb_avail=1500,
                     disk_gb_avail=2000,
                     vcpus=36,

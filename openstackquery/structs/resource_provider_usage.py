@@ -10,7 +10,7 @@ class ResourceProviderUsage:
     usage and total information until upstream updates its resource provider class.
     """
 
-    vcpu_avail: int
+    vcpus_avail: int
     memory_mb_avail: int
     disk_gb_avail: int
 
@@ -18,6 +18,6 @@ class ResourceProviderUsage:
     memory_mb_size: int
     disk_gb_size: int
 
-    vcpu_used: int
+    vcpus_used: int
     memory_mb_used: int
     disk_gb_used: int

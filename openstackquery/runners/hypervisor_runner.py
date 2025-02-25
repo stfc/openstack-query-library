@@ -65,19 +65,19 @@ class HypervisorRunner(RunnerWrapper):
         usage = self._get_usage_info(conn, obj)
         avail = self._get_availability_info(conn, obj)
 
-        vcpu_used = usage.get("VCPU", 0)
+        vcpus_used = usage.get("VCPU", 0)
         memory_mb_used = usage.get("MEMORY_MB", 0)
         disk_gb_used = usage.get("DISK_GB", 0)
 
         return ResourceProviderUsage(
             # workaround for hvs not containing VCPU/Memory/Disk resource provider info - set to 0
-            vcpu_used=vcpu_used,
+            vcpus_used=vcpus_used,
             memory_mb_used=memory_mb_used,
             disk_gb_used=disk_gb_used,
-            vcpu_avail=avail["VCPU"],
+            vcpus_avail=avail["VCPU"],
             memory_mb_avail=avail["MEMORY_MB"],
             disk_gb_avail=avail["DISK_GB"],
-            vcpus=avail["VCPU"] + vcpu_used,
+            vcpus=avail["VCPU"] + vcpus_used,
             memory_mb_size=avail["MEMORY_MB"] + memory_mb_used,
             disk_gb_size=avail["DISK_GB"] + disk_gb_used,
         )
