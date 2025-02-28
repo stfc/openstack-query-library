@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Any, List, Type, Union
+from typing import Optional, Dict, Any, Type, Union
 import logging
 
 from openstackquery.handlers.client_side_handler import ClientSideHandler

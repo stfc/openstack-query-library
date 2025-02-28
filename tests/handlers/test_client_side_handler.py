@@ -31,6 +31,9 @@ def instance_fixture(mock_filter_fn):
             MockQueryPresets.ITEM_3: [MockProperties.PROP_3, MockProperties.PROP_4],
         }
     )
+    # pylint:disable=protected-access
+    # we need to mock _filter_functions mappings to test functions that use them
+    # but the mappings themselves are hardcoded into the class and should not be accessible
     client_side_handler._filter_functions = {MockQueryPresets.ITEM_1: mock_filter_fn}
     return client_side_handler
 

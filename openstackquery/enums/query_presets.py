@@ -1,7 +1,5 @@
-from typing import Union
 from enum import auto
 from openstackquery.enums.enum_with_aliases import EnumWithAliases
-from openstackquery.exceptions.parse_query_error import ParseQueryError
 
 # pylint: disable=too-few-public-methods
 
