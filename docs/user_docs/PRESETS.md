@@ -15,47 +15,26 @@ q2 = q1.where(preset="ANY_IN", prop="status", values=["ERROR", "SHUTOFF"])
 
 # Reference
 
-## QueryPresetsGeneric
-QueryPresetsGeneric has the following presets:
+Query Library supports the following presets:
 
-| Aliases                          | Description                                                                          | Extra Parameters                                              |
-|----------------------------------|--------------------------------------------------------------------------------------|---------------------------------------------------------------|
-| `any_in`, `in`                   | Finds objects which have a property matching any of a given set of values            | `values: List` - a list of property values to compare against |
-| `not_any_in`, `not_in`           | Finds objects which have a property that does not match any of a given set of values | `values: List` - a list of property values to compare against |
-| `equal_to`, `equal`, `==`        | Finds objects which have a property matching a given value                           | `value` - a single value to compare against                   |
-| `not_equal_to` `not_equal`, `!=` | Finds objects which have a property that does not match a given value                | `value` - a single value to compare against                   |
-
-
-## QueryPresetsString
-QueryPresetsString has the following presets:
-
-| Aliases                                 | Description                                                      | Extra Parameters                                                    |
-|-----------------------------------------|------------------------------------------------------------------|---------------------------------------------------------------------|
-| `matches_regex`, `regex`, `match_regex` | Finds objects which have a property that matches a regex pattern | `value: str` - a string which can be converted into a regex pattern |
-
-
-## QueryPresetsInteger
-QueryPresetsInteger has the following presets:
-
-| Aliases                          | Description                                                                             | Extra Parameters                                                              |
-|----------------------------------|-----------------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
-| `greater_than`, `>`              | Finds objects which have an integer/float property greater than a threshold             | `value: Union[int, float]` - an integer or float threshold to compare against |
-| `less_than`, `<`                 | Finds objects which have an integer/float property less than a threshold                | `value: Union[int, float]` - an integer or float threshold to compare against |
-| `greater_than_or_equal_to`, `>=` | Finds objects which have an integer/float property greater than or equal to a threshold | `value: Union[int, float]` - an integer or float threshold to compare against |
-| `less_than_or_equal_to`, `<=`    | Finds objects which have an integer/float property less than or equal to a threshold    | `value: Union[int, float]` - an integer or float threshold to compare against |
-
-
-## QueryPresetsDateTime
-QueryPresetsDateTime has the following presets:
-
-| Aliases                          | Description                                                                                            | Extra Parameters |
-|----------------------------------|--------------------------------------------------------------------------------------------------------|------------------|
-| `older_than`, `>`                | Finds objects which have an datetime property older than a given relative time threshold               | see below        |
-| `younger_than`, `<`              | Finds objects which have an datetime property younger than a given relative time threshold             | see below        |
-| `older_than_or_equal_to`, `>=`   | Finds objects which have an datetime property older than or equal to a given relative time threshold   | see below        |
-| `younger_than_or_equal_to`, `<=` | Finds objects which have an datetime property younger than or equal to a given relative time threshold | see below        |
+| Aliases (case insensitive)                                                                         | Description                                                                                            | Extra Parameters                                                              |
+|----------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
+| `any_in`, `in`                                                                                     | Finds objects which have a property matching any of a given set of values                              | `values: List` - a list of property values to compare against                 |
+| `not_any_in`, `not_in`                                                                             | Finds objects which have a property that does not match any of a given set of values                   | `values: List` - a list of property values to compare against                 |
+| `equal_to`, `equal`, `==`                                                                          | Finds objects which have a property matching a given value                                             | `value` - a single value to compare against                                   |
+| `not_equal_to` `not_equal`, `!=`                                                                   | Finds objects which have a property that does not match a given value                                  | `value` - a single value to compare against                                   |
+| `matches_regex`, `regex`, `match_regex`, `re`                                                      | Finds objects which have a property that matches a regex pattern                                       | `value: str` - a string which can be converted into a regex pattern           |
+| `greater_than`, `>`                                                                                | Finds objects which have an integer/float property greater than a threshold                            | `value: Union[int, float]` - an integer or float threshold to compare against |
+| `less_than`, `<`                                                                                   | Finds objects which have an integer/float property less than a threshold                               | `value: Union[int, float]` - an integer or float threshold to compare against |
+| `greater_than_or_equal_to`, `greater_or_equal` <br/>`more_than_or_equal_to`, `more_or_equal`, `>=` | Finds objects which have an integer/float property greater than or equal to a threshold                | `value: Union[int, float]` - an integer or float threshold to compare against |
+| `less_than_or_equal_to`, `less_or_equal`, `<=`                                                     | Finds objects which have an integer/float property less than or equal to a threshold                   | `value: Union[int, float]` - an integer or float threshold to compare against |
+| `older_than`, `older`, `>`                                                                         | Finds objects which have an datetime property older than a given relative time threshold               | * (see below)                                                                 |
+| `younger_than`, `younger`, `newer_than`, `newer`, `<`                                              | Finds objects which have an datetime property younger than a given relative time threshold             | * (see below)                                                                 |
+| `older_than_or_equal_to`, `older_or_equal`, `>=`                                                   | Finds objects which have an datetime property older than or equal to a given relative time threshold   | * (see below)                                                                 |
+| `younger_than_or_equal_to`, `<=`                                                                   | Finds objects which have an datetime property younger than or equal to a given relative time threshold | * (see below)                                                                 |
 
 ### Extra Parameters
+"*" -> Datetime Parameters
 - `days: int` - (Optional) relative number of days since current time to compare against
 - `hours: int` - (Optional) relative number of hours since current time to compare against
 - `minutes: int` - (Optional) relative number of minutes since current time to compare against

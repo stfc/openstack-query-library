@@ -3,9 +3,9 @@ import pytest
 
 from openstackquery.aliases import ClientSidePresetPropertyMappings
 from openstackquery.enums.props.prop_enum import PropEnum
-from openstackquery.enums.query_presets import QueryPresets, QueryPresetsGeneric
+from openstackquery.enums.query_presets import QueryPresets
 from openstackquery.handlers.client_side_handler import ClientSideHandler
-from openstackquery.handlers.server_side_handler import ServerSideHandler
+from openstackquery.mappings.mapping_interface import MappingInterface
 
 
 @pytest.fixture(scope="function", name="client_side_test_mappings")
@@ -67,8 +67,7 @@ def server_side_test_mappings_fixture(client_side_match):
     """
 
     def _server_side_test_case(
-        server_side_handler: ServerSideHandler,
-        client_side_handler: ClientSideHandler,
+        mapping_cls: MappingInterface,
         preset_to_test: QueryPresets,
         expected_mappings: Dict[PropEnum, str],
         test_case: Tuple = ("test", "test"),
@@ -77,13 +76,14 @@ def server_side_test_mappings_fixture(client_side_match):
         Tests server side handler mappings are correct, and line up to the expected
         server side params for equal to params. Also tests that server-side mapping has equivalent
         client-side mapping.
-        :param server_side_handler: server-side handler to test
-        :param client_side_handler: equivalent client-side handler to test
+        :param mapping_cls: mapping object to test
         :param preset_to_test: preset to test against
         :param expected_mappings: dictionary mapping expected properties to the filter param they should output
         :param test_case: tuple of value to test mapping with and expected value that
         it will map to when running get_filters
         """
+        server_side_handler = mapping_cls.get_server_side_handler()
+        client_side_handler = mapping_cls.get_client_side_handler()
         supported_props = server_side_handler.get_supported_props(preset_to_test)
         assert all(
             key_to_check in supported_props for key_to_check in expected_mappings
@@ -109,8 +109,7 @@ def server_side_test_any_in_mappings_fixture(
     """
 
     def _server_side_any_in_test_case(
-        server_side_handler: ServerSideHandler,
-        client_side_handler: ClientSideHandler,
+        mapping_cls: MappingInterface,
         expected_mappings: Dict[PropEnum, str],
         test_cases: Dict,
     ):
@@ -118,15 +117,14 @@ def server_side_test_any_in_mappings_fixture(
         Tests server side handler mappings for ANY_IN preset are correct, and line up to the expected
         server side params for equal to params. Will test with one and with multiple values
         Also tests that server-side mapping has equivalent client-side mapping.
-        :param server_side_handler: server-side handler to test
-        :param client_side_handler: equivalent client-side handler to test
+        :param mapping_cls: mapping object to test
         :param expected_mappings: dictionary mapping expected properties to the filter param they should output
         :param test_cases: tuple of value to test mapping with and expected value that
         it will map to when running get_filters
         """
-        supported_props = server_side_handler.get_supported_props(
-            QueryPresetsGeneric.ANY_IN
-        )
+        server_side_handler = mapping_cls.get_server_side_handler()
+        client_side_handler = mapping_cls.get_client_side_handler()
+        supported_props = server_side_handler.get_supported_props(QueryPresets.ANY_IN)
 
         assert all(
             key_to_check in supported_props for key_to_check in expected_mappings
@@ -134,7 +132,7 @@ def server_side_test_any_in_mappings_fixture(
         for prop, expected in expected_mappings.items():
             # test with one value
             server_filter = server_side_handler.get_filters(
-                QueryPresetsGeneric.ANY_IN,
+                QueryPresets.ANY_IN,
                 prop,
                 {"values": [list(test_cases.keys())[0]]},
             )
@@ -142,7 +140,7 @@ def server_side_test_any_in_mappings_fixture(
 
             # test with multiple values
             server_filter = server_side_handler.get_filters(
-                QueryPresetsGeneric.ANY_IN,
+                QueryPresets.ANY_IN,
                 prop,
                 {"values": list(test_cases.keys())},
             )
@@ -152,16 +150,15 @@ def server_side_test_any_in_mappings_fixture(
 
         # EQUAL_TO should have the same mappings for ANY_IN
         server_side_test_mappings(
-            server_side_handler,
-            client_side_handler,
-            QueryPresetsGeneric.EQUAL_TO,
+            mapping_cls,
+            QueryPresets.EQUAL_TO,
             expected_mappings,
             test_case=(list(test_cases.keys())[0], list(test_cases.values())[0]),
         )
 
         client_side_match(
             client_side_handler,
-            QueryPresetsGeneric.ANY_IN,
+            QueryPresets.ANY_IN,
             list(expected_mappings.keys()),
         )
 

@@ -1,9 +1,7 @@
 from openstackquery.enums.props.project_properties import ProjectProperties
 from openstackquery.enums.props.server_properties import ServerProperties
-from openstackquery.enums.query_presets import (
-    QueryPresetsGeneric,
-    QueryPresetsString,
-)
+from openstackquery.enums.query_presets import QueryPresets
+
 from openstackquery.handlers.server_side_handler import ServerSideHandler
 from openstackquery.mappings.project_mapping import ProjectMapping
 from openstackquery.runners.project_runner import ProjectRunner
@@ -45,9 +43,8 @@ def test_server_side_handler_mappings_equal_to(server_side_test_mappings):
     }
 
     server_side_test_mappings(
-        ProjectMapping.get_server_side_handler(),
-        ProjectMapping.get_client_side_handlers().generic_handler,
-        QueryPresetsGeneric.EQUAL_TO,
+        ProjectMapping,
+        QueryPresets.EQUAL_TO,
         mappings,
         test_case=(True, True),
     )
@@ -64,9 +61,8 @@ def test_server_side_handler_mappings_not_equal_to(server_side_test_mappings):
     }
 
     server_side_test_mappings(
-        ProjectMapping.get_server_side_handler(),
-        ProjectMapping.get_client_side_handlers().generic_handler,
-        QueryPresetsGeneric.NOT_EQUAL_TO,
+        ProjectMapping,
+        QueryPresets.NOT_EQUAL_TO,
         mappings,
         test_case=(True, False),
     )
@@ -89,8 +85,7 @@ def test_server_side_handler_mappings_any_in(server_side_any_in_mappings):
     }
 
     server_side_any_in_mappings(
-        ProjectMapping.get_server_side_handler(),
-        ProjectMapping.get_client_side_handlers().generic_handler,
+        ProjectMapping,
         mappings,
         {"test1": "test1", "test2": "test2"},
     )
@@ -101,12 +96,12 @@ def test_client_side_handlers_generic(client_side_test_mappings):
     Tests client side handler mappings are correct, and line up to the expected
     client side params for generic presets
     """
-    handler = ProjectMapping.get_client_side_handlers().generic_handler
+    handler = ProjectMapping.get_client_side_handler()
     mappings = {
-        QueryPresetsGeneric.EQUAL_TO: ["*"],
-        QueryPresetsGeneric.NOT_EQUAL_TO: ["*"],
-        QueryPresetsGeneric.ANY_IN: ["*"],
-        QueryPresetsGeneric.NOT_ANY_IN: ["*"],
+        QueryPresets.EQUAL_TO: ["*"],
+        QueryPresets.NOT_EQUAL_TO: ["*"],
+        QueryPresets.ANY_IN: ["*"],
+        QueryPresets.NOT_ANY_IN: ["*"],
     }
     client_side_test_mappings(handler, mappings)
 
@@ -116,32 +111,14 @@ def test_client_side_handlers_string(client_side_test_mappings):
     Tests client side handler mappings are correct, and line up to the expected
     client side params for string presets
     """
-    handler = ProjectMapping.get_client_side_handlers().string_handler
+    handler = ProjectMapping.get_client_side_handler()
     mappings = {
-        QueryPresetsString.MATCHES_REGEX: [
+        QueryPresets.MATCHES_REGEX: [
             ProjectProperties.PROJECT_NAME,
             ProjectProperties.PROJECT_DESCRIPTION,
         ]
     }
     client_side_test_mappings(handler, mappings)
-
-
-def test_client_side_handlers_datetime():
-    """
-    Tests client side handler mappings are correct, and line up to the expected
-    shouldn't create a datetime handler because there are no datetime related properties for Project
-    """
-    handler = ProjectMapping.get_client_side_handlers().datetime_handler
-    assert not handler
-
-
-def test_client_side_handlers_integer():
-    """
-    Tests client side handler mappings are correct, and line up to the expected
-    shouldn't create a datetime handler because there are no datetime related properties for Project
-    """
-    handler = ProjectMapping.get_client_side_handlers().integer_handler
-    assert not handler
 
 
 def test_get_chain_mappings():

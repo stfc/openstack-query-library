@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from openstackquery.structs.query_client_side_handlers import QueryClientSideHandlers
+from openstackquery.handlers.client_side_handler import ClientSideHandler
 from openstackquery.handlers.server_side_handler import ServerSideHandler
 
 
@@ -19,9 +19,10 @@ class QueryBase(ABC):
         """
 
     @abstractmethod
-    def _get_client_side_handlers(self) -> QueryClientSideHandlers:
+    def _get_client_side_handler(self) -> ClientSideHandler:
         """
-        Should return a dataclass where each attribute maps to a client-side filter handler. These objects can be used
-        to get a filter function to filter a list of openstack resource objects after gathering them using openstacksdk
+        Should return a client-side filter handler object. This object can be used to get filter functions to filter
+        a list of openstack objects.
+        To get a filter function to filter a list of openstack resource objects after gathering them using openstacksdk
         command
         """

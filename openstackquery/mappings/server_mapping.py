@@ -1,29 +1,17 @@
 from typing import Type
-
 from aliases import QueryChainMappings
-from openstackquery.structs.query_client_side_handlers import QueryClientSideHandlers
 
 from openstackquery.enums.props.server_properties import ServerProperties
-from openstackquery.enums.query_presets import (
-    QueryPresetsGeneric,
-    QueryPresetsDateTime,
-    QueryPresetsString,
-)
+from openstackquery.enums.query_presets import QueryPresets
+
 from openstackquery.enums.props.user_properties import UserProperties
 from openstackquery.enums.props.project_properties import ProjectProperties
 from openstackquery.enums.props.flavor_properties import FlavorProperties
 from openstackquery.enums.props.image_properties import ImageProperties
 from openstackquery.enums.props.hypervisor_properties import HypervisorProperties
 
+from openstackquery.handlers.client_side_handler import ClientSideHandler
 from openstackquery.handlers.server_side_handler import ServerSideHandler
-
-from openstackquery.handlers.client_side_handler_generic import (
-    ClientSideHandlerGeneric,
-)
-from openstackquery.handlers.client_side_handler_string import ClientSideHandlerString
-from openstackquery.handlers.client_side_handler_datetime import (
-    ClientSideHandlerDateTime,
-)
 
 from openstackquery.mappings.mapping_interface import MappingInterface
 from openstackquery.runners.server_runner import ServerRunner
@@ -79,7 +67,7 @@ class ServerMapping(MappingInterface):
         """
         return ServerSideHandler(
             {
-                QueryPresetsGeneric.EQUAL_TO: {
+                QueryPresets.EQUAL_TO: {
                     ServerProperties.USER_ID: lambda value: {"user_id": value},
                     ServerProperties.SERVER_ID: lambda value: {"uuid": value},
                     ServerProperties.SERVER_NAME: lambda value: {"hostname": value},
@@ -94,7 +82,7 @@ class ServerMapping(MappingInterface):
                     ServerProperties.IMAGE_ID: lambda value: {"image": value},
                     ServerProperties.PROJECT_ID: lambda value: {"project_id": value},
                 },
-                QueryPresetsGeneric.ANY_IN: {
+                QueryPresets.ANY_IN: {
                     ServerProperties.USER_ID: lambda values: [
                         {"user_id": value} for value in values
                     ],
@@ -123,12 +111,12 @@ class ServerMapping(MappingInterface):
                         {"project_id": value} for value in values
                     ],
                 },
-                QueryPresetsDateTime.OLDER_THAN_OR_EQUAL_TO: {
+                QueryPresets.OLDER_THAN_OR_EQUAL_TO: {
                     ServerProperties.SERVER_LAST_UPDATED_DATE: lambda func=TimeUtils.convert_to_timestamp, **kwargs: {
                         "changes-before": func(**kwargs)
                     }
                 },
-                QueryPresetsDateTime.YOUNGER_THAN_OR_EQUAL_TO: {
+                QueryPresets.YOUNGER_THAN_OR_EQUAL_TO: {
                     ServerProperties.SERVER_LAST_UPDATED_DATE: lambda func=TimeUtils.convert_to_timestamp, **kwargs: {
                         "changes-since": func(**kwargs)
                     }
@@ -137,52 +125,36 @@ class ServerMapping(MappingInterface):
         )
 
     @staticmethod
-    def get_client_side_handlers() -> QueryClientSideHandlers:
+    def get_client_side_handler() -> ClientSideHandler:
         """
-        method to configure a set of client-side handlers which can be used to get local filter functions
-        corresponding to valid preset-property pairs. These filter functions can be used to filter results after
-        listing all servers.
+        This function returns a client-side handler object which can be used to handle filtering results locally.
+        This function maps which properties are valid for each filter preset.
         """
-        return QueryClientSideHandlers(
-            # set generic query preset mappings
-            generic_handler=ClientSideHandlerGeneric(
-                {
-                    QueryPresetsGeneric.EQUAL_TO: ["*"],
-                    QueryPresetsGeneric.NOT_EQUAL_TO: ["*"],
-                    QueryPresetsGeneric.ANY_IN: ["*"],
-                    QueryPresetsGeneric.NOT_ANY_IN: ["*"],
-                }
-            ),
-            # set string query preset mappings
-            string_handler=ClientSideHandlerString(
-                {
-                    QueryPresetsString.MATCHES_REGEX: [
-                        ServerProperties.SERVER_NAME,
-                        ServerProperties.ADDRESSES,
-                    ]
-                }
-            ),
-            # set datetime query preset mappings
-            datetime_handler=ClientSideHandlerDateTime(
-                {
-                    QueryPresetsDateTime.OLDER_THAN: [
-                        ServerProperties.SERVER_CREATION_DATE,
-                        ServerProperties.SERVER_LAST_UPDATED_DATE,
-                    ],
-                    QueryPresetsDateTime.YOUNGER_THAN: [
-                        ServerProperties.SERVER_CREATION_DATE,
-                        ServerProperties.SERVER_LAST_UPDATED_DATE,
-                    ],
-                    QueryPresetsDateTime.YOUNGER_THAN_OR_EQUAL_TO: [
-                        ServerProperties.SERVER_CREATION_DATE,
-                        ServerProperties.SERVER_LAST_UPDATED_DATE,
-                    ],
-                    QueryPresetsDateTime.OLDER_THAN_OR_EQUAL_TO: [
-                        ServerProperties.SERVER_CREATION_DATE,
-                        ServerProperties.SERVER_LAST_UPDATED_DATE,
-                    ],
-                }
-            ),
-            # set integer query preset mappings
-            integer_handler=None,
+        return ClientSideHandler(
+            {
+                QueryPresets.EQUAL_TO: ["*"],
+                QueryPresets.NOT_EQUAL_TO: ["*"],
+                QueryPresets.ANY_IN: ["*"],
+                QueryPresets.NOT_ANY_IN: ["*"],
+                QueryPresets.MATCHES_REGEX: [
+                    ServerProperties.SERVER_NAME,
+                    ServerProperties.ADDRESSES,
+                ],
+                QueryPresets.OLDER_THAN: [
+                    ServerProperties.SERVER_CREATION_DATE,
+                    ServerProperties.SERVER_LAST_UPDATED_DATE,
+                ],
+                QueryPresets.YOUNGER_THAN: [
+                    ServerProperties.SERVER_CREATION_DATE,
+                    ServerProperties.SERVER_LAST_UPDATED_DATE,
+                ],
+                QueryPresets.YOUNGER_THAN_OR_EQUAL_TO: [
+                    ServerProperties.SERVER_CREATION_DATE,
+                    ServerProperties.SERVER_LAST_UPDATED_DATE,
+                ],
+                QueryPresets.OLDER_THAN_OR_EQUAL_TO: [
+                    ServerProperties.SERVER_CREATION_DATE,
+                    ServerProperties.SERVER_LAST_UPDATED_DATE,
+                ],
+            }
         )

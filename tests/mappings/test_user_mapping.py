@@ -1,6 +1,6 @@
 from openstackquery.enums.props.server_properties import ServerProperties
 from openstackquery.enums.props.user_properties import UserProperties
-from openstackquery.enums.query_presets import QueryPresetsGeneric, QueryPresetsString
+from openstackquery.enums.query_presets import QueryPresets
 from openstackquery.handlers.server_side_handler import ServerSideHandler
 from openstackquery.mappings.user_mapping import UserMapping
 from openstackquery.runners.user_runner import UserRunner
@@ -39,9 +39,8 @@ def test_server_side_handler_mappings_equal_to(server_side_test_mappings):
     }
 
     server_side_test_mappings(
-        UserMapping.get_server_side_handler(),
-        UserMapping.get_client_side_handlers().generic_handler,
-        QueryPresetsGeneric.EQUAL_TO,
+        UserMapping,
+        QueryPresets.EQUAL_TO,
         mappings,
     )
 
@@ -62,8 +61,7 @@ def test_server_side_handler_mappings_any_in(server_side_any_in_mappings):
     }
 
     server_side_any_in_mappings(
-        UserMapping.get_server_side_handler(),
-        UserMapping.get_client_side_handlers().generic_handler,
+        UserMapping,
         mappings,
         {"test1": "test1", "test2": "test2"},
     )
@@ -74,47 +72,18 @@ def test_client_side_handlers_generic(client_side_test_mappings):
     Tests client side handler mappings are correct, and line up to the expected
     client side params for generic presets
     """
-    handler = UserMapping.get_client_side_handlers().generic_handler
+    handler = UserMapping.get_client_side_handler()
     mappings = {
-        QueryPresetsGeneric.EQUAL_TO: ["*"],
-        QueryPresetsGeneric.NOT_EQUAL_TO: ["*"],
-        QueryPresetsGeneric.ANY_IN: ["*"],
-        QueryPresetsGeneric.NOT_ANY_IN: ["*"],
-    }
-    client_side_test_mappings(handler, mappings)
-
-
-def test_client_side_handlers_string(client_side_test_mappings):
-    """
-    Tests client side handler mappings are correct, and line up to the expected
-    client side params for string presets
-    """
-    handler = UserMapping.get_client_side_handlers().string_handler
-    mappings = {
-        QueryPresetsString.MATCHES_REGEX: [
+        QueryPresets.EQUAL_TO: ["*"],
+        QueryPresets.NOT_EQUAL_TO: ["*"],
+        QueryPresets.ANY_IN: ["*"],
+        QueryPresets.NOT_ANY_IN: ["*"],
+        QueryPresets.MATCHES_REGEX: [
             UserProperties.USER_EMAIL,
             UserProperties.USER_NAME,
-        ]
+        ],
     }
     client_side_test_mappings(handler, mappings)
-
-
-def test_client_side_handlers_integer():
-    """
-    Tests client side handler mappings are correct
-    shouldn't create an integer handler because there are no integer related properties for User
-    """
-    handler = UserMapping.get_client_side_handlers().integer_handler
-    assert not handler
-
-
-def test_client_side_handlers_datetime():
-    """
-    Tests client side handler mappings are correct
-    shouldn't create a datetime handler because there are no datetime related properties for User
-    """
-    handler = UserMapping.get_client_side_handlers().datetime_handler
-    assert not handler
 
 
 def test_get_chain_mappings():

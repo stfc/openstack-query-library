@@ -1,10 +1,6 @@
 from openstackquery.enums.props.flavor_properties import FlavorProperties
 from openstackquery.enums.props.server_properties import ServerProperties
-from openstackquery.enums.query_presets import (
-    QueryPresetsGeneric,
-    QueryPresetsString,
-    QueryPresetsInteger,
-)
+from openstackquery.enums.query_presets import QueryPresets
 from openstackquery.handlers.server_side_handler import ServerSideHandler
 from openstackquery.mappings.flavor_mapping import FlavorMapping
 from openstackquery.runners.flavor_runner import FlavorRunner
@@ -31,16 +27,15 @@ def test_get_server_side_handler_returns_correct_type():
     assert isinstance(FlavorMapping.get_server_side_handler(), ServerSideHandler)
 
 
-def test_server_side_handler_mappings_equal_to(server_side_test_mappings):
+def test_server_side_handler_mappings(server_side_test_mappings):
     """
     Tests server side handler mappings are correct, and line up to the expected
     server side params for equal to params
     """
     mappings = {FlavorProperties.FLAVOR_IS_PUBLIC: "is_public"}
     server_side_test_mappings(
-        FlavorMapping.get_server_side_handler(),
-        FlavorMapping.get_client_side_handlers().generic_handler,
-        QueryPresetsGeneric.EQUAL_TO,
+        FlavorMapping,
+        QueryPresets.EQUAL_TO,
         mappings,
         test_case=(True, True),
     )
@@ -56,27 +51,24 @@ def test_server_side_handler_less_than_or_equal_to(server_side_test_mappings):
         FlavorProperties.FLAVOR_RAM: "minRam",
     }
     server_side_test_mappings(
-        FlavorMapping.get_server_side_handler(),
-        FlavorMapping.get_client_side_handlers().integer_handler,
-        QueryPresetsInteger.LESS_THAN_OR_EQUAL_TO,
+        FlavorMapping,
+        QueryPresets.LESS_THAN_OR_EQUAL_TO,
         mappings,
         (10, 10),
     )
 
     # with strings which can convert to ints
     server_side_test_mappings(
-        FlavorMapping.get_server_side_handler(),
-        FlavorMapping.get_client_side_handlers().integer_handler,
-        QueryPresetsInteger.LESS_THAN_OR_EQUAL_TO,
+        FlavorMapping,
+        QueryPresets.LESS_THAN_OR_EQUAL_TO,
         mappings,
         ("10", 10),
     )
 
     # with floats which can convert to ints
     server_side_test_mappings(
-        FlavorMapping.get_server_side_handler(),
-        FlavorMapping.get_client_side_handlers().integer_handler,
-        QueryPresetsInteger.LESS_THAN_OR_EQUAL_TO,
+        FlavorMapping,
+        QueryPresets.LESS_THAN_OR_EQUAL_TO,
         mappings,
         (10.0, 10),
     )
@@ -91,52 +83,17 @@ def test_server_side_handler_not_equal_to(server_side_test_mappings):
         FlavorProperties.FLAVOR_IS_PUBLIC: "is_public",
     }
     server_side_test_mappings(
-        FlavorMapping.get_server_side_handler(),
-        FlavorMapping.get_client_side_handlers().generic_handler,
-        QueryPresetsGeneric.NOT_EQUAL_TO,
+        FlavorMapping,
+        QueryPresets.NOT_EQUAL_TO,
         mappings,
         (True, False),
     )
 
 
-def test_client_side_handlers_generic(client_side_test_mappings):
+def test_client_side_handlers(client_side_test_mappings):
     """
     Tests client side handler mappings are correct, and line up to the expected
     client side params for generic presets
-    """
-    handler = FlavorMapping.get_client_side_handlers().generic_handler
-    mappings = {
-        QueryPresetsGeneric.EQUAL_TO: ["*"],
-        QueryPresetsGeneric.NOT_EQUAL_TO: ["*"],
-        QueryPresetsGeneric.ANY_IN: ["*"],
-        QueryPresetsGeneric.NOT_ANY_IN: ["*"],
-    }
-    client_side_test_mappings(handler, mappings)
-
-
-def test_client_side_handlers_string(client_side_test_mappings):
-    """
-    Tests client side handler mappings are correct, and line up to the expected
-    client side params for string presets
-    """
-    handler = FlavorMapping.get_client_side_handlers().string_handler
-    mappings = {QueryPresetsString.MATCHES_REGEX: [FlavorProperties.FLAVOR_NAME]}
-    client_side_test_mappings(handler, mappings)
-
-
-def test_client_side_handlers_datetime():
-    """
-    Tests client side handler mappings are correct, and line up to the expected
-    shouldn't create a datetime handler because there are no datetime related properties for Flavor
-    """
-    handler = FlavorMapping.get_client_side_handlers().datetime_handler
-    assert not handler
-
-
-def test_client_side_handlers_integer(client_side_test_mappings):
-    """
-    Tests client side handler mappings are correct, and line up to the expected
-    client side params for integer presets
     """
     integer_prop_list = [
         FlavorProperties.FLAVOR_RAM,
@@ -145,12 +102,17 @@ def test_client_side_handlers_integer(client_side_test_mappings):
         FlavorProperties.FLAVOR_SWAP,
         FlavorProperties.FLAVOR_VCPU,
     ]
-    handler = FlavorMapping.get_client_side_handlers().integer_handler
+    handler = FlavorMapping.get_client_side_handler()
     mappings = {
-        QueryPresetsInteger.LESS_THAN: integer_prop_list,
-        QueryPresetsInteger.LESS_THAN_OR_EQUAL_TO: integer_prop_list,
-        QueryPresetsInteger.GREATER_THAN: integer_prop_list,
-        QueryPresetsInteger.GREATER_THAN_OR_EQUAL_TO: integer_prop_list,
+        QueryPresets.LESS_THAN: integer_prop_list,
+        QueryPresets.LESS_THAN_OR_EQUAL_TO: integer_prop_list,
+        QueryPresets.GREATER_THAN: integer_prop_list,
+        QueryPresets.GREATER_THAN_OR_EQUAL_TO: integer_prop_list,
+        QueryPresets.MATCHES_REGEX: [FlavorProperties.FLAVOR_NAME],
+        QueryPresets.EQUAL_TO: ["*"],
+        QueryPresets.NOT_EQUAL_TO: ["*"],
+        QueryPresets.ANY_IN: ["*"],
+        QueryPresets.NOT_ANY_IN: ["*"],
     }
     client_side_test_mappings(handler, mappings)
 

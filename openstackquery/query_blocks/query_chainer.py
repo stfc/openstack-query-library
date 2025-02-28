@@ -1,8 +1,8 @@
 from typing import Tuple, List, Optional, Union, Dict
 
+from openstackquery.enums.query_presets import QueryPresets
 from openstackquery.aliases import PropValue, QueryChainMappings
 from openstackquery.enums.props.prop_enum import PropEnum
-from openstackquery.enums.query_presets import QueryPresetsGeneric
 from openstackquery.enums.query_types import QueryTypes
 from openstackquery.exceptions.query_chaining_error import QueryChainingError
 
@@ -126,7 +126,7 @@ class QueryChainer:
             )
 
         return new_query.where(
-            QueryPresetsGeneric.ANY_IN,
+            QueryPresets.ANY_IN,
             link_props[1],
             values=search_values,
         )

@@ -6,11 +6,8 @@ from openstackquery.enums.props.image_properties import ImageProperties
 from openstackquery.enums.props.project_properties import ProjectProperties
 from openstackquery.enums.props.server_properties import ServerProperties
 from openstackquery.enums.props.user_properties import UserProperties
-from openstackquery.enums.query_presets import (
-    QueryPresetsGeneric,
-    QueryPresetsDateTime,
-    QueryPresetsString,
-)
+from openstackquery.enums.query_presets import QueryPresets
+
 from openstackquery.handlers.server_side_handler import ServerSideHandler
 from openstackquery.mappings.server_mapping import ServerMapping
 from openstackquery.runners.server_runner import ServerRunner
@@ -54,9 +51,8 @@ def test_server_side_handler_mappings_equal_to(server_side_test_mappings):
         ServerProperties.PROJECT_ID: "project_id",
     }
     server_side_test_mappings(
-        ServerMapping.get_server_side_handler(),
-        ServerMapping.get_client_side_handlers().generic_handler,
-        QueryPresetsGeneric.EQUAL_TO,
+        ServerMapping,
+        QueryPresets.EQUAL_TO,
         mappings,
     )
 
@@ -82,8 +78,7 @@ def test_server_side_handler_mappings_any_in(server_side_any_in_mappings):
         ServerProperties.PROJECT_ID: "project_id",
     }
     server_side_any_in_mappings(
-        ServerMapping.get_server_side_handler(),
-        ServerMapping.get_client_side_handlers().generic_handler,
+        ServerMapping,
         mappings,
         {"test1": "test1", "test2": "test2"},
     )
@@ -102,9 +97,8 @@ def test_server_side_handler_mappings_older_than_or_equal_to(
         ServerProperties.SERVER_LAST_UPDATED_DATE: "changes-before",
     }
     server_side_test_mappings(
-        ServerMapping.get_server_side_handler(),
-        ServerMapping.get_client_side_handlers().datetime_handler,
-        QueryPresetsDateTime.OLDER_THAN_OR_EQUAL_TO,
+        ServerMapping,
+        QueryPresets.OLDER_THAN_OR_EQUAL_TO,
         mappings,
     )
 
@@ -125,9 +119,8 @@ def test_server_side_handler_mappings_younger_than_or_equal_to(
         ServerProperties.SERVER_LAST_UPDATED_DATE: "changes-since",
     }
     server_side_test_mappings(
-        ServerMapping.get_server_side_handler(),
-        ServerMapping.get_client_side_handlers().datetime_handler,
-        QueryPresetsDateTime.YOUNGER_THAN_OR_EQUAL_TO,
+        ServerMapping,
+        QueryPresets.YOUNGER_THAN_OR_EQUAL_TO,
         mappings,
     )
 
@@ -140,65 +133,26 @@ def test_client_side_handlers_generic(client_side_test_mappings):
     Tests client side handler mappings are correct, and line up to the expected
     client side params for generic presets
     """
-    handler = ServerMapping.get_client_side_handlers().generic_handler
+    handler = ServerMapping.get_client_side_handler()
+    date_props = [
+        ServerProperties.SERVER_LAST_UPDATED_DATE,
+        ServerProperties.SERVER_CREATION_DATE,
+    ]
     mappings = {
-        QueryPresetsGeneric.EQUAL_TO: ["*"],
-        QueryPresetsGeneric.NOT_EQUAL_TO: ["*"],
-        QueryPresetsGeneric.ANY_IN: ["*"],
-        QueryPresetsGeneric.NOT_ANY_IN: ["*"],
-    }
-    client_side_test_mappings(handler, mappings)
-
-
-def test_client_side_handlers_string(client_side_test_mappings):
-    """
-    Tests client side handler mappings are correct, and line up to the expected
-    client side params for string presets
-    """
-    handler = ServerMapping.get_client_side_handlers().string_handler
-    mappings = {
-        QueryPresetsString.MATCHES_REGEX: [
+        QueryPresets.EQUAL_TO: ["*"],
+        QueryPresets.NOT_EQUAL_TO: ["*"],
+        QueryPresets.ANY_IN: ["*"],
+        QueryPresets.NOT_ANY_IN: ["*"],
+        QueryPresets.MATCHES_REGEX: [
             ServerProperties.SERVER_NAME,
             ServerProperties.ADDRESSES,
-        ]
+        ],
+        QueryPresets.OLDER_THAN_OR_EQUAL_TO: date_props,
+        QueryPresets.YOUNGER_THAN_OR_EQUAL_TO: date_props,
+        QueryPresets.YOUNGER_THAN: date_props,
+        QueryPresets.OLDER_THAN: date_props,
     }
     client_side_test_mappings(handler, mappings)
-
-
-def test_client_side_handlers_datetime(client_side_test_mappings):
-    """
-    Tests client side handler mappings are correct, and line up to the expected
-    client side params for string presets
-    """
-    handler = ServerMapping.get_client_side_handlers().datetime_handler
-    mappings = {
-        QueryPresetsDateTime.OLDER_THAN_OR_EQUAL_TO: [
-            ServerProperties.SERVER_LAST_UPDATED_DATE,
-            ServerProperties.SERVER_CREATION_DATE,
-        ],
-        QueryPresetsDateTime.YOUNGER_THAN_OR_EQUAL_TO: [
-            ServerProperties.SERVER_LAST_UPDATED_DATE,
-            ServerProperties.SERVER_CREATION_DATE,
-        ],
-        QueryPresetsDateTime.YOUNGER_THAN: [
-            ServerProperties.SERVER_LAST_UPDATED_DATE,
-            ServerProperties.SERVER_CREATION_DATE,
-        ],
-        QueryPresetsDateTime.OLDER_THAN: [
-            ServerProperties.SERVER_LAST_UPDATED_DATE,
-            ServerProperties.SERVER_CREATION_DATE,
-        ],
-    }
-    client_side_test_mappings(handler, mappings)
-
-
-def test_client_side_handlers_integer():
-    """
-    Tests client side handler mappings are correct
-    shouldn't create an integer handler because there are no integer related properties for Server
-    """
-    handler = ServerMapping.get_client_side_handlers().integer_handler
-    assert not handler
 
 
 def test_get_chain_mappings():

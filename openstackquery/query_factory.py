@@ -29,7 +29,7 @@ class QueryFactory:
         parser = QueryParser(prop_mapping)
         builder = QueryBuilder(
             prop_enum_cls=prop_mapping,
-            client_side_handlers=mapping_cls.get_client_side_handlers().to_list(),
+            client_side_handler=mapping_cls.get_client_side_handler(),
             server_side_handler=mapping_cls.get_server_side_handler(),
         )
         executor = QueryExecutor(

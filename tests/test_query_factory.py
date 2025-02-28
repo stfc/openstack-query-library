@@ -39,7 +39,7 @@ def run_build_query_deps_test_case_fixture():
         mock_parser.assert_called_once_with(mock_prop_mapping)
         mock_builder.assert_called_once_with(
             prop_enum_cls=mock_prop_mapping,
-            client_side_handlers=mock_mapping_cls.get_client_side_handlers.return_value.to_list.return_value,
+            client_side_handler=mock_mapping_cls.get_client_side_handler.return_value,
             server_side_handler=mock_mapping_cls.get_server_side_handler.return_value,
         )
         mock_chainer.assert_called_once_with(

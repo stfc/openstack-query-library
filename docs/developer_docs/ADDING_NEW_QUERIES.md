@@ -16,7 +16,7 @@ class ResourceProperties(PropEnum):
 
     # add enums for each property you found here like so
     PROP_1 = auto() # replace `PROP_1` with property name
-    ...
+    # ...
 
     @staticmethod
     def get_prop_mapping(prop):
@@ -62,18 +62,20 @@ class ResourceRunner(RunnerWrapper):
 
     def _parse_meta_params(
         self,
-        conn: OpenstackConnection
+        conn: OpenstackConnection,
 
         # define meta params that could be passed
         # they should all be optional, if no meta-params are passed, the query should still work with default values
         meta_param_1 = None,
         meta_param_2 = None,
-        ...
+        # ...
     ):
+        pass
         # Define logic here that will alter the keyword arguments that will be passed to the openstacksdk command
         # based on the meta-parameter values passed in. This method should return a dictionary which will be merged with
         # server-side filters and be used when calling the specific openstacksdk query which gets the resources being queried for
-        ...
+
+    # ...
 
     def _run_query(
         self,
@@ -153,55 +155,46 @@ we can add mapping like so:
         ...
         return {
             # Here we map the prop_1 enum stored in ResourceProperties to the user_id enum stored in UserProperties
+            # Values must be a list - because a query property may map to multiple other query properties
             # These two properties MUST store the same info
-            ResourceProperties.PROP_1: UserProperties.USER_ID,
+            ResourceProperties.PROP_1: [UserProperties.USER_ID],
         }
     ...
 ```
 
-### 3d. Set the client_side_handlers
+### 3d. Set the client_side_handler
 We must define which preset-property pair can be used together when calling `where()` on this Query class.
 
-The `get_client_side_handlers` class is where we define these mappings.
-This class creates a Dataclass called `QueryClientSideHandlers` from the mappings we define.
+The `get_client_side_handler` class is where we define these mappings.
+This class creates an object of `ClientSideHandler` from which mappings can be stored.
 
 Here you must:
 1. Evaluate which presets you want to the query to accept and which properties they should work on
-2. You must add the presets like so:
+2. Add the presets like so:
 
 ```python
-
-    def get_client_side_handlers() -> ServerSideHandler:
+    # This is required - at least one preset mapping must be defined here
+    def get_client_side_handlers() -> ClientSideHandler:
         ...
-        return QueryClientSideHandlers(
-            # generic_handler = set preset-property mappings that belong to generic presets
-            # This is required - at least one preset mapping must be defined here
-            generic_handler=ClientSideHandlerGeneric(
-                {
-                    # Line below maps EQUAL_TO preset on all available properties
-                    # ["*"] - represents all props
-                    QueryPresetsGeneric.EQUAL_TO: ["*"],
-                    ...
-                }
-            ),
-            # do the same for each of these (all optional)
-            string_handler=ClientSideHandlerString(
-               {
-                    # Line Below maps MATCHES_REGEX preset on PROP_1 only
-                    # All other properties are invalid
-                    QueryPresetsString.MATCHES_REGEX: [ResourceProperties.PROP_1]
-               }
-            ),
-            # we don't want any datetime presets to be valid - so set it to None
-            datetime_handler=None,
+        return ClientSideHandler(
+            {
+                # Line below maps EQUAL_TO preset on all available properties
+                # ["*"] - represents all props
+                QueryPresets.EQUAL_TO: ["*"],
+                #...
 
-            # we don't want any integer presets to be valid - so set it to None
-            integer_handler=None
+                # Line Below maps MATCHES_REGEX preset on PROP_1 only
+                # All other properties are invalid
+                QueryPresets.MATCHES_REGEX: [ResourceProperties.PROP_1]
+
+                #...
+                # keep going until all presets you want to allow are mapped
+           }
         )
-    ...
+    # ...
 ```
 
-## 3e (Optional) Map client-side filters
+## 3e (Optional) Map server-side filters
 
 To add a server-side filter you must:
 1. Read the Openstack API documentation for each Query the preset works on
@@ -234,7 +227,7 @@ will call `QueryFactory` with the `ResourceMapping` class we just created.
 
 e.g. Add this function to `openstackquery/api/query_objects.py` (as usual, replace `Resource` with the name of the openstack resource your querying)
 ```python
-def ResourceQuery() -> QueryAPI:
+def ResourceQuery() -> "QueryAPI":
    """
    Simple helper function to setup a query using a factory
    """
