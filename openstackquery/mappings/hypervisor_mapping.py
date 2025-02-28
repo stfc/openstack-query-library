@@ -85,7 +85,7 @@ class HypervisorMapping(MappingInterface):
             HypervisorProperties.DISK_GB_USED,
             HypervisorProperties.VCPUS,
             HypervisorProperties.DISK_GB_SIZE,
-            HypervisorProperties.DISK_GB_SIZE,
+            HypervisorProperties.MEMORY_MB_SIZE,
         ]
 
         return QueryClientSideHandlers(
