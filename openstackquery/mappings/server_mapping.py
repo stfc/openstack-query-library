@@ -1,5 +1,6 @@
 from typing import Type
 
+from aliases import QueryChainMappings
 from openstackquery.structs.query_client_side_handlers import QueryClientSideHandlers
 
 from openstackquery.enums.props.server_properties import ServerProperties
@@ -37,17 +38,19 @@ class ServerMapping(MappingInterface):
     """
 
     @staticmethod
-    def get_chain_mappings():
+    def get_chain_mappings() -> QueryChainMappings:
         """
         Should return a dictionary containing property pairs mapped to query mappings.
         This is used to define how to chain results from this query to other possible queries
         """
         return {
-            ServerProperties.USER_ID: UserProperties.USER_ID,
-            ServerProperties.PROJECT_ID: ProjectProperties.PROJECT_ID,
-            ServerProperties.FLAVOR_ID: FlavorProperties.FLAVOR_ID,
-            ServerProperties.IMAGE_ID: ImageProperties.IMAGE_ID,
-            ServerProperties.HYPERVISOR_NAME: HypervisorProperties.HYPERVISOR_NAME,
+            ServerProperties.USER_ID: [UserProperties.USER_ID],
+            ServerProperties.PROJECT_ID: [ProjectProperties.PROJECT_ID],
+            ServerProperties.FLAVOR_ID: [FlavorProperties.FLAVOR_ID],
+            ServerProperties.IMAGE_ID: [ImageProperties.IMAGE_ID],
+            ServerProperties.HYPERVISOR_NAME: [
+                HypervisorProperties.HYPERVISOR_NAME,
+            ],
         }
 
     @staticmethod

@@ -97,8 +97,8 @@ def test_image_query(run_query_test_case):
 
 def test_hypervisor_query(run_query_test_case):
     """
-    tests that function ProjectQuery works
-    should call get_common with ProjectMapping
+    tests that function HypervisorQuery works
+    should call get_common with HypervisorMapping
     """
     with patch(
         "openstackquery.api.query_objects.HypervisorMapping"

@@ -1,7 +1,7 @@
 from typing import Dict, List, Tuple
 import pytest
 
-from openstackquery.aliases import PresetPropMappings
+from openstackquery.aliases import ClientSidePresetPropertyMappings
 from openstackquery.enums.props.prop_enum import PropEnum
 from openstackquery.enums.query_presets import QueryPresets, QueryPresetsGeneric
 from openstackquery.handlers.client_side_handler import ClientSideHandler
@@ -15,7 +15,7 @@ def client_side_test_mappings_fixture():
     """
 
     def _client_side_test_case(
-        handler: ClientSideHandler, expected_mappings: PresetPropMappings
+        handler: ClientSideHandler, expected_mappings: ClientSidePresetPropertyMappings
     ):
         """
         Tests client side handler mappings are correct, ensure that each handler has appropriate presets

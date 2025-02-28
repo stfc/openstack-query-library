@@ -1,5 +1,6 @@
 from typing import Type
 
+from aliases import QueryChainMappings
 from openstackquery.enums.props.image_properties import ImageProperties
 from openstackquery.enums.props.server_properties import ServerProperties
 from openstackquery.enums.query_presets import (
@@ -33,12 +34,12 @@ class ImageMapping(MappingInterface):
     """
 
     @staticmethod
-    def get_chain_mappings():
+    def get_chain_mappings() -> QueryChainMappings:
         """
         Return a dictionary containing property pairs mapped to query mappings.
         This is used to define how to chain results from this query to other possible queries
         """
-        return {ImageProperties.IMAGE_ID: ServerProperties.IMAGE_ID}
+        return {ImageProperties.IMAGE_ID: [ServerProperties.IMAGE_ID]}
 
     @staticmethod
     def get_runner_mapping() -> Type[ImageRunner]:

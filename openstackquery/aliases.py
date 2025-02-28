@@ -1,4 +1,4 @@
-from typing import List, Callable, Any, Dict, Union
+from typing import List, Callable, Any, Dict, Union, Literal, Optional
 from openstack.identity.v3.project import Project
 
 from openstackquery.enums.props.prop_enum import PropEnum
@@ -10,43 +10,62 @@ PropValue = Union[str, bool, int, None]
 # A type alias for a single openstack resource - i.e Server, Hypervisor etc
 OpenstackResourceObj = Any
 
-# A type alias for a Prop Func which takes an openstack resource and returns its corresponding property value
+# A type alias for a function which takes an openstack resource and returns it's value for a given property
 PropFunc = Callable[[OpenstackResourceObj], PropValue]
 
-# A type alias for a dictionary which contains mappings between PropEnum and PropFunc
+# A type alias which maps a property enum to the function that returns it
 PropertyMappings = Dict[PropEnum, PropFunc]
 
-# A type alias for a dictionary of params to pass to either client_side or server_side filters
+# A type alias for storing the input parameters for handling query filtering (filter name -> value(s))
 FilterParams = Dict[str, Union[PropValue, List[PropValue]]]
-FilterFunc = Callable[[PropValue, FilterParams], bool]
 
-# A type alias for a client-side filter func
+# type alias for a generic filter function - takes a value to compare and parameters to define the filter conditions
+#   - returns True if a given property value matches filter condition
+#   - returns False if not
+FilterFunc = Callable[[PropValue, Any], bool]
+
+# A type alias for a client-side filter function. Wraps a generic filter function
+#   - takes a openstack resource object
+#   - extracts desired property
+#   - applies stored generic filter function - see FilterFunc
 ClientSideFilterFunc = Callable[[OpenstackResourceObj], bool]
 
-# A type alias for a list of client-side filters to pass to run_query
+# A list of client-side filter functions that make up a single query
+#   - applied after querying openstacksdk
+#   - applied sequentially - act as logical "AND" filters
 ClientSideFilters = List[ClientSideFilterFunc]
 
-# A type alias for a dictionary of filters to pass to openstacksdk commands as filter params
+# A type alias for a server-side filter.
+#   - kwargs to pass to openstacksdk which handles filtering for us
+#   - faster than using client-side filters
 ServerSideFilter = Dict[str, PropValue]
 
-# A type alias for representing a list of server-side-filters which will be used to run multiple openstacksdk commands
-# - one command per server-side filter
+# A list of server-side filters
+# each set of filters create a separate queries - results of which are aggregated together
 ServerSideFilters = List[ServerSideFilter]
 
-# A type alias for a function that takes a number of filter params and returns a set of server-side filters
+# A type alias for a function that:
+# - takes a set of filter params as input
+# - returns kwargs to pass to openstacksdk to apply filter
 ServerSideFilterFunc = Callable[[FilterParams], ServerSideFilter]
 
-# type aliases for mapping server side filter functions to a corresponding preset-property pairs
-PropToServerSideFilterFunc = Dict[PropEnum, ServerSideFilterFunc]
-ServerSideFilterMappings = Dict[QueryPresets, PropToServerSideFilterFunc]
+# A type alias for mapping preset/property pairs to corresponding server-side filter functions
+# Each QueryPreset contains a set of property enums that are valid for the preset
+# Each enum is mapped to a filter function that returns server-side kwargs to pass to openstacksdk
+ServerSideFilterMappings = Dict[QueryPresets, Dict[PropEnum, ServerSideFilterFunc]]
 
-# type alias for mapping presets to valid properties that can be used with them
-# can also accept a literal ['*'] to indicate preset works for all enum values
-# NOTE: can't use Literal typing for ['*'] with python 3.6 so using generic List
-PresetPropMappings = Dict[QueryPresets, Union[List, List[PropEnum]]]
+# A type alias for mapping client-side query presets to the properties they act on
+# Maps a preset to list of valid property enums
+# - accepts ['*'] - indicates all PropEnums are valid
+# - or accepts a list of valid PropEnums
+ClientSidePresetPropertyMappings = Dict[
+    QueryPresets, Union[List[Literal["*"]], List[PropEnum]]
+]
 
 # type alias for mapping preset to a filter function
-PresetToFilterFunc = Dict[QueryPresets, Callable[[PropValue, Any], bool]]
+# client-side filters are more generic than server-side filters
+# - every valid property for a preset uses the same filter function
+ClientSideFilterMappings = Dict[QueryPresets, FilterFunc]
 
 # type alias for project identifier - either name/id or Project object
 ProjectIdentifier = Union[str, Project]
@@ -65,7 +84,15 @@ GroupMappings = Dict[str, Callable[[OpenstackResourceObj], bool]]
 # that should belong to that group
 GroupRanges = Dict[str, List[PropValue]]
 
-
 # a type alias for grouped and parsed outputs. A dicitonary of grouped prop-value as key and list of values
 # that belong to that group
 GroupedReturn = Dict[PropValue, List[Dict]]
+
+# a type alias for query chain mappings. Defines common preset-property pairs between query types to allow
+# chaining between queries
+#   - The key is a PropEnum belonging to current query type
+#   - The value is a list of PropEnums that hold the same information but belong to different query types
+# by running a second query on the second query type where the values of the shared properties match
+#   - we can chain queries together.
+# Not all query types will have chain mappings
+QueryChainMappings = Optional[Dict[PropEnum, List[PropEnum]]]

@@ -3,7 +3,7 @@ from datetime import datetime
 
 from openstackquery.enums.query_presets import QueryPresetsDateTime
 
-from openstackquery.aliases import PresetPropMappings
+from openstackquery.aliases import ClientSidePresetPropertyMappings
 
 from openstackquery.time_utils import TimeUtils
 from openstackquery.handlers.client_side_handler import ClientSideHandler
@@ -18,7 +18,7 @@ class ClientSideHandlerDateTime(ClientSideHandler):
     Filter functions which map to QueryPresetsDateTime are defined here
     """
 
-    def __init__(self, preset_prop_mappings: PresetPropMappings):
+    def __init__(self, preset_prop_mappings: ClientSidePresetPropertyMappings):
         filter_mappings = {
             QueryPresetsDateTime.OLDER_THAN: self._prop_older_than,
             QueryPresetsDateTime.YOUNGER_THAN: self._prop_younger_than,

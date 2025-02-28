@@ -1,5 +1,7 @@
 from typing import Type
 from abc import ABC, abstractmethod
+
+from aliases import QueryChainMappings
 from openstackquery.enums.props.prop_enum import PropEnum
 from openstackquery.structs.query_client_side_handlers import QueryClientSideHandlers
 from openstackquery.runners.runner_wrapper import RunnerWrapper
@@ -14,7 +16,7 @@ class MappingInterface(ABC):
 
     @staticmethod
     @abstractmethod
-    def get_chain_mappings():
+    def get_chain_mappings() -> QueryChainMappings:
         """
         Should return a dictionary containing common property pairs for query mappings.
         This is used to define how to chain results from this query to other possible queries

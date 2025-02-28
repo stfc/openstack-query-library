@@ -1,5 +1,6 @@
 from typing import Type
 
+from aliases import QueryChainMappings
 from openstackquery.enums.props.hypervisor_properties import HypervisorProperties
 from openstackquery.enums.props.server_properties import ServerProperties
 from openstackquery.enums.query_presets import (
@@ -10,10 +11,9 @@ from openstackquery.enums.query_presets import (
 from openstackquery.handlers.client_side_handler_generic import (
     ClientSideHandlerGeneric,
 )
-from openstackquery.handlers.client_side_handler_integer import (
-    ClientSideHandlerInteger,
-)
 from openstackquery.handlers.client_side_handler_string import ClientSideHandlerString
+from openstackquery.handlers.client_side_handler_integer import ClientSideHandlerInteger
+
 from openstackquery.handlers.server_side_handler import ServerSideHandler
 from openstackquery.mappings.mapping_interface import MappingInterface
 
@@ -30,12 +30,16 @@ class HypervisorMapping(MappingInterface):
     """
 
     @staticmethod
-    def get_chain_mappings():
+    def get_chain_mappings() -> QueryChainMappings:
         """
         Should return a dictionary containing property pairs mapped to query mappings.
         This is used to define how to chain results from this query to other possible queries
         """
-        return {HypervisorProperties.HYPERVISOR_NAME: ServerProperties.HYPERVISOR_NAME}
+        return {
+            HypervisorProperties.HYPERVISOR_NAME: [
+                ServerProperties.HYPERVISOR_NAME,
+            ]
+        }
 
     @staticmethod
     def get_runner_mapping() -> Type[RunnerWrapper]:
@@ -72,17 +76,16 @@ class HypervisorMapping(MappingInterface):
         corresponding to valid preset-property pairs. These filter functions can be used to filter results after
         listing all hypervisors.
         """
-        integer_props = [
-            HypervisorProperties.HYPERVISOR_DISK_USED,
-            HypervisorProperties.HYPERVISOR_DISK_FREE,
-            HypervisorProperties.HYPERVISOR_DISK_SIZE,
-            HypervisorProperties.HYPERVISOR_MEMORY_SIZE,
-            HypervisorProperties.HYPERVISOR_MEMORY_USED,
-            HypervisorProperties.HYPERVISOR_MEMORY_FREE,
-            HypervisorProperties.HYPERVISOR_VCPUS,
-            HypervisorProperties.HYPERVISOR_VCPUS_USED,
-            # HypervisorProperties.HYPERVISOR_SERVER_COUNT, # Deprecated, use server query
-            # HypervisorProperties.HYPERVISOR_CURRENT_WORKLOAD,
+        integer_prop_list = [
+            HypervisorProperties.VCPUS_AVAIL,
+            HypervisorProperties.MEMORY_MB_AVAIL,
+            HypervisorProperties.DISK_GB_AVAIL,
+            HypervisorProperties.VCPUS_USED,
+            HypervisorProperties.MEMORY_MB_USED,
+            HypervisorProperties.DISK_GB_USED,
+            HypervisorProperties.VCPUS,
+            HypervisorProperties.DISK_GB_SIZE,
+            HypervisorProperties.MEMORY_MB_SIZE,
         ]
 
         return QueryClientSideHandlers(
@@ -110,10 +113,10 @@ class HypervisorMapping(MappingInterface):
             # set integer query preset mappings
             integer_handler=ClientSideHandlerInteger(
                 {
-                    QueryPresetsInteger.LESS_THAN: integer_props,
-                    QueryPresetsInteger.GREATER_THAN: integer_props,
-                    QueryPresetsInteger.LESS_THAN_OR_EQUAL_TO: integer_props,
-                    QueryPresetsInteger.GREATER_THAN_OR_EQUAL_TO: integer_props,
+                    QueryPresetsInteger.LESS_THAN: integer_prop_list,
+                    QueryPresetsInteger.LESS_THAN_OR_EQUAL_TO: integer_prop_list,
+                    QueryPresetsInteger.GREATER_THAN: integer_prop_list,
+                    QueryPresetsInteger.GREATER_THAN_OR_EQUAL_TO: integer_prop_list,
                 }
             ),
         )

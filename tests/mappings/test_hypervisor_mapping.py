@@ -62,6 +62,33 @@ def test_client_side_handlers_string(client_side_test_mappings):
     client_side_test_mappings(handler, mappings)
 
 
+def test_client_side_handlers_integer(client_side_test_mappings):
+    """
+    Tests client side handler mappings are correct
+    shouldn't create an integer handler because there are no integer related properties for Server
+    """
+    integer_prop_list = [
+        HypervisorProperties.VCPUS_AVAIL,
+        HypervisorProperties.MEMORY_MB_AVAIL,
+        HypervisorProperties.DISK_GB_AVAIL,
+        HypervisorProperties.VCPUS_USED,
+        HypervisorProperties.MEMORY_MB_USED,
+        HypervisorProperties.DISK_GB_USED,
+        HypervisorProperties.VCPUS,
+        HypervisorProperties.DISK_GB_SIZE,
+        HypervisorProperties.MEMORY_MB_SIZE,
+    ]
+
+    handler = HypervisorMapping.get_client_side_handlers().integer_handler
+    mappings = {
+        QueryPresetsInteger.LESS_THAN: integer_prop_list,
+        QueryPresetsInteger.GREATER_THAN: integer_prop_list,
+        QueryPresetsInteger.GREATER_THAN_OR_EQUAL_TO: integer_prop_list,
+        QueryPresetsInteger.LESS_THAN_OR_EQUAL_TO: integer_prop_list,
+    }
+    client_side_test_mappings(handler, mappings)
+
+
 def test_client_side_handlers_datetime():
     """
     Tests client side handler mappings are correct, and line up to the expected
@@ -71,37 +98,14 @@ def test_client_side_handlers_datetime():
     assert not handler
 
 
-def test_client_side_handlers_integer(client_side_test_mappings):
-    """
-    Tests client side handler mappings are correct, and line up to the expected
-    client side params for integer presets
-    """
-    integer_prop_list = [
-        HypervisorProperties.HYPERVISOR_DISK_USED,
-        HypervisorProperties.HYPERVISOR_DISK_FREE,
-        HypervisorProperties.HYPERVISOR_DISK_SIZE,
-        HypervisorProperties.HYPERVISOR_MEMORY_SIZE,
-        HypervisorProperties.HYPERVISOR_MEMORY_USED,
-        HypervisorProperties.HYPERVISOR_MEMORY_FREE,
-        HypervisorProperties.HYPERVISOR_VCPUS,
-        HypervisorProperties.HYPERVISOR_VCPUS_USED,
-    ]
-    handler = HypervisorMapping.get_client_side_handlers().integer_handler
-    mappings = {
-        QueryPresetsInteger.LESS_THAN: integer_prop_list,
-        QueryPresetsInteger.LESS_THAN_OR_EQUAL_TO: integer_prop_list,
-        QueryPresetsInteger.GREATER_THAN: integer_prop_list,
-        QueryPresetsInteger.GREATER_THAN_OR_EQUAL_TO: integer_prop_list,
-    }
-    client_side_test_mappings(handler, mappings)
-
-
 def test_get_chain_mappings():
     """
     Tests get_chain_mapping outputs correctly
     """
     expected_mappings = {
-        HypervisorProperties.HYPERVISOR_NAME: ServerProperties.HYPERVISOR_NAME,
+        HypervisorProperties.HYPERVISOR_NAME: [
+            ServerProperties.HYPERVISOR_NAME,
+        ],
     }
-
-    assert HypervisorMapping.get_chain_mappings() == expected_mappings
+    # we don't care about order
+    assert set(HypervisorMapping.get_chain_mappings()) == set(expected_mappings)

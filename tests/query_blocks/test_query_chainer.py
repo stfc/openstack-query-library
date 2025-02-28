@@ -18,7 +18,9 @@ def instance_fixture():
     # mocks MockProperties PROP_1 to PROP_2 - contrived example since
     # the properties should belong to 2 different Queries to be useful
     # - but this is just a test
-    _chain_mappings = {MockProperties.PROP_1: MockProperties.PROP_2}
+    _chain_mappings = {
+        MockProperties.PROP_1: [MockProperties.PROP_2, MockProperties.PROP_3]
+    }
     return QueryChainer(_chain_mappings)
 
 
@@ -137,7 +139,7 @@ def test_get_link_props_valid_query(instance):
     should return link props
     """
     # a set of mock_properties that the input query returns
-    mock_props = [MockProperties.PROP_2, MockProperties.PROP_3]
+    mock_props = [MockProperties.PROP_2, MockProperties.PROP_4]
 
     mock_query = MagicMock()
     mock_query.value.get_prop_mapping.return_value = mock_props
@@ -152,7 +154,7 @@ def test_get_link_props_no_mapping(instance):
     Tests get_link_props method - with invalid query chain mappings
     should return none
     """
-    mock_props = [MockProperties.PROP_3, MockProperties.PROP_4]
+    mock_props = [MockProperties.PROP_4]
 
     mock_query = MagicMock()
     mock_query.value.get_prop_mapping.return_value = mock_props

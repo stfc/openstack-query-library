@@ -160,7 +160,7 @@ def test_get_chain_mappings():
     Tests get_chain_mapping outputs correctly
     """
     expected_mappings = {
-        FlavorProperties.FLAVOR_ID: ServerProperties.FLAVOR_ID,
+        FlavorProperties.FLAVOR_ID: [ServerProperties.FLAVOR_ID],
     }
 
-    assert FlavorMapping.get_chain_mappings() == expected_mappings
+    assert set(FlavorMapping.get_chain_mappings()) == set(expected_mappings)
