@@ -36,7 +36,7 @@ from openstackquery import HypervisorQuery
 | `string`    | "status"                                                         | The status of the hypervisor. One of enabled or disabled.       |
 | `int`       | "vcpus"                                                          | The number of vCPUs on this hypervisor.                         |
 | `int`       | "vcpus_free" "vcpus_avail"                                       | The number of vCPUs on this hypervisor.                         |
-| `int`       | "vcpus_used"                                                     | The number of vCPUs currently being used on this hypervisor.    |
+| `int`       | "vcpus_used", "vcpus_in_use"                                     | The number of vCPUs currently being used on this hypervisor.    |
 | `string`    | "disabled_reason"                                                | Comment of why the hypervisor is disabled, None if not disabled |
 | `float`     | "uptime"                                                         | The total uptime in days of the hypervisor                      |
 

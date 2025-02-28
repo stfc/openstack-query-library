@@ -37,7 +37,7 @@ from tests.mocks.mocked_props import MockProperties
             HypervisorProperties.DISK_GB_AVAIL,
             ["disk_gb_avail", "disk_avail", "local_disk_free", "free_disk_gb"],
         ),
-        (HypervisorProperties.VCPUS_USED, ["vcpus_used"]),
+        (HypervisorProperties.VCPUS_USED, ["vcpus_used", "vcpus_in_use"]),
         (HypervisorProperties.MEMORY_MB_USED, ["memory_mb_used", "memory_used"]),
         (
             HypervisorProperties.DISK_GB_USED,

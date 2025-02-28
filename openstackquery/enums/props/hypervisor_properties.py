@@ -44,7 +44,7 @@ class HypervisorProperties(PropEnum):
             HypervisorProperties.HYPERVISOR_DISABLED_REASON: ["disabled_reason"],
             HypervisorProperties.HYPERVISOR_UPTIME_DAYS: ["uptime"],
             HypervisorProperties.VCPUS: ["vcpus"],
-            HypervisorProperties.VCPUS_USED: ["vcpus_used"],
+            HypervisorProperties.VCPUS_USED: ["vcpus_used", "vcpus_in_use"],
             HypervisorProperties.VCPUS_AVAIL: ["vcpus_avail", "vcpus_free"],
             HypervisorProperties.MEMORY_MB_SIZE: [
                 "memory_mb_size",
