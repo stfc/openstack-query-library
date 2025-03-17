@@ -215,30 +215,3 @@ def prop_matches_regex(prop: Union[str, None], value: str) -> bool:
         return False
     res = re.match(re.compile(rf"{value}"), prop)
     return bool(res)
-
-
-def prop_list_contains(prop: Union[List, None], values: Union[PropValue, List]) -> bool:
-    """
-    Filter function which returns true if a prop (a list) contains a value or sublist
-    :param prop: prop list to check against
-    :param values: a value or sublist of values to check if the prop list contains it
-    :return:
-    """
-    if prop is None:
-        return False
-
-    if isinstance(values, list):
-        return all(item in prop for item in values)
-    return values in prop
-
-
-def prop_list_not_contains(
-    prop: Union[List, None], values: Union[PropValue, List]
-) -> bool:
-    """
-    Filter function which returns true if a prop (a list) DOES NOT contain a given value or sublist
-    :param prop: prop list to check against
-    :param values: a value or sublist of values to check if the prop list contains it
-    :return:
-    """
-    return not prop_list_contains(prop, values)

@@ -28,8 +28,6 @@ from openstackquery.handlers.client_side_filters import (
     prop_greater_than_or_equal_to,
     prop_less_than_or_equal_to,
     prop_matches_regex,
-    prop_list_contains,
-    prop_list_not_contains,
 )
 
 from openstackquery.enums.query_presets import QueryPresets
@@ -64,8 +62,6 @@ class ClientSideHandler(HandlerBase):
             QueryPresets.GREATER_THAN_OR_EQUAL_TO: prop_greater_than_or_equal_to,
             QueryPresets.LESS_THAN_OR_EQUAL_TO: prop_less_than_or_equal_to,
             QueryPresets.MATCHES_REGEX: prop_matches_regex,
-            QueryPresets.CONTAINS: prop_list_contains,
-            QueryPresets.NOT_CONTAINS: prop_list_not_contains,
         }
 
     def get_supported_props(self, preset: QueryPresets) -> Union[List, List[PropEnum]]:

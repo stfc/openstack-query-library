@@ -30,10 +30,6 @@ class QueryPresets(EnumWithAliases):
     # string comparisons
     MATCHES_REGEX = auto()
 
-    # list comparisons
-    CONTAINS = auto()
-    NOT_CONTAINS = auto()
-
     @staticmethod
     def _get_aliases():
         """
@@ -63,6 +59,4 @@ class QueryPresets(EnumWithAliases):
                 "<=",
             ],
             QueryPresets.MATCHES_REGEX: ["match_regex", "regex", "re"],
-            # QueryPresets.CONTAINS: ["list_contains", "has"],
-            # QueryPresets.NOT_CONTAINS: ["list_not_contains", "has_not"]
         }
