@@ -1,5 +1,5 @@
 from typing import Type
-from aliases import QueryChainMappings
+from openstackquery.aliases import QueryChainMappings
 from openstackquery.enums.query_presets import QueryPresets
 
 from openstackquery.enums.props.project_properties import ProjectProperties

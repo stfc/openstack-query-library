@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from openstack.compute.v2.hypervisor import Hypervisor as OpenstackHypervisor
-from structs.resource_provider_usage import ResourceProviderUsage
+from openstackquery.structs.resource_provider_usage import ResourceProviderUsage
 
 
 # pylint: disable=too-many-instance-attributes

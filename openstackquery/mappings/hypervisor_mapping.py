@@ -1,6 +1,6 @@
 from typing import Type
 
-from aliases import QueryChainMappings
+from openstackquery.aliases import QueryChainMappings
 from openstackquery.enums.props.hypervisor_properties import HypervisorProperties
 from openstackquery.enums.props.server_properties import ServerProperties
 

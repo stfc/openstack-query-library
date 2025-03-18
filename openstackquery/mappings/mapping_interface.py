@@ -1,7 +1,7 @@
 from typing import Type
 from abc import ABC, abstractmethod
 
-from aliases import QueryChainMappings
+from openstackquery.aliases import QueryChainMappings
 from openstackquery.enums.props.prop_enum import PropEnum
 from openstackquery.runners.runner_wrapper import RunnerWrapper
 

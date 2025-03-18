@@ -1,6 +1,6 @@
 from typing import Type
 
-from aliases import QueryChainMappings
+from openstackquery.aliases import QueryChainMappings
 from openstackquery.enums.props.image_properties import ImageProperties
 from openstackquery.enums.props.server_properties import ServerProperties
 from openstackquery.enums.query_presets import QueryPresets
