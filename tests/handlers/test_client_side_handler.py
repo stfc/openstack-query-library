@@ -11,38 +11,31 @@ from tests.mocks.mocked_query_presets import MockQueryPresets
 from tests.mocks.mocked_props import MockProperties
 
 
-@pytest.fixture(name="mock_preset_prop_mappings")
-def preset_prop_mappings_fixture():
-    """
-    Sets up a set of mock mappings of valid presets for handler against a
-    list of mock properties that preset can work on
-    """
-    return {
-        MockQueryPresets.ITEM_1: ["*"],
-        MockQueryPresets.ITEM_2: [MockProperties.PROP_1, MockProperties.PROP_2],
-        MockQueryPresets.ITEM_3: [MockProperties.PROP_3, MockProperties.PROP_4],
-    }
-
-
-@pytest.fixture(name="mock_filter")
+@pytest.fixture(name="mock_filter_fn")
 def mock_filter_instance():
     """
-    Returns a mocked filter that will always fail
+    Returns a mocked filter function
     """
-
     return MagicMock()
 
 
 @pytest.fixture(name="instance")
-def instance_fixture(mock_preset_prop_mappings, mock_filter):
+def instance_fixture(mock_filter_fn):
     """
     Returns a function that will setup a client_side_handler with mocks
     """
-
-    mock_filter_mappings = {
-        MockQueryPresets.ITEM_1: mock_filter,
-    }
-    return ClientSideHandler(mock_filter_mappings, mock_preset_prop_mappings)
+    client_side_handler = ClientSideHandler(
+        {
+            MockQueryPresets.ITEM_1: ["*"],
+            MockQueryPresets.ITEM_2: [MockProperties.PROP_1, MockProperties.PROP_2],
+            MockQueryPresets.ITEM_3: [MockProperties.PROP_3, MockProperties.PROP_4],
+        }
+    )
+    # pylint:disable=protected-access
+    # we need to mock _filter_functions mappings to test functions that use them
+    # but the mappings themselves are hardcoded into the class and should not be accessible
+    client_side_handler._filter_functions = {MockQueryPresets.ITEM_1: mock_filter_fn}
+    return client_side_handler
 
 
 def test_get_supported_props(instance):
@@ -124,7 +117,7 @@ def get_filter_func_runner_fixture(instance):
     return _get_filter_func_runner
 
 
-def test_get_filter_func_valid_kwargs(get_filter_func_runner, mock_filter):
+def test_get_filter_func_valid_kwargs(get_filter_func_runner, mock_filter_fn):
     """
     Tests calling get_filter_func with valid kwargs.
     get_filter_func will get a simple stub method that will output whatever value that kwarg "out" holds
@@ -134,7 +127,7 @@ def test_get_filter_func_valid_kwargs(get_filter_func_runner, mock_filter):
 
     res = get_filter_func_runner(mock_prop_func, mock_kwargs)
 
-    mock_filter.assert_has_calls(
+    mock_filter_fn.assert_has_calls(
         [
             # first call from _check_filter_func
             call(None, **mock_kwargs),
@@ -142,10 +135,10 @@ def test_get_filter_func_valid_kwargs(get_filter_func_runner, mock_filter):
             call(mock_prop_func.return_value, **mock_kwargs),
         ]
     )
-    assert res == mock_filter.return_value
+    assert res == mock_filter_fn.return_value
 
 
-def test_get_filter_func_valid_kwargs_no_params(mock_filter, get_filter_func_runner):
+def test_get_filter_func_valid_kwargs_no_params(get_filter_func_runner, mock_filter_fn):
     """
     Tests calling get_filter_func with valid kwargs - filter takes no extra params.
     get_filter_func will get a simple stub method that will output whatever value that kwarg "out" holds
@@ -155,7 +148,7 @@ def test_get_filter_func_valid_kwargs_no_params(mock_filter, get_filter_func_run
 
     res = get_filter_func_runner(mock_prop_func, mock_kwargs)
 
-    mock_filter.assert_has_calls(
+    mock_filter_fn.assert_has_calls(
         [
             # first call from _check_filter_func
             call(None),
@@ -163,10 +156,10 @@ def test_get_filter_func_valid_kwargs_no_params(mock_filter, get_filter_func_run
             call(mock_prop_func.return_value),
         ]
     )
-    assert res == mock_filter.return_value
+    assert res == mock_filter_fn.return_value
 
 
-def test_get_filter_func_prop_func_raises_error(mock_filter, get_filter_func_runner):
+def test_get_filter_func_prop_func_raises_error(get_filter_func_runner, mock_filter_fn):
     """
     Tests calling get_filter_func with prop func that raises AttributeError when invoked
     filter_func_wrapper should return False in this case
@@ -177,7 +170,7 @@ def test_get_filter_func_prop_func_raises_error(mock_filter, get_filter_func_run
 
     res = get_filter_func_runner(mock_prop_func, mock_kwargs)
 
-    mock_filter.assert_has_calls(
+    mock_filter_fn.assert_has_calls(
         [
             # first call from _check_filter_func
             call(None),
@@ -224,14 +217,14 @@ def test_get_filter_func_prop_invalid(instance):
 
 
 @pytest.mark.parametrize("error_type", [ParseQueryError, TypeError, NameError])
-def test_get_filter_func_filter_raises_error(error_type, instance, mock_filter):
+def test_get_filter_func_filter_raises_error(error_type, instance, mock_filter_fn):
     """
     Tests get_filter_func method when filter function raises an error.
     Should raise QueryPresetMappingError
     """
     mock_prop_func = MagicMock()
     mock_kwargs = {"arg1": "val1", "arg2": "val2"}
-    mock_filter.side_effect = error_type
+    mock_filter_fn.side_effect = error_type
 
     with pytest.raises(QueryPresetMappingError):
         instance.get_filter_func(
@@ -241,4 +234,4 @@ def test_get_filter_func_filter_raises_error(error_type, instance, mock_filter):
             mock_kwargs,
         )
 
-    mock_filter.assert_called_once_with(None, **mock_kwargs)
+    mock_filter_fn.assert_called_once_with(None, **mock_kwargs)

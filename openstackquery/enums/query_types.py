@@ -39,6 +39,9 @@ class QueryTypes(EnumWithAliases):
                 "projectquery",
             ],
             QueryTypes.SERVER_QUERY: [
+                "vm",
+                "vms",
+                "vmquery",
                 "server",
                 "servers",
                 "serverquery",

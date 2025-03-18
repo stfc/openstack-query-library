@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, patch, call, NonCallableMock
 
 import pytest
 
-from openstackquery.enums.query_presets import QueryPresetsGeneric
+from openstackquery.enums.query_presets import QueryPresets
 from openstackquery.exceptions.query_chaining_error import QueryChainingError
 from openstackquery.query_blocks.query_chainer import QueryChainer
 from tests.mocks.mocked_props import MockProperties
@@ -89,7 +89,7 @@ def run_parse_then_query_valid_fixture(instance):
         )
 
         mock_query_api.return_value.where.assert_called_once_with(
-            QueryPresetsGeneric.ANY_IN,
+            QueryPresets.ANY_IN,
             MockProperties.PROP_2,
             values=["val1", "val2", "val3"],
         )

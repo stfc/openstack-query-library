@@ -12,7 +12,22 @@ from openstackquery.aliases import (
     PropFunc,
     FilterParams,
     OpenstackResourceObj,
-    ClientSideFilterMappings,
+)
+
+from openstackquery.handlers.client_side_filters import (
+    prop_older_than,
+    prop_younger_than,
+    prop_older_than_or_equal_to,
+    prop_younger_than_or_equal_to,
+    prop_any_in,
+    prop_not_any_in,
+    prop_equal_to,
+    prop_not_equal_to,
+    prop_less_than,
+    prop_greater_than,
+    prop_greater_than_or_equal_to,
+    prop_less_than_or_equal_to,
+    prop_matches_regex,
 )
 
 from openstackquery.enums.query_presets import QueryPresets
@@ -30,11 +45,24 @@ class ClientSideHandler(HandlerBase):
 
     def __init__(
         self,
-        filter_mappings: ClientSideFilterMappings,
         preset_prop_mappings: ClientSidePresetPropertyMappings,
     ):
         self._filter_function_mappings = preset_prop_mappings
-        self._filter_functions = filter_mappings
+        self._filter_functions = {
+            QueryPresets.OLDER_THAN: prop_older_than,
+            QueryPresets.YOUNGER_THAN: prop_younger_than,
+            QueryPresets.OLDER_THAN_OR_EQUAL_TO: prop_older_than_or_equal_to,
+            QueryPresets.YOUNGER_THAN_OR_EQUAL_TO: prop_younger_than_or_equal_to,
+            QueryPresets.ANY_IN: prop_any_in,
+            QueryPresets.EQUAL_TO: prop_equal_to,
+            QueryPresets.NOT_ANY_IN: prop_not_any_in,
+            QueryPresets.NOT_EQUAL_TO: prop_not_equal_to,
+            QueryPresets.GREATER_THAN: prop_greater_than,
+            QueryPresets.LESS_THAN: prop_less_than,
+            QueryPresets.GREATER_THAN_OR_EQUAL_TO: prop_greater_than_or_equal_to,
+            QueryPresets.LESS_THAN_OR_EQUAL_TO: prop_less_than_or_equal_to,
+            QueryPresets.MATCHES_REGEX: prop_matches_regex,
+        }
 
     def get_supported_props(self, preset: QueryPresets) -> Union[List, List[PropEnum]]:
         """

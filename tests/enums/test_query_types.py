@@ -5,102 +5,44 @@ from openstackquery.exceptions.parse_query_error import ParseQueryError
 
 
 @pytest.mark.parametrize(
-    "query_type",
+    "expected_prop,test_values",
     [
-        "Flavor_Query",
-        "FlAvOr_Query",
-        "flavor_query",
-        "flavor",
-        "flavors",
-        "flavorquery",
+        (QueryTypes.FLAVOR_QUERY, ["flavor_query", "flavor", "flavors", "flavorquery"]),
+        (
+            QueryTypes.PROJECT_QUERY,
+            ["project_query", "project", "projects", "projectquery"],
+        ),
+        (
+            QueryTypes.SERVER_QUERY,
+            [
+                "server_query",
+                "vm",
+                "vms",
+                "vmquery",
+                "server",
+                "servers",
+                "serverquery",
+            ],
+        ),
+        (QueryTypes.USER_QUERY, ["user_query", "user", "users", "userquery"]),
+        (QueryTypes.IMAGE_QUERY, ["image_query", "image", "images", "imagequery"]),
+        (
+            QueryTypes.HYPERVISOR_QUERY,
+            ["hypervisor_query", "hypervisor", "hypervisors", "hypervisorquery"],
+        ),
     ],
 )
-def test_flavor_query_serialization(query_type):
-    """
-    Tests that variants of FLAVOR_QUERY can be serialized
-    """
-    assert QueryTypes.from_string(query_type) is QueryTypes.FLAVOR_QUERY
+def test_query_presets_serialization(
+    expected_prop, test_values, property_variant_generator
+):
+    """Test all query preset name formats can be correctly serialized."""
+    for variant in property_variant_generator(test_values):
+        assert QueryTypes.from_string(variant) is expected_prop
 
 
-@pytest.mark.parametrize(
-    "query_type",
-    [
-        "Server_Query",
-        "SeRvEr_QuErY",
-        "server_query",
-        "server",
-        "servers",
-        "serverquery",
-    ],
-)
-def test_server_query_serialization(query_type):
+def test_get_preset_from_string_invalid():
     """
-    Tests that variants of SERVER_QUERY can be serialized
-    """
-    assert QueryTypes.from_string(query_type) is QueryTypes.SERVER_QUERY
-
-
-@pytest.mark.parametrize(
-    "query_type",
-    [
-        "Project_Query",
-        "PrOjEcT_Query",
-        "project_query",
-        "project",
-        "projects",
-        "projectquery",
-    ],
-)
-def test_project_query_serialization(query_type):
-    """
-    Tests that variants of PROJECT_QUERY can be serialized
-    """
-    assert QueryTypes.from_string(query_type) is QueryTypes.PROJECT_QUERY
-
-
-@pytest.mark.parametrize(
-    "query_type",
-    ["User_Query", "UsEr_QuEry", "user_query", "user", "users", "userquery"],
-)
-def test_user_query_serialization(query_type):
-    """
-    Tests that variants of USER_QUERY can be serialized
-    """
-    assert QueryTypes.from_string(query_type) is QueryTypes.USER_QUERY
-
-
-@pytest.mark.parametrize(
-    "query_type",
-    ["Image_Query", "ImAgE_QuEry", "image_query", "image", "images", "imagequery"],
-)
-def test_image_query_serialization(query_type):
-    """
-    Tests that variants of IMAGE_QUERY can be serialized
-    """
-    assert QueryTypes.from_string(query_type) is QueryTypes.IMAGE_QUERY
-
-
-@pytest.mark.parametrize(
-    "query_type",
-    [
-        "Hypervisor_Query",
-        "HyPeRvIsOr_QuErY",
-        "hypervisor_query",
-        "hypervisor",
-        "hypervisors",
-        "hypervisorquery",
-    ],
-)
-def test_hypervisor_query_serialization(query_type):
-    """
-    Tests that variants of HYPERVISOR_QUERY can be serialized
-    """
-    assert QueryTypes.from_string(query_type) is QueryTypes.HYPERVISOR_QUERY
-
-
-def test_invalid_serialization():
-    """
-    Tests that error is raised when passes invalid string
+    Tests that get_preset_from_string returns error if given an invalid alias
     """
     with pytest.raises(ParseQueryError):
-        QueryTypes.from_string("some-invalid-string")
+        QueryTypes.from_string("invalid-alias")

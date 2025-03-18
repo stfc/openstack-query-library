@@ -1,85 +1,33 @@
-from typing import Union
 from enum import auto
 from openstackquery.enums.enum_with_aliases import EnumWithAliases
-from openstackquery.exceptions.parse_query_error import ParseQueryError
 
 # pylint: disable=too-few-public-methods
 
 
-class QueryPresetsGeneric(EnumWithAliases):
+class QueryPresets(EnumWithAliases):
     """
     Enum class which holds generic query comparison operators
     """
 
+    # generic comparisons
     EQUAL_TO = auto()
     NOT_EQUAL_TO = auto()
     ANY_IN = auto()
     NOT_ANY_IN = auto()
 
-    @staticmethod
-    def _get_aliases():
-        """
-        A method that returns all valid string alias mappings
-        """
-        return {
-            QueryPresetsGeneric.EQUAL_TO: ["equal", "=="],
-            QueryPresetsGeneric.NOT_EQUAL_TO: ["not_equal", "!="],
-            QueryPresetsGeneric.ANY_IN: ["in"],
-            QueryPresetsGeneric.NOT_ANY_IN: ["not_in"],
-        }
-
-
-class QueryPresetsInteger(EnumWithAliases):
-    """
-    Enum class which holds integer/float comparison operators
-    """
-
+    # integer comparisons
     GREATER_THAN = auto()
     GREATER_THAN_OR_EQUAL_TO = auto()
     LESS_THAN = auto()
     LESS_THAN_OR_EQUAL_TO = auto()
 
-    @staticmethod
-    def _get_aliases():
-        """
-        A method that returns all valid string alias mappings
-        """
-        return {
-            QueryPresetsInteger.LESS_THAN: ["<"],
-            QueryPresetsInteger.GREATER_THAN: [">"],
-            QueryPresetsInteger.GREATER_THAN_OR_EQUAL_TO: [">="],
-            QueryPresetsInteger.LESS_THAN_OR_EQUAL_TO: ["<="],
-        }
-
-
-class QueryPresetsDateTime(EnumWithAliases):
-    """
-    Enum class which holds datetime comparison operators
-    """
-
+    # datetime comparisons
     OLDER_THAN = auto()
     OLDER_THAN_OR_EQUAL_TO = auto()
     YOUNGER_THAN = auto()
     YOUNGER_THAN_OR_EQUAL_TO = auto()
 
-    @staticmethod
-    def _get_aliases():
-        """
-        A method that returns all valid string alias mappings
-        """
-        return {
-            QueryPresetsDateTime.YOUNGER_THAN: ["<"],
-            QueryPresetsDateTime.OLDER_THAN: [">"],
-            QueryPresetsDateTime.OLDER_THAN_OR_EQUAL_TO: [">="],
-            QueryPresetsDateTime.YOUNGER_THAN_OR_EQUAL_TO: ["<="],
-        }
-
-
-class QueryPresetsString(EnumWithAliases):
-    """
-    Enum class which holds string comparison operators
-    """
-
+    # string comparisons
     MATCHES_REGEX = auto()
 
     @staticmethod
@@ -87,27 +35,28 @@ class QueryPresetsString(EnumWithAliases):
         """
         A method that returns all valid string alias mappings
         """
-        return {QueryPresetsString.MATCHES_REGEX: ["regex", "match_regex"]}
-
-
-def get_preset_from_string(val: str):
-    """
-    function that takes a string and returns a preset Enum if that string is an alias for that preset
-    :param val: a string alias to convert
-    """
-    for preset_cls in [
-        QueryPresetsGeneric,
-        QueryPresetsString,
-        QueryPresetsDateTime,
-        QueryPresetsInteger,
-    ]:
-        try:
-            return preset_cls.from_string(val)
-        except ParseQueryError:
-            continue
-    raise ParseQueryError(f"Could not find preset that matches alias {val}.")
-
-
-QueryPresets = Union[
-    QueryPresetsGeneric, QueryPresetsDateTime, QueryPresetsString, QueryPresetsInteger
-]
+        return {
+            QueryPresets.EQUAL_TO: ["equal", "=="],
+            QueryPresets.NOT_EQUAL_TO: ["not_equal", "!="],
+            QueryPresets.ANY_IN: ["in"],
+            QueryPresets.NOT_ANY_IN: ["not_in"],
+            QueryPresets.LESS_THAN: ["less", "<"],
+            QueryPresets.GREATER_THAN: ["greater", "more_than", "more", ">"],
+            QueryPresets.GREATER_THAN_OR_EQUAL_TO: [
+                "greater_or_equal",
+                "more_than_or_equal_to",
+                "more_or_equal",
+                ">=",
+            ],
+            QueryPresets.LESS_THAN_OR_EQUAL_TO: ["less_or_equal", "<="],
+            QueryPresets.YOUNGER_THAN: ["younger", "newer_than", "newer"],
+            QueryPresets.OLDER_THAN: ["older"],
+            QueryPresets.OLDER_THAN_OR_EQUAL_TO: ["older_or_equal"],
+            QueryPresets.YOUNGER_THAN_OR_EQUAL_TO: [
+                "younger_or_equal",
+                "newer_than_or_equal_to",
+                "newer_or_equal",
+                "<=",
+            ],
+            QueryPresets.MATCHES_REGEX: ["match_regex", "regex", "re"],
+        }

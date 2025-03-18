@@ -1,22 +1,12 @@
 from typing import Type
-
-from aliases import QueryChainMappings
-from openstackquery.structs.query_client_side_handlers import QueryClientSideHandlers
+from openstackquery.aliases import QueryChainMappings
 
 from openstackquery.enums.props.user_properties import UserProperties
-from openstackquery.enums.query_presets import (
-    QueryPresetsGeneric,
-    QueryPresetsString,
-)
 from openstackquery.enums.props.server_properties import ServerProperties
+from openstackquery.enums.query_presets import QueryPresets
 
 from openstackquery.handlers.server_side_handler import ServerSideHandler
-
-
-from openstackquery.handlers.client_side_handler_generic import (
-    ClientSideHandlerGeneric,
-)
-from openstackquery.handlers.client_side_handler_string import ClientSideHandlerString
+from openstackquery.handlers.client_side_handler import ClientSideHandler
 
 from openstackquery.mappings.mapping_interface import MappingInterface
 from openstackquery.runners.user_runner import UserRunner
@@ -63,12 +53,12 @@ class UserMapping(MappingInterface):
         """
         return ServerSideHandler(
             {
-                QueryPresetsGeneric.EQUAL_TO: {
+                QueryPresets.EQUAL_TO: {
                     UserProperties.USER_DOMAIN_ID: lambda value: {"domain_id": value},
                     UserProperties.USER_NAME: lambda value: {"name": value},
                     UserProperties.USER_ID: lambda value: {"id": value},
                 },
-                QueryPresetsGeneric.ANY_IN: {
+                QueryPresets.ANY_IN: {
                     UserProperties.USER_DOMAIN_ID: lambda values: [
                         {"domain_id": value} for value in values
                     ],
@@ -83,33 +73,20 @@ class UserMapping(MappingInterface):
         )
 
     @staticmethod
-    def get_client_side_handlers() -> QueryClientSideHandlers:
+    def get_client_side_handler() -> ClientSideHandler:
         """
-        method to configure a set of client-side handlers which can be used to get local filter functions
-        corresponding to valid preset-property pairs. These filter functions can be used to filter results after
-        listing all users.
+        This function returns a client-side handler object which can be used to handle filtering results locally.
+        This function maps which properties are valid for each filter preset.
         """
-        return QueryClientSideHandlers(
-            # set generic query preset mappings
-            generic_handler=ClientSideHandlerGeneric(
-                {
-                    QueryPresetsGeneric.EQUAL_TO: ["*"],
-                    QueryPresetsGeneric.NOT_EQUAL_TO: ["*"],
-                    QueryPresetsGeneric.ANY_IN: ["*"],
-                    QueryPresetsGeneric.NOT_ANY_IN: ["*"],
-                }
-            ),
-            # set string query preset mappings
-            string_handler=ClientSideHandlerString(
-                {
-                    QueryPresetsString.MATCHES_REGEX: [
-                        UserProperties.USER_EMAIL,
-                        UserProperties.USER_NAME,
-                    ]
-                }
-            ),
-            # set datetime query preset mappings
-            datetime_handler=None,
-            # set integer query preset mappings
-            integer_handler=None,
+        return ClientSideHandler(
+            {
+                QueryPresets.EQUAL_TO: ["*"],
+                QueryPresets.NOT_EQUAL_TO: ["*"],
+                QueryPresets.ANY_IN: ["*"],
+                QueryPresets.NOT_ANY_IN: ["*"],
+                QueryPresets.MATCHES_REGEX: [
+                    UserProperties.USER_EMAIL,
+                    UserProperties.USER_NAME,
+                ],
+            }
         )
