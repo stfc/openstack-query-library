@@ -1,37 +1,35 @@
 import logging
-from typing import Optional, Tuple, List, Union
+from typing import List, Optional, Tuple, Union
 
-from openstackquery.exceptions.parse_query_error import ParseQueryError
-from openstackquery.exceptions.query_preset_mapping_error import QueryPresetMappingError
-
-from openstackquery.handlers.handler_base import HandlerBase
 from openstackquery.aliases import (
-    FilterFunc,
-    ClientSidePresetPropertyMappings,
     ClientSideFilterFunc,
-    PropFunc,
+    ClientSidePresetPropertyMappings,
+    FilterFunc,
     FilterParams,
     OpenstackResourceObj,
+    PropFunc,
 )
-
+from openstackquery.enums.props.prop_enum import PropEnum
+from openstackquery.enums.query_presets import QueryPresets
+from openstackquery.exceptions.parse_query_error import ParseQueryError
+from openstackquery.exceptions.query_preset_mapping_error import QueryPresetMappingError
 from openstackquery.handlers.client_side_filters import (
-    prop_older_than,
-    prop_younger_than,
-    prop_older_than_or_equal_to,
-    prop_younger_than_or_equal_to,
     prop_any_in,
-    prop_not_any_in,
     prop_equal_to,
-    prop_not_equal_to,
-    prop_less_than,
     prop_greater_than,
     prop_greater_than_or_equal_to,
+    prop_less_than,
     prop_less_than_or_equal_to,
     prop_matches_regex,
+    prop_not_any_in,
+    prop_not_equal_to,
+    prop_not_matches_regex,
+    prop_older_than,
+    prop_older_than_or_equal_to,
+    prop_younger_than,
+    prop_younger_than_or_equal_to,
 )
-
-from openstackquery.enums.query_presets import QueryPresets
-from openstackquery.enums.props.prop_enum import PropEnum
+from openstackquery.handlers.handler_base import HandlerBase
 
 logger = logging.getLogger(__name__)
 
@@ -62,6 +60,7 @@ class ClientSideHandler(HandlerBase):
             QueryPresets.GREATER_THAN_OR_EQUAL_TO: prop_greater_than_or_equal_to,
             QueryPresets.LESS_THAN_OR_EQUAL_TO: prop_less_than_or_equal_to,
             QueryPresets.MATCHES_REGEX: prop_matches_regex,
+            QueryPresets.NOT_MATCHES_REGEX: prop_not_matches_regex,
         }
 
     def get_supported_props(self, preset: QueryPresets) -> Union[List, List[PropEnum]]:

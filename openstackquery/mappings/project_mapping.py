@@ -1,13 +1,11 @@
 from typing import Type
-from openstackquery.aliases import QueryChainMappings
-from openstackquery.enums.query_presets import QueryPresets
 
+from openstackquery.aliases import QueryChainMappings
 from openstackquery.enums.props.project_properties import ProjectProperties
 from openstackquery.enums.props.server_properties import ServerProperties
-
-from openstackquery.handlers.server_side_handler import ServerSideHandler
+from openstackquery.enums.query_presets import QueryPresets
 from openstackquery.handlers.client_side_handler import ClientSideHandler
-
+from openstackquery.handlers.server_side_handler import ServerSideHandler
 from openstackquery.mappings.mapping_interface import MappingInterface
 from openstackquery.runners.project_runner import ProjectRunner
 
@@ -107,6 +105,10 @@ class ProjectMapping(MappingInterface):
                 QueryPresets.ANY_IN: ["*"],
                 QueryPresets.NOT_ANY_IN: ["*"],
                 QueryPresets.MATCHES_REGEX: [
+                    ProjectProperties.PROJECT_NAME,
+                    ProjectProperties.PROJECT_DESCRIPTION,
+                ],
+                QueryPresets.NOT_MATCHES_REGEX: [
                     ProjectProperties.PROJECT_NAME,
                     ProjectProperties.PROJECT_DESCRIPTION,
                 ],

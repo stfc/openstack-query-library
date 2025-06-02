@@ -82,6 +82,10 @@ def test_client_side_handlers_generic(client_side_test_mappings):
             UserProperties.USER_EMAIL,
             UserProperties.USER_NAME,
         ],
+        QueryPresets.NOT_MATCHES_REGEX: [
+            UserProperties.USER_EMAIL,
+            UserProperties.USER_NAME,
+        ],
     }
     client_side_test_mappings(handler, mappings)
 

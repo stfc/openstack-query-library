@@ -1,21 +1,17 @@
 from typing import Type
+
 from openstackquery.aliases import QueryChainMappings
-
-from openstackquery.enums.props.server_properties import ServerProperties
-from openstackquery.enums.query_presets import QueryPresets
-
-from openstackquery.enums.props.user_properties import UserProperties
-from openstackquery.enums.props.project_properties import ProjectProperties
 from openstackquery.enums.props.flavor_properties import FlavorProperties
-from openstackquery.enums.props.image_properties import ImageProperties
 from openstackquery.enums.props.hypervisor_properties import HypervisorProperties
-
+from openstackquery.enums.props.image_properties import ImageProperties
+from openstackquery.enums.props.project_properties import ProjectProperties
+from openstackquery.enums.props.server_properties import ServerProperties
+from openstackquery.enums.props.user_properties import UserProperties
+from openstackquery.enums.query_presets import QueryPresets
 from openstackquery.handlers.client_side_handler import ClientSideHandler
 from openstackquery.handlers.server_side_handler import ServerSideHandler
-
 from openstackquery.mappings.mapping_interface import MappingInterface
 from openstackquery.runners.server_runner import ServerRunner
-
 from openstackquery.time_utils import TimeUtils
 
 
@@ -137,6 +133,10 @@ class ServerMapping(MappingInterface):
                 QueryPresets.ANY_IN: ["*"],
                 QueryPresets.NOT_ANY_IN: ["*"],
                 QueryPresets.MATCHES_REGEX: [
+                    ServerProperties.SERVER_NAME,
+                    ServerProperties.ADDRESSES,
+                ],
+                QueryPresets.NOT_MATCHES_REGEX: [
                     ServerProperties.SERVER_NAME,
                     ServerProperties.ADDRESSES,
                 ],

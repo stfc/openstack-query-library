@@ -4,10 +4,8 @@ from openstackquery.aliases import QueryChainMappings
 from openstackquery.enums.props.image_properties import ImageProperties
 from openstackquery.enums.props.server_properties import ServerProperties
 from openstackquery.enums.query_presets import QueryPresets
-
 from openstackquery.handlers.client_side_handler import ClientSideHandler
 from openstackquery.handlers.server_side_handler import ServerSideHandler
-
 from openstackquery.mappings.mapping_interface import MappingInterface
 from openstackquery.runners.image_runner import ImageRunner
 from openstackquery.time_utils import TimeUtils
@@ -130,6 +128,7 @@ class ImageMapping(MappingInterface):
                 QueryPresets.ANY_IN: ["*"],
                 QueryPresets.NOT_ANY_IN: ["*"],
                 QueryPresets.MATCHES_REGEX: [ImageProperties.IMAGE_NAME],
+                QueryPresets.NOT_MATCHES_REGEX: [ImageProperties.IMAGE_NAME],
                 QueryPresets.YOUNGER_THAN: date_prop_list,
                 QueryPresets.YOUNGER_THAN_OR_EQUAL_TO: date_prop_list,
                 QueryPresets.OLDER_THAN: date_prop_list,

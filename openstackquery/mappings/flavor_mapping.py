@@ -1,13 +1,11 @@
 from typing import Type
+
 from openstackquery.aliases import QueryChainMappings
-
-from openstackquery.enums.props.server_properties import ServerProperties
 from openstackquery.enums.props.flavor_properties import FlavorProperties
+from openstackquery.enums.props.server_properties import ServerProperties
 from openstackquery.enums.query_presets import QueryPresets
-
-from openstackquery.handlers.server_side_handler import ServerSideHandler
 from openstackquery.handlers.client_side_handler import ClientSideHandler
-
+from openstackquery.handlers.server_side_handler import ServerSideHandler
 from openstackquery.mappings.mapping_interface import MappingInterface
 from openstackquery.runners.flavor_runner import FlavorRunner
 
@@ -92,6 +90,7 @@ class FlavorMapping(MappingInterface):
                 QueryPresets.ANY_IN: ["*"],
                 QueryPresets.NOT_ANY_IN: ["*"],
                 QueryPresets.MATCHES_REGEX: [FlavorProperties.FLAVOR_NAME],
+                QueryPresets.NOT_MATCHES_REGEX: [FlavorProperties.FLAVOR_NAME],
                 QueryPresets.LESS_THAN: integer_prop_list,
                 QueryPresets.LESS_THAN_OR_EQUAL_TO: integer_prop_list,
                 QueryPresets.GREATER_THAN: integer_prop_list,
