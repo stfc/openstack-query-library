@@ -1,4 +1,5 @@
 from enum import auto
+
 from openstackquery.enums.enum_with_aliases import EnumWithAliases
 
 # pylint: disable=too-few-public-methods
@@ -29,6 +30,7 @@ class QueryPresets(EnumWithAliases):
 
     # string comparisons
     MATCHES_REGEX = auto()
+    NOT_MATCHES_REGEX = auto()
 
     @staticmethod
     def _get_aliases():
@@ -59,4 +61,5 @@ class QueryPresets(EnumWithAliases):
                 "<=",
             ],
             QueryPresets.MATCHES_REGEX: ["match_regex", "regex", "re"],
+            QueryPresets.NOT_MATCHES_REGEX: ["not_match_regex", "notregex", "nre"],
         }

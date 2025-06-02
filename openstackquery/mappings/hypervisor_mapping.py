@@ -3,13 +3,10 @@ from typing import Type
 from openstackquery.aliases import QueryChainMappings
 from openstackquery.enums.props.hypervisor_properties import HypervisorProperties
 from openstackquery.enums.props.server_properties import ServerProperties
-
 from openstackquery.enums.query_presets import QueryPresets
-
 from openstackquery.handlers.client_side_handler import ClientSideHandler
 from openstackquery.handlers.server_side_handler import ServerSideHandler
 from openstackquery.mappings.mapping_interface import MappingInterface
-
 from openstackquery.runners.hypervisor_runner import HypervisorRunner
 from openstackquery.runners.runner_wrapper import RunnerWrapper
 
@@ -78,17 +75,19 @@ class HypervisorMapping(MappingInterface):
             HypervisorProperties.DISK_GB_SIZE,
             HypervisorProperties.MEMORY_MB_SIZE,
         ]
+        string_prop_list = [
+            HypervisorProperties.HYPERVISOR_IP,
+            HypervisorProperties.HYPERVISOR_NAME,
+            HypervisorProperties.HYPERVISOR_DISABLED_REASON,
+        ]
         return ClientSideHandler(
             {
                 QueryPresets.EQUAL_TO: ["*"],
                 QueryPresets.NOT_EQUAL_TO: ["*"],
                 QueryPresets.ANY_IN: ["*"],
                 QueryPresets.NOT_ANY_IN: ["*"],
-                QueryPresets.MATCHES_REGEX: [
-                    HypervisorProperties.HYPERVISOR_IP,
-                    HypervisorProperties.HYPERVISOR_NAME,
-                    HypervisorProperties.HYPERVISOR_DISABLED_REASON,
-                ],
+                QueryPresets.MATCHES_REGEX: string_prop_list,
+                QueryPresets.NOT_MATCHES_REGEX: string_prop_list,
                 QueryPresets.LESS_THAN: integer_prop_list,
                 QueryPresets.GREATER_THAN: integer_prop_list,
                 QueryPresets.LESS_THAN_OR_EQUAL_TO: integer_prop_list,

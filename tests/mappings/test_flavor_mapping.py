@@ -109,6 +109,7 @@ def test_client_side_handlers(client_side_test_mappings):
         QueryPresets.GREATER_THAN: integer_prop_list,
         QueryPresets.GREATER_THAN_OR_EQUAL_TO: integer_prop_list,
         QueryPresets.MATCHES_REGEX: [FlavorProperties.FLAVOR_NAME],
+        QueryPresets.NOT_MATCHES_REGEX: [FlavorProperties.FLAVOR_NAME],
         QueryPresets.EQUAL_TO: ["*"],
         QueryPresets.NOT_EQUAL_TO: ["*"],
         QueryPresets.ANY_IN: ["*"],
