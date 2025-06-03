@@ -248,11 +248,11 @@ x = query.to_objects()
 Like all output methods - it will parse the results set in `sort_by()`, `group_by()` and requires `run()` to have been called first
 - this method will not run `select` - instead outputting raw results (openstack resource objects)
 
-This is either returned as a list if `to_groups` has not been set, or as a dict if `to_groups` was set
+This is either returned as a list if `group_by` has not been set, or as a dict if `group_by` was set
 
 **Arguments**:
 
-- `groups`: a list of group keys to limit output by - this will only work if `to_groups()` has been set - else it produces an error
+- `groups`: a list of group keys to limit output by - this will only work if `group_by()` has been set - else it produces an error
 
 **Examples**
 
@@ -288,7 +288,7 @@ Like all output methods - it will parse the results set in `sort_by()`, `group_b
 - If this query is chained from previous query(ies) by `then()` - the previous results will also be included
 - If any `append_from` calls have been run - the properties appended will also be included
 
-This is either returned as a list if `to_groups` has not been set, or as a dict if `to_groups` was set
+This is either returned as a list if `group_by` has not been set, or as a dict if `group_by` was set
 
 **Arguments**:
 
@@ -354,7 +354,7 @@ print(grouped_query.to_props(flatten=True))
 }
 ```
 
-- `groups`: (optional) a list of group keys to limit output by - this will only work if `to_groups()` has been set - else it produces an error
+- `groups`: (optional) a list of group keys to limit output by - this will only work if `group_by()` has been set - else it produces an error
 
 **Examples**
 
@@ -401,7 +401,7 @@ Like all output methods - it will parse the results set in `sort_by()`, `group_b
 **Arguments**:
 
 - `title`: An optional title to print on top
-- `groups`: a list of group keys to limit output by - this will only work if `to_groups()` has been set - else it produces an error
+- `groups`: a list of group keys to limit output by - this will only work if `group_by()` has been set - else it produces an error
 - `include_group_titles`: A boolean (Default True), if True, will print the group key as a subtitle before printing each selected group table, if False no subtitle will be printed.
 - `kwargs`: kwargs to pass to tabulate to tweak table generation
   - see [tabulate](https://pypi.org/project/tabulate/) for valid kwargs
@@ -451,7 +451,7 @@ Like all output methods - it will parse the results set in `sort_by()`, `group_b
 **Arguments**:
 
 - `title`: An optional title to print on top
-- `groups`: a list of group keys to limit output by - this will only work if `to_groups()` has been set - else it produces an error
+- `groups`: a list of group keys to limit output by - this will only work if `group_by()` has been set - else it produces an error
 - `include_group_titles`: A boolean (Default True), if True, will print the group key as a subtitle before printing each selected group table, if False no subtitle will be printed.
 - `kwargs`: kwargs to pass to tabulate to tweak table generation
   - see [tabulate](https://pypi.org/project/tabulate/) for valid kwargs
@@ -492,7 +492,9 @@ print(query.to_html())
 
 #
 ### to_csv
-`to_csv` is an output method that will write the output into csv file(s). If the results are grouped, each group will be written to a file under `<unique-group-key>.csv`
+`to_csv` is an output method that will return the results as a csv string. If the results are grouped, different strings will be returned for each.
+
+Grouped data can be flattened by setting `flatten_groups=True`. Grouped data will then be merged into a single csv, with a `group` column.
 
 Like all output methods - it will parse the results set in `sort_by()`, `group_by()` and requires `run()` to have been called first
 - This method will parse results to get properties that we 'selected' for - from a `select()` or a `select_all()` call
@@ -501,9 +503,64 @@ Like all output methods - it will parse the results set in `sort_by()`, `group_b
 
 **Arguments**:
 
-**NOTE:** More args for to_csv method under development
+- `groups`: *(optional)* a list of group keys to limit output by - this will only work if `group_by()` has been set - else it produces an error
+- `flatten_groups`: *(optional, default=False)* if True, grouped data is merged into a single csv string with a `group` column.
 
-- `dirpath`: path to directory where file(s) will be written, can be a filepath, but will error if results are grouped
+**Examples**:
+Without grouping:
+```python
+from openstackquery import ServerQuery
+
+query = ServerQuery()
+query.select("id", "name", "status")
+query.where(preset="equal_to", prop="status", value="ERROR")
+query.run("openstack-domain", as_admin=True, all_projects=True)
+
+csv_output = query.to_csv()
+print(csv_output)
+```
+
+```commandline
+id,name,status
+1,foo,ERROR
+2,bar,ERROR
+3,baz,ACTIVE
+4,bif,ACTIVE
+```
+
+With grouping:
+```python
+query.group_by("status")
+csv_output = query.to_csv()
+print(csv_output)
+```
+
+```commandline
+# Group: ERROR
+id,name,status
+1,foo,ERROR
+2,bar,ERROR
+
+# Group: ACTIVE
+id,name,status
+3,baz,ACTIVE
+4,bif,ACTIVE
+```
+
+With grouping and flattening:
+```python
+query.group_by("status")
+csv_output = query.to_csv(flatten_groups=True)
+print(csv_output)
+```
+
+```commandline
+id,name,status,group
+1,foo,ERROR,ERROR
+2,bar,ERROR,ERROR
+3,baz,ACTIVE,ACTIVE
+4,bif,ACTIVE,ACTIVE
+```
 
 #
 ### to_json (Under development)

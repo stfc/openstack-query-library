@@ -1,9 +1,10 @@
-from unittest.mock import MagicMock, patch, call, NonCallableMock, mock_open
+from unittest.mock import MagicMock, NonCallableMock, call, patch
+
 import pytest
 
+from openstackquery.enums.props.server_properties import ServerProperties
 from openstackquery.exceptions.parse_query_error import ParseQueryError
 from openstackquery.query_blocks.query_output import QueryOutput
-from openstackquery.enums.props.server_properties import ServerProperties
 from tests.mocks.mocked_props import MockProperties
 
 
@@ -532,115 +533,110 @@ def test_parse_select_overwrites_old(instance):
     instance.parse_select(MockProperties.PROP_2)
     assert instance.selected_props == [MockProperties.PROP_2]
 
+# pylint:disable=W0212 # Allow protected-access for tests
 
-@patch("builtins.open", new_callable=mock_open)
-@patch("openstackquery.query_blocks.query_output.csv.DictWriter")
-@patch("openstackquery.query_blocks.query_output.Path")
-def test_to_csv_ungrouped_results(
-    mock_path, mock_dict_writer, mock_open_call, instance
-):
-    """
-    Tests to_csv with ungrouped results - should call open to write a single file
-    """
-    mock_dir_path = NonCallableMock()
-    mock_file_path = mock_path.return_value.joinpath.return_value
-    mock_results = [
+def test_convert_csv_to_string(instance):
+    data = [
+        {"a": 1, "b": 2},
+        {"a": 3, "b": 4},
+    ]
+    csv_str = instance._convert_to_csv_string(data)
+    expected_csv = "a,b\r\n1,2\r\n3,4"
+    assert csv_str == expected_csv
+
+
+def test_convert_to_csv_string_raises_on_empty_data(instance):
+    with pytest.raises(RuntimeError):
+        instance._convert_to_csv_string([])
+
+
+def test_convert_to_csv_string_raises_on_empty_dict_keys(instance):
+    with pytest.raises(RuntimeError):
+        instance._convert_to_csv_string([{}])
+
+
+def test_to_csv_ungrouped(instance):
+    mock_results_container = MagicMock()
+    mock_results_container.to_props.return_value = [
         {"prop1": "val1", "prop2": "val2"},
         {"prop1": "val3", "prop2": "val4"},
     ]
+    # no groups, no flatten
+    csv_output = instance.to_csv(mock_results_container)
+    assert "prop1,prop2" in csv_output
+    assert "val1,val2" in csv_output
+    mock_results_container.to_props.assert_called_once_with(*instance.selected_props)
 
+
+def test_to_csv_grouped(instance):
     mock_results_container = MagicMock()
-    mock_results_container.to_props.return_value = mock_results
-
-    instance.to_csv(mock_results_container, mock_dir_path)
-    mock_path.assert_has_calls(
-        [
-            call(mock_dir_path),
-            call().joinpath("query_out.csv"),
-        ]
-    )
-    assert mock_open_call.call_args_list == [
-        call(mock_file_path, "w", encoding="utf-8")
-    ]
-    mock_dict_writer.assert_has_calls(
-        [
-            call(
-                mock_open_call.return_value,
-                fieldnames=mock_results[0].keys(),
-            ),
-            call().writeheader(),
-            call().writerows(mock_results),
-        ]
-    )
-
-
-@patch("builtins.open", new_callable=mock_open)
-@patch("openstackquery.query_blocks.query_output.csv.DictWriter")
-@patch("openstackquery.query_blocks.query_output.Path")
-def test_to_csv_grouped_results(mock_path, mock_dict_writer, mock_open_call, instance):
-    """
-    Tests to_csv with grouped results - should call open to write multiple files
-    one for each group in results
-    """
-    mock_dir_path = NonCallableMock()
-    mock_file_path = mock_path.return_value.joinpath.return_value
-    mock_results = {
+    mock_results_container.to_props.return_value = {
         "group1": [
             {"prop1": "val1", "prop2": "val2"},
             {"prop1": "val3", "prop2": "val4"},
         ],
         "group2": [
             {"prop1": "val5", "prop2": "val6"},
-            {"prop1": "val7", "prop2": "val8"},
+        ],
+    }
+    csv_output = instance.to_csv(mock_results_container)
+    # Expect group headers
+    assert "# Group: group1" in csv_output
+    assert "# Group: group2" in csv_output
+    assert "prop1,prop2" in csv_output
+    assert "val1,val2" in csv_output
+    assert "val5,val6" in csv_output
+
+
+def test_to_csv_grouped_with_flatten(instance):
+    mock_results_container = MagicMock()
+    mock_results_container.to_props.return_value = {
+        "group1": [
+            {"prop1": "val1", "prop2": "val2"},
+            {"prop1": "val3", "prop2": "val4"},
+        ],
+        "group2": [
+            {"prop1": "val5", "prop2": "val6"},
         ],
     }
 
+    csv_output = instance.to_csv(mock_results_container, flatten_groups=True)
+
+    # Expect a flat CSV with a "group" column added
+    assert "group,prop1,prop2" in csv_output or "prop1,prop2,group" in csv_output
+    assert "group1" in csv_output
+    assert "group2" in csv_output
+    assert "val1,val2" in csv_output
+    assert "val5,val6" in csv_output
+    # Should not contain group headers (as we are flattening)
+    assert "# Group:" not in csv_output
+
+
+def test_to_csv_with_group_filtering(instance):
     mock_results_container = MagicMock()
-    mock_results_container.to_props.return_value = mock_results
+    # Simulate grouped results from the container
+    grouped_data = {
+        "group1": [
+            {"prop1": "val1", "prop2": "val2"},
+        ],
+        "group2": [
+            {"prop1": "val3", "prop2": "val4"},
+        ],
+    }
+    mock_results_container.to_props.return_value = grouped_data
 
-    instance.to_csv(mock_results_container, mock_dir_path)
+    # Patch the instance's _validate_groups method to simulate filtering
+    filtered_data = {"group2": grouped_data["group2"]}
+    instance._validate_groups = MagicMock(return_value=filtered_data)
 
-    mock_path.assert_has_calls(
-        [
-            call(mock_dir_path),
-            call().joinpath("group1.csv"),
-            call().joinpath("group2.csv"),
-        ]
-    )
+    csv_output = instance.to_csv(mock_results_container, groups=["group2"])
 
-    assert mock_open_call.call_args_list == [
-        call(mock_file_path, "w", encoding="utf-8"),
-        call(mock_file_path, "w", encoding="utf-8"),
-    ]
+    # Check that only group2 is present in the output
+    assert "# Group: group2" in csv_output
+    assert "val3,val4" in csv_output
+    assert "# Group: group1" not in csv_output
+    assert "val1,val2" not in csv_output
 
-    mock_dict_writer.assert_has_calls(
-        [
-            call(
-                mock_open_call.return_value,
-                fieldnames=mock_results["group1"][0].keys(),
-            ),
-            call().writeheader(),
-            call().writerows(mock_results["group1"]),
-            call(
-                mock_open_call.return_value,
-                fieldnames=mock_results["group2"][0].keys(),
-            ),
-            call().writeheader(),
-            call().writerows(mock_results["group2"]),
-        ]
-    )
+    instance._validate_groups.assert_called_once_with(grouped_data, ["group2"])
 
-
-@patch("openstackquery.query_blocks.query_output.Path")
-def test_to_csv_results_empty(mock_path, instance):
-    """
-    Tests to_csv with empty results - should raise Runtime error
-    """
-    mock_dir_path = NonCallableMock()
-    mock_results_container = MagicMock()
-    mock_results_container.to_props.return_value = []
-
-    with pytest.raises(RuntimeError):
-        instance.to_csv(mock_results_container, mock_dir_path)
-    assert mock_path.call_args_list == [call(mock_dir_path)]
-    assert mock_path.return_value.joinpath.call_args_list == [call("query_out.csv")]
+# pylint:enable=W0212

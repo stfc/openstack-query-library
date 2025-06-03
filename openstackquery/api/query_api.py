@@ -1,12 +1,11 @@
 import logging
 from copy import deepcopy
-from typing import TYPE_CHECKING
-from typing import Union, List, Optional, Dict, Tuple
+from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
 
 from openstackquery.aliases import OpenstackResourceObj, PropValue
 from openstackquery.enums.props.prop_enum import PropEnum
-from openstackquery.enums.sort_order import SortOrder
 from openstackquery.enums.query_presets import QueryPresets
+from openstackquery.enums.sort_order import SortOrder
 from openstackquery.exceptions.parse_query_error import ParseQueryError
 
 if TYPE_CHECKING:
@@ -214,13 +213,19 @@ class QueryAPI:
             self.results_container, title, groups, include_group_titles, **kwargs
         )
 
-    def to_csv(self, dir_path: str) -> None:
+    def to_csv(
+        self,
+        groups: Optional[List[str]] = None,
+        flatten_groups: bool = False,
+    ) -> str:
         """
-        Creates csv files
-        :param dir_path: string representing directory to store csv files.
+        Public method to return results as csv string.
+        :param groups: a list of groups to limit output by
+        :param flatten_groups: If True, grouped data is merged into a single CSV with a 'group' column.
         """
         self.results_container.parse_results(self.parser.run_parser)
-        return self.output.to_csv(self.results_container, dir_path)
+        return self.output.to_csv(self.results_container, groups, flatten_groups)
+        )
 
     def then(
         self, query_type: Union[str, "QueryTypes"], keep_previous_results: bool = True
