@@ -1,5 +1,6 @@
 import csv
 import io
+import json
 from typing import Dict, List, Optional, Set, Type, Union
 
 from tabulate import tabulate
@@ -315,3 +316,35 @@ class QueryOutput:
             return "\n\n".join(csv_chunks)
 
         return self._convert_to_csv_string(results)
+
+    def to_json(
+        self,
+        results_container: ResultsContainer,
+        groups: Optional[List[str]] = None,
+        flatten_groups: bool = False,
+        pretty: bool = False,
+    ) -> str:
+        """
+        Method to return results as a JSON string.
+        :param results_container: container object which stores results.
+        :param groups: optional list of group keys to limit output by.
+        :param flatten_groups: if True and results are grouped, merge all groups into a single list with group info.
+        :param pretty: if True, return pretty-printed JSON.
+        :return: JSON string representation of results.
+        """
+        results = results_container.to_props(*self.selected_props)
+        results = self._validate_groups(results, groups)
+
+        if flatten_groups and isinstance(results, dict):
+            merged_list = []
+            for group, items in results.items():
+                for item in items:
+                    item_with_group = dict(item)
+                    item_with_group["group"] = group
+                    merged_list.append(item_with_group)
+            results = merged_list
+
+        if pretty:
+            return json.dumps(results, indent=4)
+
+        return json.dumps(results)

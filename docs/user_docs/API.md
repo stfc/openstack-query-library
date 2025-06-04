@@ -562,8 +562,98 @@ id,name,status,group
 4,bif,ACTIVE,ACTIVE
 ```
 
-#
-### to_json (Under development)
+### to_json
+
+`to_json` is an output method that will return results as a JSON-formatted string.
+
+Like all output methods, it will parse the result set built using `sort_by()`, `group_by()`, and requires `run()` to have been called first.
+
+- This method will parse results to get properties that were selected via `select()` or `select_all()`
+- If this query is chained from previous query(ies) using `then()`, the previous results will also be included
+- If any `append_from()` calls have been made, the appended properties will also be included
+
+**Arguments**:
+
+- `groups`: *(optional)* A list of group keys to limit output by – only works if `group_by()` has been used. Otherwise, this will raise an error.
+- `flatten_groups`: *(optional, default=False)*  
+  - If `False` and the results are grouped, the output will be a JSON object (dict) where each key is a group name and the value is a list of results for that group.
+  - If `True` and the results are grouped, all grouped results are flattened into a single list, and each entry includes a `"group"` field indicating which group it originally belonged to.
+- `pretty`: *(optional, default=False)* If True, returns a pretty-printed JSON string with indentation for readability.
+
+**Examples**
+
+Without grouping:
+```python
+from openstackquery import ServerQuery
+
+query = ServerQuery()
+query.select("id", "name", "status")
+query.where(preset="equal_to", prop="status", value="ERROR")
+query.run("openstack-domain", as_admin=True, all_projects=True)
+
+json_output = query.to_json()
+print(json_output)
+```
+
+```json
+[{"id": 1, "name": "foo", "status": "ERROR"}, {"id": 2, "name": "bar", "status": "ERROR"}]
+```
+
+With `pretty=True`:
+```python
+json_output = query.to_json(pretty=True)
+print(json_output)
+```
+
+```json
+[
+    {
+        "id": 1,
+        "name": "foo",
+        "status": "ERROR"
+    },
+    {
+        "id": 2,
+        "name": "bar",
+        "status": "ERROR"
+    }
+]
+```
+
+With grouping:
+```python
+query.group_by("status")
+json_output = query.to_json(pretty=True)
+print(json_output)
+```
+
+```json
+{
+    "ERROR": [
+        {"id": 1, "name": "foo", "status": "ERROR"},
+        {"id": 2, "name": "bar", "status": "ERROR"}
+    ],
+    "ACTIVE": [
+        {"id": 3, "name": "baz", "status": "ACTIVE"},
+        {"id": 4, "name": "bif", "status": "ACTIVE"}
+    ]
+}
+```
+
+With grouping and flattening:
+```python
+json_output = query.to_json(flatten_groups=True, pretty=True)
+print(json_output)
+```
+
+```json
+[
+    {"id": 1, "name": "foo", "status": "ERROR", "group": "ERROR"},
+    {"id": 2, "name": "bar", "status": "ERROR", "group": "ERROR"},
+    {"id": 3, "name": "baz", "status": "ACTIVE", "group": "ACTIVE"},
+    {"id": 4, "name": "bif", "status": "ACTIVE", "group": "ACTIVE"}
+]
+```
 
 #
 ### then

@@ -1,3 +1,4 @@
+import json
 from unittest.mock import MagicMock, NonCallableMock, call, patch
 
 import pytest
@@ -533,7 +534,9 @@ def test_parse_select_overwrites_old(instance):
     instance.parse_select(MockProperties.PROP_2)
     assert instance.selected_props == [MockProperties.PROP_2]
 
+
 # pylint:disable=W0212 # Allow protected-access for tests
+
 
 def test_convert_csv_to_string(instance):
     data = [
@@ -639,4 +642,91 @@ def test_to_csv_with_group_filtering(instance):
 
     instance._validate_groups.assert_called_once_with(grouped_data, ["group2"])
 
+
 # pylint:enable=W0212
+
+
+def test_to_json_empty_results(instance):
+    """
+    Tests to_json with no groups or flatten
+    """
+    mock_results_container = MagicMock()
+    mock_results_container.to_props.return_value = []
+
+    result = instance.to_json(mock_results_container)
+    mock_results_container.to_props.assert_called_once_with(*instance.selected_props)
+
+    assert json.loads(result) == []
+
+
+def test_to_json_ungrouped_results(instance):
+    mock_results_container = MagicMock()
+    mock_results_container.to_props.return_value = [
+        {"prop1": "val1", "prop2": "val2"},
+        {"prop1": "val3", "prop2": "val4"},
+    ]
+
+    result = instance.to_json(mock_results_container)
+    mock_results_container.to_props.assert_called_once_with(*instance.selected_props)
+    parsed = json.loads(result)
+
+    assert isinstance(parsed, list)
+
+    assert parsed == mock_results_container.to_props.return_value
+
+
+def test_to_json_grouped_results(instance):
+    mock_results_container = MagicMock()
+    grouped_data = {
+        "group1": [
+            {"prop1": "val1", "prop2": "val2"},
+            {"prop1": "val3", "prop2": "val4"},
+        ],
+        "group2": [{"prop1": "val5", "prop2": "val6"}],
+    }
+    mock_results_container.to_props.return_value = grouped_data
+    result = instance.to_json(mock_results_container)
+    parsed = json.loads(result)
+    assert isinstance(parsed, dict)
+    assert set(parsed.keys()) == set(grouped_data.keys())
+    assert parsed["group1"] == grouped_data["group1"]
+
+
+def test_to_json_flatten_groups(instance):
+    mock_results_container = MagicMock()
+    grouped_data = {
+        "group1": [{"prop1": "val1"}],
+        "group2": [{"prop1": "val2"}],
+    }
+    mock_results_container.to_props.return_value = grouped_data
+    # flatten_groups=True should merge groups with group info
+    result = instance.to_json(mock_results_container, flatten_groups=True)
+    parsed = json.loads(result)
+    assert isinstance(parsed, list)
+    assert any("group" in item for item in parsed)
+    groups = {item["group"] for item in parsed}
+    assert groups == {"group1", "group2"}
+
+
+def test_to_json_pretty(instance):
+    mock_results_container = MagicMock()
+    data = [{"prop1": "val1"}]
+    mock_results_container.to_props.return_value = data
+    result = instance.to_json(mock_results_container, pretty=True)
+    # Pretty JSON has newlines and indents
+    assert result.startswith("[\n")
+    parsed = json.loads(result)
+    assert parsed == data
+
+
+def test_to_json_with_groups_filter(instance):
+    mock_results_container = MagicMock()
+    grouped_data = {
+        "group1": [{"prop1": "val1"}],
+        "group2": [{"prop1": "val2"}],
+    }
+    mock_results_container.to_props.return_value = grouped_data
+    # filtering only "group2"
+    result = instance.to_json(mock_results_container, groups=["group2"])
+    parsed = json.loads(result)
+    assert set(parsed.keys()) == {"group2"}

@@ -225,6 +225,22 @@ class QueryAPI:
         """
         self.results_container.parse_results(self.parser.run_parser)
         return self.output.to_csv(self.results_container, groups, flatten_groups)
+
+    def to_json(
+        self,
+        groups: Optional[List[str]] = None,
+        flatten_groups: bool = False,
+        pretty: bool = False,
+    ) -> str:
+        """
+        Public method to return results as a json string.
+        :param groups: optional list of group keys to limit output by.
+        :param flatten_groups: if True and results are grouped, merge all groups into a single list with group info.
+        :param pretty: if True, return pretty-printed JSON.
+        """
+        self.results_container.parse_results(self.parser.run_parser)
+        return self.output.to_json(
+            self.results_container, groups, flatten_groups, pretty
         )
 
     def then(
