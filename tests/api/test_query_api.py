@@ -1,11 +1,11 @@
 from unittest.mock import MagicMock, NonCallableMock, patch
+
 import pytest
 
 from openstackquery.api.query_api import QueryAPI
-
 from openstackquery.exceptions.parse_query_error import ParseQueryError
-from tests.mocks.mocked_query_presets import MockQueryPresets
 from tests.mocks.mocked_props import MockProperties
+from tests.mocks.mocked_query_presets import MockQueryPresets
 
 
 @pytest.fixture(name="instance")
@@ -234,17 +234,38 @@ def test_to_props(instance):
 def test_to_csv(instance):
     """
     Tests to_csv method, method should call results_container.parse_results and forward that result
-    onto output.to_csv with given dir_path param
+    onto output.to_csv with given groups and flatten_groups params
     """
-    mock_dir_path = NonCallableMock()
-    res = instance.to_csv(mock_dir_path)
+    mock_groups = NonCallableMock()
+    mock_flatten_groups = NonCallableMock()
+
+    res = instance.to_csv(mock_groups, mock_flatten_groups)
     instance.results_container.parse_results.assert_called_once_with(
         instance.parser.run_parser
     )
     instance.output.to_csv.assert_called_once_with(
-        instance.results_container, mock_dir_path
+        instance.results_container, mock_groups, mock_flatten_groups
     )
     assert res == instance.output.to_csv.return_value
+
+
+def test_to_json(instance):
+    """
+    Tests to_json method, method should call results_container.parse_results and forward that result
+    onto output.to_json with given groups, flatten_groups and pretty params.
+    """
+    mock_groups = NonCallableMock()
+    mock_flatten_groups = NonCallableMock()
+    mock_pretty = NonCallableMock()
+
+    res = instance.to_json(mock_groups, mock_flatten_groups, mock_pretty)
+    instance.results_container.parse_results.assert_called_once_with(
+        instance.parser.run_parser
+    )
+    instance.output.to_json.assert_called_once_with(
+        instance.results_container, mock_groups, mock_flatten_groups, mock_pretty
+    )
+    assert res == instance.output.to_json.return_value
 
 
 def test_to_objects(instance):

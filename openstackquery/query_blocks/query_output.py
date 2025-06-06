@@ -1,10 +1,12 @@
 import csv
-from typing import List, Dict, Union, Type, Set, Optional
-from pathlib import Path
+import io
+import json
+from typing import Dict, List, Optional, Set, Type, Union
+
 from tabulate import tabulate
 
-from openstackquery.enums.props.prop_enum import PropEnum
 from openstackquery.aliases import PropValue
+from openstackquery.enums.props.prop_enum import PropEnum
 from openstackquery.exceptions.parse_query_error import ParseQueryError
 from openstackquery.query_blocks.results_container import ResultsContainer
 
@@ -269,48 +271,80 @@ class QueryOutput:
         return res
 
     @staticmethod
-    def _write_file(data: Union[List, Dict], output_filepath: Path) -> None:
-        """
-        takes a list of results, calls to_props() and outputs them to a file
-        :param data: list of results to write
-        :param output_filepath: Path object containing filepath to write to
-        """
-
-        if not data or not data[0].keys():
+    def _convert_to_csv_string(data: Union[List, Dict]) -> str:
+        output = io.StringIO()
+        if not data or not (len(data) > 0 and data[0].keys()):
             raise RuntimeError(
-                "Error: Could not write to csv file: "
-                "No results found, or no properties selected to output"
+                "Error: Could not write to csv: No results found, or no properties selected to output"
             )
-
         fields = data[0].keys()
-        with open(output_filepath, "w", encoding="utf-8") as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=fields)
-            writer.writeheader()
-            writer.writerows(data)
+        writer = csv.DictWriter(output, fieldnames=fields)
+        writer.writeheader()
+        writer.writerows(data)
+        return output.getvalue().strip()
 
-    @staticmethod
-    def _write_files(data: Union[List, Dict], dir_path: Path) -> None:
+    def to_csv(
+        self,
+        results_container: ResultsContainer,
+        groups: Optional[List[str]] = None,
+        flatten_groups: bool = False,
+    ) -> str:
         """
-        takes grouped results and outputs each group to a separate file in specified directory
-        :param data: grouped results to write to files
-        :param dir_path: Path object containing path to directory the files will be written to
+        Method to return results as csv string, with headers if grouped.
+        Optionally creates files at a given path, in seperate files if grouped.
+        :param results_container: container object which stores results.
+        :param groups: a list of groups to limit output by
+        :param flatten_groups: If True, grouped data is merged into a single CSV with a 'group' column.
         """
-        for group_name_id, group_item_info in data.items():
-            file_path = dir_path.joinpath(f"{group_name_id}.csv")
-            QueryOutput._write_file(group_item_info, file_path)
+        results = results_container.to_props(*self.selected_props)
+        results = self._validate_groups(results, groups)
 
-    def to_csv(self, results_container: ResultsContainer, dir_path: str) -> None:
-        """
-        Method to return results as csv files. Will output grouped results as separate files.
-        :param results_container: container object which stores results
-        :param dir_path: string representing a directory path where csv files will be created in.
-            - If results aren't grouped, file called "query_out.csv" will be written inside the directory
-            - If results are grouped, files matching the group keys will be written inside the directory
-        """
-        dir_path = Path(dir_path)
-        data = self.to_props(results_container)
+        if flatten_groups and isinstance(results, dict):
+            merged_list = []
+            for group, items in results.items():
+                for item in items:
+                    item_with_group = dict(item)
+                    item_with_group["group"] = group
+                    merged_list.append(item_with_group)
+            results = merged_list
 
-        if isinstance(data, list):
-            filepath = dir_path.joinpath("query_out.csv")
-            return self._write_file(data, filepath)
-        return self._write_files(data, dir_path)
+        if isinstance(results, dict):
+            csv_chunks = []
+            for group, items in results.items():
+                csv_chunk = f"# Group: {group}\n" + self._convert_to_csv_string(items)
+                csv_chunks.append(csv_chunk)
+            return "\n\n".join(csv_chunks)
+
+        return self._convert_to_csv_string(results)
+
+    def to_json(
+        self,
+        results_container: ResultsContainer,
+        groups: Optional[List[str]] = None,
+        flatten_groups: bool = False,
+        pretty: bool = False,
+    ) -> str:
+        """
+        Method to return results as a JSON string.
+        :param results_container: container object which stores results.
+        :param groups: optional list of group keys to limit output by.
+        :param flatten_groups: if True and results are grouped, merge all groups into a single list with group info.
+        :param pretty: if True, return pretty-printed JSON.
+        :return: JSON string representation of results.
+        """
+        results = results_container.to_props(*self.selected_props)
+        results = self._validate_groups(results, groups)
+
+        if flatten_groups and isinstance(results, dict):
+            merged_list = []
+            for group, items in results.items():
+                for item in items:
+                    item_with_group = dict(item)
+                    item_with_group["group"] = group
+                    merged_list.append(item_with_group)
+            results = merged_list
+
+        if pretty:
+            return json.dumps(results, indent=4)
+
+        return json.dumps(results)
