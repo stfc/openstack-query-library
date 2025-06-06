@@ -46,6 +46,10 @@ from openstackquery.exceptions.parse_query_error import ParseQueryError
         (QueryPresets.ANY_IN, ["any_in", "in"]),
         (QueryPresets.NOT_ANY_IN, ["not_any_in", "not_in"]),
         (QueryPresets.MATCHES_REGEX, ["matches_regex", "match_regex", "regex", "re"]),
+        (
+            QueryPresets.NOT_MATCHES_REGEX,
+            ["not_matches_regex", "not_match_regex", "notregex", "nre"],
+        ),
     ],
 )
 def test_query_presets_serialization(

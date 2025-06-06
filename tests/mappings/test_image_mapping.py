@@ -1,9 +1,8 @@
 from unittest.mock import patch
 
-from openstackquery.enums.props.server_properties import ServerProperties
 from openstackquery.enums.props.image_properties import ImageProperties
+from openstackquery.enums.props.server_properties import ServerProperties
 from openstackquery.enums.query_presets import QueryPresets
-
 from openstackquery.handlers.server_side_handler import ServerSideHandler
 from openstackquery.mappings.image_mapping import ImageMapping
 from openstackquery.runners.image_runner import ImageRunner
@@ -238,6 +237,9 @@ def test_client_side_handler(client_side_test_mappings):
         QueryPresets.ANY_IN: ["*"],
         QueryPresets.NOT_ANY_IN: ["*"],
         QueryPresets.MATCHES_REGEX: [
+            ImageProperties.IMAGE_NAME,
+        ],
+        QueryPresets.NOT_MATCHES_REGEX: [
             ImageProperties.IMAGE_NAME,
         ],
         QueryPresets.OLDER_THAN: date_prop_list,
