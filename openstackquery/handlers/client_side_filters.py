@@ -1,9 +1,9 @@
-from typing import Union, Any, List
-from datetime import datetime
 import re
+from datetime import datetime
+from typing import Any, List, Union
 
-from openstackquery.time_utils import TimeUtils
 from openstackquery.aliases import PropValue
+from openstackquery.time_utils import TimeUtils
 
 
 def prop_older_than(
@@ -215,3 +215,13 @@ def prop_matches_regex(prop: Union[str, None], value: str) -> bool:
         return False
     res = re.match(re.compile(rf"{value}"), prop)
     return bool(res)
+
+
+def prop_not_matches_regex(prop: Union[str, None], value: str) -> bool:
+    """
+    Filter function which returns false if a prop matches a regex pattern
+    :param prop: prop value to check against
+    :param value: a string which can be converted into a valid regex pattern to run
+    """
+    res = prop_matches_regex(prop=prop, value=value)
+    return not res

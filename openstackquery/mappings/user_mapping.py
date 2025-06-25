@@ -1,13 +1,11 @@
 from typing import Type
+
 from openstackquery.aliases import QueryChainMappings
-
-from openstackquery.enums.props.user_properties import UserProperties
 from openstackquery.enums.props.server_properties import ServerProperties
+from openstackquery.enums.props.user_properties import UserProperties
 from openstackquery.enums.query_presets import QueryPresets
-
-from openstackquery.handlers.server_side_handler import ServerSideHandler
 from openstackquery.handlers.client_side_handler import ClientSideHandler
-
+from openstackquery.handlers.server_side_handler import ServerSideHandler
 from openstackquery.mappings.mapping_interface import MappingInterface
 from openstackquery.runners.user_runner import UserRunner
 
@@ -85,6 +83,10 @@ class UserMapping(MappingInterface):
                 QueryPresets.ANY_IN: ["*"],
                 QueryPresets.NOT_ANY_IN: ["*"],
                 QueryPresets.MATCHES_REGEX: [
+                    UserProperties.USER_EMAIL,
+                    UserProperties.USER_NAME,
+                ],
+                QueryPresets.NOT_MATCHES_REGEX: [
                     UserProperties.USER_EMAIL,
                     UserProperties.USER_NAME,
                 ],

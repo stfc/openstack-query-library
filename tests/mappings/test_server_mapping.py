@@ -7,7 +7,6 @@ from openstackquery.enums.props.project_properties import ProjectProperties
 from openstackquery.enums.props.server_properties import ServerProperties
 from openstackquery.enums.props.user_properties import UserProperties
 from openstackquery.enums.query_presets import QueryPresets
-
 from openstackquery.handlers.server_side_handler import ServerSideHandler
 from openstackquery.mappings.server_mapping import ServerMapping
 from openstackquery.runners.server_runner import ServerRunner
@@ -134,6 +133,10 @@ def test_client_side_handlers_generic(client_side_test_mappings):
     client side params for generic presets
     """
     handler = ServerMapping.get_client_side_handler()
+    string_props = [
+        ServerProperties.SERVER_NAME,
+        ServerProperties.ADDRESSES,
+    ]
     date_props = [
         ServerProperties.SERVER_LAST_UPDATED_DATE,
         ServerProperties.SERVER_CREATION_DATE,
@@ -143,10 +146,8 @@ def test_client_side_handlers_generic(client_side_test_mappings):
         QueryPresets.NOT_EQUAL_TO: ["*"],
         QueryPresets.ANY_IN: ["*"],
         QueryPresets.NOT_ANY_IN: ["*"],
-        QueryPresets.MATCHES_REGEX: [
-            ServerProperties.SERVER_NAME,
-            ServerProperties.ADDRESSES,
-        ],
+        QueryPresets.MATCHES_REGEX: string_props,
+        QueryPresets.NOT_MATCHES_REGEX: string_props,
         QueryPresets.OLDER_THAN_OR_EQUAL_TO: date_props,
         QueryPresets.YOUNGER_THAN_OR_EQUAL_TO: date_props,
         QueryPresets.YOUNGER_THAN: date_props,

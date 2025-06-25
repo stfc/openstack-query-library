@@ -1,7 +1,6 @@
 from openstackquery.enums.props.project_properties import ProjectProperties
 from openstackquery.enums.props.server_properties import ServerProperties
 from openstackquery.enums.query_presets import QueryPresets
-
 from openstackquery.handlers.server_side_handler import ServerSideHandler
 from openstackquery.mappings.project_mapping import ProjectMapping
 from openstackquery.runners.project_runner import ProjectRunner
@@ -116,7 +115,11 @@ def test_client_side_handlers_string(client_side_test_mappings):
         QueryPresets.MATCHES_REGEX: [
             ProjectProperties.PROJECT_NAME,
             ProjectProperties.PROJECT_DESCRIPTION,
-        ]
+        ],
+        QueryPresets.NOT_MATCHES_REGEX: [
+            ProjectProperties.PROJECT_NAME,
+            ProjectProperties.PROJECT_DESCRIPTION,
+        ],
     }
     client_side_test_mappings(handler, mappings)
 
