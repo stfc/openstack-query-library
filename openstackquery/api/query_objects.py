@@ -1,6 +1,6 @@
-from typing import TYPE_CHECKING
-from typing import Type
+from typing import TYPE_CHECKING, Type
 
+from openstackquery.mappings.aggregate_mapping import AggregateMapping
 from openstackquery.mappings.flavor_mapping import FlavorMapping
 from openstackquery.mappings.hypervisor_mapping import HypervisorMapping
 from openstackquery.mappings.image_mapping import ImageMapping
@@ -8,7 +8,6 @@ from openstackquery.mappings.mapping_interface import MappingInterface
 from openstackquery.mappings.project_mapping import ProjectMapping
 from openstackquery.mappings.server_mapping import ServerMapping
 from openstackquery.mappings.user_mapping import UserMapping
-from openstackquery.mappings.aggregate_mapping import AggregateMapping
 
 if TYPE_CHECKING:
     from openstackquery.api.query_api import QueryAPI
@@ -73,7 +72,7 @@ def HypervisorQuery() -> "QueryAPI":
     return get_common(HypervisorMapping)
 
 
-def AggregateQuery() -> QueryAPI:
+def AggregateQuery() -> "QueryAPI":
     """
     Simple helper function to setup a query using a factory
     """

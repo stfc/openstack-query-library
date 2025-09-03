@@ -1,33 +1,23 @@
 from typing import Type
 
+from openstackquery.aliases import QueryChainMappings
 from openstackquery.enums.props.aggregate_properties import AggregateProperties
-from openstackquery.enums.query_presets import (
-    QueryPresetsDateTime,
-    QueryPresetsString,
-    QueryPresetsGeneric,
-)
-from openstackquery.handlers.client_side_handler_datetime import (
-    ClientSideHandlerDateTime,
-)
-from openstackquery.handlers.client_side_handler_generic import (
-    ClientSideHandlerGeneric,
-)
-from openstackquery.handlers.client_side_handler_string import ClientSideHandlerString
+from openstackquery.enums.query_presets import QueryPresets
+from openstackquery.handlers.client_side_handler import ClientSideHandler
 from openstackquery.handlers.server_side_handler import ServerSideHandler
 from openstackquery.mappings.mapping_interface import MappingInterface
 from openstackquery.runners.aggregate_runner import AggregateRunner
-from openstackquery.runners.runner_wrapper import RunnerWrapper
-from openstackquery.structs.query_client_side_handlers import QueryClientSideHandlers
 
 
 class AggregateMapping(MappingInterface):
     """
     Mapping class for querying Openstack Aggregate objects
-    Define property mappings, kwarg mappings and filter function mappings, and runner mapping related to hypervisors here
+    Define property mappings, kwarg mappings and filter function mappings,
+    and runner mapping related to aggregates here
     """
 
     @staticmethod
-    def get_chain_mappings():
+    def get_chain_mappings() -> QueryChainMappings:
         """
         Should return a dictionary containing property pairs mapped to query mappings.
         This is used to define how to chain results from this query to other possible queries
@@ -37,7 +27,7 @@ class AggregateMapping(MappingInterface):
         return None
 
     @staticmethod
-    def get_runner_mapping() -> Type[RunnerWrapper]:
+    def get_runner_mapping() -> Type[AggregateRunner]:
         """
         Returns a mapping to associated Runner class for the Query (AggregateRunner)
         """
@@ -65,42 +55,44 @@ class AggregateMapping(MappingInterface):
         return ServerSideHandler({})
 
     @staticmethod
-    def get_client_side_handlers() -> QueryClientSideHandlers:
+    def get_client_side_handlers() -> ClientSideHandler:
         """
         method to configure a set of client-side handlers which can be used to get local filter functions
         corresponding to valid preset-property pairs. These filter functions can be used to filter results after
         listing all aggregates.
         """
-        datetime_props = [
+        date_prop_list = [
             AggregateProperties.AGGREGATE_DELETED_AT,
             AggregateProperties.AGGREGATE_UPDATED_AT,
             AggregateProperties.AGGREGATE_CREATED_AT,
         ]
 
-        return QueryClientSideHandlers(
-            # set generic query preset mappings
-            generic_handler=ClientSideHandlerGeneric(
-                {
-                    QueryPresetsGeneric.EQUAL_TO: ["*"],
-                    QueryPresetsGeneric.NOT_EQUAL_TO: ["*"],
-                    QueryPresetsGeneric.ANY_IN: ["*"],
-                    QueryPresetsGeneric.NOT_ANY_IN: ["*"],
-                }
-            ),
-            string_handler=ClientSideHandlerString(
-                {
-                    QueryPresetsString.MATCHES_REGEX: [
-                        AggregateProperties.AGGREGATE_HOSTTYPE
-                    ]
-                }
-            ),
-            datetime_handler=ClientSideHandlerDateTime(
-                {
-                    QueryPresetsDateTime.OLDER_THAN: datetime_props,
-                    QueryPresetsDateTime.YOUNGER_THAN: datetime_props,
-                    QueryPresetsDateTime.OLDER_THAN_OR_EQUAL_TO: datetime_props,
-                    QueryPresetsDateTime.YOUNGER_THAN_OR_EQUAL_TO: datetime_props,
-                }
-            ),
-            integer_handler=None,
+        string_prop_list = [
+            AggregateProperties.AGGREGATE_HOSTTYPE,
+            AggregateProperties.AGGREGATE_HOST_IPS,
+            AggregateProperties.AGGREGATE_METADATA,
+            AggregateProperties.AGGREGATE_LOCAL_STORAGE_TYPE,
+        ]
+
+        return ClientSideHandler(
+            {
+                QueryPresets.EQUAL_TO: ["*"],
+                QueryPresets.NOT_EQUAL_TO: ["*"],
+                QueryPresets.ANY_IN: ["*"],
+                QueryPresets.NOT_ANY_IN: ["*"],
+                QueryPresets.MATCHES_REGEX: string_prop_list,
+                QueryPresets.NOT_MATCHES_REGEX: string_prop_list,
+                QueryPresets.YOUNGER_THAN: date_prop_list,
+                QueryPresets.YOUNGER_THAN_OR_EQUAL_TO: date_prop_list,
+                QueryPresets.OLDER_THAN: date_prop_list,
+                QueryPresets.OLDER_THAN_OR_EQUAL_TO: date_prop_list,
+                QueryPresets.LESS_THAN: [AggregateProperties.AGGREGATE_GPUNUM],
+                QueryPresets.LESS_THAN_OR_EQUAL_TO: [
+                    AggregateProperties.AGGREGATE_GPUNUM
+                ],
+                QueryPresets.GREATER_THAN: [AggregateProperties.AGGREGATE_GPUNUM],
+                QueryPresets.GREATER_THAN_OR_EQUAL_TO: [
+                    AggregateProperties.AGGREGATE_GPUNUM
+                ],
+            }
         )

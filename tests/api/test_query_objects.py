@@ -1,14 +1,15 @@
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 
 from openstackquery.api.query_objects import (
-    UserQuery,
-    ServerQuery,
+    AggregateQuery,
     FlavorQuery,
-    ProjectQuery,
-    ImageQuery,
     HypervisorQuery,
+    ImageQuery,
+    ProjectQuery,
+    ServerQuery,
+    UserQuery,
     get_common,
 )
 
@@ -104,3 +105,14 @@ def test_hypervisor_query(run_query_test_case):
         "openstackquery.api.query_objects.HypervisorMapping"
     ) as mock_project_mapping:
         run_query_test_case(HypervisorQuery, mock_project_mapping)
+
+
+def test_aggregate_query(run_query_test_case):
+    """
+    tests that function AggregateQuery works
+    should call get_common with AggregateMapping
+    """
+    with patch(
+        "openstackquery.api.query_objects.AggregateMapping"
+    ) as mock_project_mapping:
+        run_query_test_case(AggregateQuery, mock_project_mapping)

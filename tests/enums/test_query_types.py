@@ -30,6 +30,10 @@ from openstackquery.exceptions.parse_query_error import ParseQueryError
             QueryTypes.HYPERVISOR_QUERY,
             ["hypervisor_query", "hypervisor", "hypervisors", "hypervisorquery"],
         ),
+        (
+            QueryTypes.AGGREGATE_QUERY,
+            ["aggregate", "aggregates", "aggregatequery", "aggregate_query"],
+        ),
     ],
 )
 def test_query_presets_serialization(

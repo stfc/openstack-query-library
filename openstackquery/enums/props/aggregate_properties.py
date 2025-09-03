@@ -1,8 +1,11 @@
+import json
 from enum import auto
 from typing import Dict, Optional
 
 from openstackquery.enums.props.prop_enum import PropEnum, PropFunc
-from exceptions.query_property_mapping_error import QueryPropertyMappingError
+from openstackquery.exceptions.query_property_mapping_error import (
+    QueryPropertyMappingError,
+)
 
 
 class AggregateProperties(PropEnum):
@@ -13,8 +16,11 @@ class AggregateProperties(PropEnum):
     AGGREGATE_CREATED_AT = auto()
     AGGREGATE_DELETED = auto()
     AGGREGATE_DELETED_AT = auto()
+    AGGREGATE_GPUNUM = auto()
     AGGREGATE_HOST_IPS = auto()
     AGGREGATE_HOSTTYPE = auto()
+    AGGREGATE_LOCAL_STORAGE_TYPE = auto()
+    AGGREGATE_METADATA = auto()
     AGGREGATE_UPDATED_AT = auto()
     AGGREGATE_ID = auto()
 
@@ -27,8 +33,14 @@ class AggregateProperties(PropEnum):
             AggregateProperties.AGGREGATE_CREATED_AT: ["created_at"],
             AggregateProperties.AGGREGATE_DELETED: ["deleted"],
             AggregateProperties.AGGREGATE_DELETED_AT: ["deleted_at"],
-            AggregateProperties.AGGREGATE_HOST_IPS: ["hosts"],
+            AggregateProperties.AGGREGATE_GPUNUM: ["metadata_gpunum", "gpunum"],
+            AggregateProperties.AGGREGATE_HOST_IPS: ["hosts", "host_ips"],
             AggregateProperties.AGGREGATE_HOSTTYPE: ["metadata_hosttype", "hosttype"],
+            AggregateProperties.AGGREGATE_LOCAL_STORAGE_TYPE: [
+                "metadata_local_storage_type",
+                "local_storage_type",
+            ],
+            AggregateProperties.AGGREGATE_METADATA: ["metadata"],
             AggregateProperties.AGGREGATE_UPDATED_AT: ["updated_at"],
             AggregateProperties.AGGREGATE_ID: ["id", "uuid"],
         }
@@ -45,11 +57,19 @@ class AggregateProperties(PropEnum):
             AggregateProperties.AGGREGATE_CREATED_AT: lambda a: a["created_at"],
             AggregateProperties.AGGREGATE_DELETED: lambda a: a["deleted"],
             AggregateProperties.AGGREGATE_DELETED_AT: lambda a: a["deleted_at"],
-            AggregateProperties.AGGREGATE_HOST_IPS: lambda a: a["hosts"],
+            AggregateProperties.AGGREGATE_GPUNUM: lambda a: int(
+                a["metadata"].get("gpunum", 0)
+            ),
+            AggregateProperties.AGGREGATE_HOST_IPS: lambda a: json.dumps(a["hosts"]),
             AggregateProperties.AGGREGATE_HOSTTYPE: lambda a: a["metadata"].get(
                 "hosttype", None
             ),
-            AggregateProperties.AGGREGATE_ID: lambda a: a["id"],
+            AggregateProperties.AGGREGATE_LOCAL_STORAGE_TYPE: lambda a: a[
+                "metadata"
+            ].get("local-storage-type", None),
+            AggregateProperties.AGGREGATE_METADATA: lambda a: json.dumps(a["metadata"]),
+            AggregateProperties.AGGREGATE_UPDATED_AT: lambda a: a["updated_at"],
+            AggregateProperties.AGGREGATE_ID: lambda a: a["uuid"],
         }
         try:
             return mapping[prop]

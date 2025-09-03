@@ -1,10 +1,12 @@
 import logging
-from typing import Optional, List
+from typing import List, Optional
 
-from openstackquery.aliases import ServerSideFilters, OpenstackResourceObj
-from openstackquery.openstack_connection import OpenstackConnection
-from openstackquery.runners.runner_wrapper import RunnerWrapper
 from openstack.compute.v2.aggregate import Aggregate
+
+from openstackquery.aliases import OpenstackResourceObj, ServerSideFilter
+from openstackquery.openstack_connection import OpenstackConnection
+from openstackquery.runners.runner_utils import RunnerUtils
+from openstackquery.runners.runner_wrapper import RunnerWrapper
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +30,7 @@ class AggregateRunner(RunnerWrapper):
     def run_query(
         self,
         conn: OpenstackConnection,
-        filter_kwargs: Optional[ServerSideFilters] = None,
+        filter_kwargs: Optional[ServerSideFilter] = None,
         **kwargs,
     ) -> List[OpenstackResourceObj]:
         """
@@ -48,4 +50,6 @@ class AggregateRunner(RunnerWrapper):
             ",".join(f"{key}={value}" for key, value in filter_kwargs.items()),
         )
 
-        return conn.compute.aggregates(**filter_kwargs)
+        return RunnerUtils.run_paginated_query(
+            conn.compute.aggregates, self._page_marker_prop_func, filter_kwargs
+        )
