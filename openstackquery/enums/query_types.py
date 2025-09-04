@@ -1,13 +1,13 @@
 from typing import Dict
 
 from openstackquery.enums.enum_with_aliases import EnumWithAliases
-
+from openstackquery.mappings.aggregate_mapping import AggregateMapping
 from openstackquery.mappings.flavor_mapping import FlavorMapping
+from openstackquery.mappings.hypervisor_mapping import HypervisorMapping
 from openstackquery.mappings.image_mapping import ImageMapping
 from openstackquery.mappings.project_mapping import ProjectMapping
 from openstackquery.mappings.server_mapping import ServerMapping
 from openstackquery.mappings.user_mapping import UserMapping
-from openstackquery.mappings.hypervisor_mapping import HypervisorMapping
 
 # pylint: disable=too-few-public-methods
 
@@ -24,6 +24,7 @@ class QueryTypes(EnumWithAliases):
     USER_QUERY = UserMapping
     IMAGE_QUERY = ImageMapping
     HYPERVISOR_QUERY = HypervisorMapping
+    AGGREGATE_QUERY = AggregateMapping
 
     @staticmethod
     def _get_aliases() -> Dict:
@@ -61,4 +62,5 @@ class QueryTypes(EnumWithAliases):
                 "hypervisors",
                 "hypervisorquery",
             ],
+            QueryTypes.AGGREGATE_QUERY: ["aggregate", "aggregates", "aggregatequery"],
         }

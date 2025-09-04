@@ -1,6 +1,6 @@
-from typing import TYPE_CHECKING
-from typing import Type
+from typing import TYPE_CHECKING, Type
 
+from openstackquery.mappings.aggregate_mapping import AggregateMapping
 from openstackquery.mappings.flavor_mapping import FlavorMapping
 from openstackquery.mappings.hypervisor_mapping import HypervisorMapping
 from openstackquery.mappings.image_mapping import ImageMapping
@@ -70,3 +70,10 @@ def HypervisorQuery() -> "QueryAPI":
     Simple helper function to setup a query using a factory
     """
     return get_common(HypervisorMapping)
+
+
+def AggregateQuery() -> "QueryAPI":
+    """
+    Simple helper function to setup a query using a factory
+    """
+    return get_common(AggregateMapping)

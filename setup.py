@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 DESCRIPTION = "python package for openstack query library"
 LONG_DESCRIPTION = (
@@ -7,7 +7,7 @@ LONG_DESCRIPTION = (
 
 setup(
     name="openstackquery",
-    version="1.2.0",
+    version="1.3.0",
     author="STFC Cloud Team",
     author_email="<cloud-support@stfc.ac.uk>",
     description=DESCRIPTION,

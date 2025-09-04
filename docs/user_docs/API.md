@@ -19,7 +19,9 @@ The query library currently supports queries on the following Openstack resource
 | [Users](https://docs.openstack.org/api-ref/identity/v3/index.html?expanded=list-users-detail#users)      | Run a Query on Openstack Users         | [USERS.md](query_docs/USERS.md)          | `from openstackquery import UserQuery`       |
 | [Project](https://docs.openstack.org/api-ref/identity/v3/index.html?expanded=list-users-detail#projects) | Run a Query on Openstack Projects      | [PROJECTS.md](query_docs/PROJECTS.md)    | `from openstackquery import ProjectQuery`    |
 | [Flavor](https://docs.openstack.org/api-ref/compute/#flavors)                                            | Run a Query on Openstack Flavors       | [FLAVORS.md](query_docs/FLAVORS.md)      | `from openstackquery import FlavorQuery`     |
-| [Hypervisor](https://docs.openstack.org/api-ref/compute/#hypervisors-os-hypervisors)                     | Run a Query on Openstack Hypervisors   | [HYPERVISORS](query_docs/HYPERVISORS.md) | `from openstackquery import HypervisorQuery` |
+| [Hypervisor](https://docs.openstack.org/api-ref/compute/#hypervisors-os-hypervisors)                     | Run a Query on Openstack Hypervisors   | [HYPERVISORS.md](query_docs/HYPERVISORS.md) | `from openstackquery import HypervisorQuery` |
+| [Aggregate](https://docs.openstack.org/api-ref/compute/#host-aggregates-os-aggregates)                   | Run a Query on OpenStack Aggregates    | [AGGREGATES.md](query_docs/AGGREGATES.md) | `from openstackquery import AggregateQuery` |
+| [Image](https://docs.openstack.org/api-ref/image/v2/index.html)                                          | Run a Query on OpenStack Images        | [IMAGES.md](query_docs/IMAGES.md) | `from openstackquery import ImageQuery` |
 
 #
 ### select

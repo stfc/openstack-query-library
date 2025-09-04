@@ -11,6 +11,8 @@ Feature References
   - [Flavors](docs/user_docs/query_docs/FLAVORS.md)
   - [Projects](docs/user_docs/query_docs/PROJECTS.md)
   - [Hypervisors](docs/user_docs/query_docs/HYPERVISORS.md)
+  - [Aggregates](docs/user_docs/query_docs/AGGREGATES.md)
+  - [Images](docs/user_docs/IMAGES.md)
 
  Developer-related Docs:
 - [Developer README](docs/developer_docs/OVERVIEW.md)
