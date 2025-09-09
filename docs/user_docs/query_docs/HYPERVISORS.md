@@ -21,7 +21,6 @@ from openstackquery import HypervisorQuery
 
 | Return Type | Property Name(s) (case-insensitive)                              | Description                                                     |
 |-------------|------------------------------------------------------------------|-----------------------------------------------------------------|
-| `int`       | "current_workload", "workload"                                   | The number of tasks the hypervisor is responsible for           |
 | `int`       | "disk_gb_avail", "disk_avail", "local_disk_free", "free_disk_gb" | The local disk space remaining on this hypervisor(in GiB)       |
 | `int`       | "disk_gb_used", "disk_used", "local_disk_used", "local_gb_used"  | The local disk space allocated on this hypervisor(in GiB)       |
 | `int`       | "disk_gb_size", "disk", "local_disk", "local_gb"                 | The total amount of local disk space(in GiB)                    |
@@ -31,7 +30,6 @@ from openstackquery import HypervisorQuery
 | `int`       | "memory_used", "memory_mb_used"                                  | RAM currently being used on this hypervisor(in MiB).            |
 | `int`       | "memory_mb_size", "memory_size", "memory_mb", "memory", "ram"    | The total amount of ram(in MiB)                                 |
 | `string`    | "name", "host_name"                                              | Hypervisor Hostname                                             |
-| `int`       | "running_vms"                                                    | The number of running VMs on this hypervisor.                   |
 | `string`    | "state"                                                          | The state of the hypervisor. One of up or down.                 |
 | `string`    | "status"                                                         | The status of the hypervisor. One of enabled or disabled.       |
 | `int`       | "vcpus"                                                          | The number of vCPUs on this hypervisor.                         |
