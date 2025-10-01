@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from unittest.mock import patch
 
 import pytest
@@ -106,3 +107,122 @@ def test_get_marker_prop_func(mock_get_prop_mapping):
     val = HypervisorProperties.get_marker_prop_func()
     mock_get_prop_mapping.assert_called_once_with(HypervisorProperties.HYPERVISOR_ID)
     assert val == mock_get_prop_mapping.return_value
+
+
+# pylint: disable=too-many-instance-attributes
+@dataclass
+class MockUsage:
+    vcpus: int = 0
+    pcpus: int = 0
+    vcpus_used: int = 0
+    pcpus_used: int = 0
+    vcpus_avail: int = 0
+    pcpus_avail: int = 0
+    memory_mb_size: int = 0
+    memory_mb_used: int = 0
+    memory_mb_avail: int = 0
+    disk_gb_size: int = 0
+    disk_gb_used: int = 0
+    disk_gb_avail: int = 0
+
+
+@dataclass
+class MockHypervisor:
+    hv: dict
+    usage: MockUsage
+
+
+@pytest.mark.parametrize(
+    "prop, mock_hv, mock_usage, expected",
+    [
+        (HypervisorProperties.HYPERVISOR_ID, {"id": "abc123"}, None, "abc123"),
+        (HypervisorProperties.HYPERVISOR_IP, {"host_ip": "10.0.0.1"}, None, "10.0.0.1"),
+        (HypervisorProperties.HYPERVISOR_NAME, {"name": "hyp1"}, None, "hyp1"),
+        (HypervisorProperties.HYPERVISOR_STATE, {"state": "up"}, None, "up"),
+        (
+            HypervisorProperties.HYPERVISOR_STATUS,
+            {"status": "enabled"},
+            None,
+            "enabled",
+        ),
+        (
+            HypervisorProperties.HYPERVISOR_DISABLED_REASON,
+            {"service": {"disabled_reason": "maintenance"}},
+            None,
+            "maintenance",
+        ),
+        (
+            HypervisorProperties.VCPUS,
+            {},
+            MockUsage(vcpus=4, pcpus=2),
+            6,
+        ),
+        (
+            HypervisorProperties.VCPUS_USED,
+            {},
+            MockUsage(vcpus_used=1, pcpus_used=2),
+            3,
+        ),
+        (
+            HypervisorProperties.VCPUS_AVAIL,
+            {},
+            MockUsage(vcpus_avail=3, pcpus_avail=1),
+            4,
+        ),
+        (
+            HypervisorProperties.MEMORY_MB_SIZE,
+            {},
+            MockUsage(memory_mb_size=8192),
+            8192,
+        ),
+        (
+            HypervisorProperties.MEMORY_MB_USED,
+            {},
+            MockUsage(memory_mb_used=4096),
+            4096,
+        ),
+        (
+            HypervisorProperties.MEMORY_MB_AVAIL,
+            {},
+            MockUsage(memory_mb_avail=2048),
+            2048,
+        ),
+        (
+            HypervisorProperties.DISK_GB_SIZE,
+            {},
+            MockUsage(disk_gb_size=500),
+            500,
+        ),
+        (
+            HypervisorProperties.DISK_GB_USED,
+            {},
+            MockUsage(disk_gb_used=200),
+            200,
+        ),
+        (
+            HypervisorProperties.DISK_GB_AVAIL,
+            {},
+            MockUsage(disk_gb_avail=300),
+            300,
+        ),
+    ],
+)
+def test_hypervisor_property_mappings(prop, mock_hv, mock_usage, expected):
+    """Test that each HypervisorProperties mapping correctly extracts the expected data."""
+    hv_obj = MockHypervisor(mock_hv, mock_usage)
+    func = HypervisorProperties.get_prop_mapping(prop)
+    assert func(hv_obj) == expected
+
+
+@patch("openstackquery.enums.props.hypervisor_properties.TimeUtils.extract_uptime")
+def test_hypervisor_uptime_days_mapping(mock_extract):
+    mock_extract.return_value = 5
+    hv_obj = MockHypervisor({"uptime": "fake-uptime-string"}, None)
+
+    func = HypervisorProperties.get_prop_mapping(
+        HypervisorProperties.HYPERVISOR_UPTIME_DAYS
+    )
+    result = func(hv_obj)
+
+    mock_extract.assert_called_once_with("fake-uptime-string")
+    assert result == 5
