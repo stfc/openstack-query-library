@@ -21,3 +21,7 @@ class ResourceProviderUsage:
     vcpus_used: int
     memory_mb_used: int
     disk_gb_used: int
+
+    pcpus: int
+    pcpus_used: int
+    pcpus_avail: int

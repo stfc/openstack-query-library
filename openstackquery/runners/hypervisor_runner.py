@@ -1,5 +1,5 @@
 import logging
-from typing import List, Optional, Dict
+from typing import Dict, List, Optional
 
 from openstack import exceptions, utils
 from openstack.compute.v2.hypervisor import Hypervisor as OpenstackHypervisor
@@ -9,7 +9,6 @@ from openstackquery.aliases import OpenstackResourceObj, ServerSideFilters
 from openstackquery.openstack_connection import OpenstackConnection
 from openstackquery.runners.runner_utils import RunnerUtils
 from openstackquery.runners.runner_wrapper import RunnerWrapper
-
 from openstackquery.structs.hypervisor import Hypervisor
 from openstackquery.structs.resource_provider_usage import ResourceProviderUsage
 
@@ -69,6 +68,8 @@ class HypervisorRunner(RunnerWrapper):
         memory_mb_used = usage.get("MEMORY_MB", 0)
         disk_gb_used = usage.get("DISK_GB", 0)
 
+        pcpus_used = usage.get("PCPU", 0)
+
         return ResourceProviderUsage(
             # workaround for hvs not containing VCPU/Memory/Disk resource provider info - set to 0
             vcpus_used=vcpus_used,
@@ -80,6 +81,9 @@ class HypervisorRunner(RunnerWrapper):
             vcpus=avail["VCPU"] + vcpus_used,
             memory_mb_size=avail["MEMORY_MB"] + memory_mb_used,
             disk_gb_size=avail["DISK_GB"] + disk_gb_used,
+            pcpus_avail=avail["PCPU"],
+            pcpus_used=pcpus_used,
+            pcpus=pcpus_used + avail["PCPU"],
         )
 
     @staticmethod
@@ -94,7 +98,7 @@ class HypervisorRunner(RunnerWrapper):
         :return: A dictionary with the summed availability stats using the class name as a key
         """
         summed_classes = {}
-        for resource_class in ["VCPU", "MEMORY_MB", "DISK_GB"]:
+        for resource_class in ["VCPU", "MEMORY_MB", "DISK_GB", "PCPU"]:
             placement_inventories = conn.placement.resource_provider_inventories(
                 resource_provider_obj, resource_class=resource_class
             )

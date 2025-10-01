@@ -1,8 +1,9 @@
-from unittest.mock import MagicMock, NonCallableMock, patch, call
+from unittest.mock import MagicMock, NonCallableMock, call, patch
+
 import pytest
 
-from openstackquery.structs.resource_provider_usage import ResourceProviderUsage
 from openstackquery.runners.hypervisor_runner import HypervisorRunner
+from openstackquery.structs.resource_provider_usage import ResourceProviderUsage
 
 
 @pytest.fixture(name="instance")
@@ -89,11 +90,12 @@ def mock_inventory_responses_fixture():
         # test case for single provider with all inventory resources"
         {
             "providers": [{"id": "id1", "name": "foo"}],
-            "usages": {"VCPU": 4, "MEMORY_MB": 8192, "DISK_GB": 100},
+            "usages": {"VCPU": 4, "MEMORY_MB": 8192, "DISK_GB": 100, "PCPU": 48},
             "inventories": {
                 "VCPU": [{"total": 16}],
                 "MEMORY_MB": [{"total": 32768}],
                 "DISK_GB": [{"total": 500}],
+                "PCPU": [{"total": 16}],
             },
             "expected_results": {
                 "foo": ResourceProviderUsage(
@@ -106,13 +108,21 @@ def mock_inventory_responses_fixture():
                     vcpus=20,
                     memory_mb_size=40960,
                     disk_gb_size=600,
+                    pcpus_used=48,
+                    pcpus_avail=16,
+                    pcpus=64,
                 )
             },
         },
         # "test case for single provider with no inventory resources",
         {
             "providers": [{"id": "id1", "name": "foo"}],
-            "usages": {"VCPU": 0, "MEMORY_MB": 0, "DISK_GB": 0},
+            "usages": {
+                "VCPU": 0,
+                "MEMORY_MB": 0,
+                "DISK_GB": 0,
+                "PCPU": 0,
+            },
             "inventories": {},
             "expected_results": {
                 "foo": ResourceProviderUsage(
@@ -125,6 +135,9 @@ def mock_inventory_responses_fixture():
                     vcpus=0,
                     memory_mb_size=0,
                     disk_gb_size=0,
+                    pcpus_used=0,
+                    pcpus_avail=0,
+                    pcpus=0,
                 )
             },
         },
@@ -136,11 +149,12 @@ def mock_inventory_responses_fixture():
                 {"id": "id-1", "name": "provider-1"},
                 {"id": "id-2", "name": "provider-2"},
             ],
-            "usages": {"VCPU": 4, "MEMORY_MB": 8192, "DISK_GB": 100},
+            "usages": {"VCPU": 4, "MEMORY_MB": 8192, "DISK_GB": 100, "PCPU": 32},
             "inventories": {
                 "VCPU": [{"total": 16}, {"total": 16}],
                 "MEMORY_MB": [{"total": 500}, {"total": 1000}],
                 "DISK_GB": [{"total": 500}, {"total": 1500}],
+                "PCPU": [{"total": 4}, {"total": 12}],
             },
             "expected_results": {
                 f"provider-{i}": ResourceProviderUsage(
@@ -153,6 +167,9 @@ def mock_inventory_responses_fixture():
                     vcpus=36,
                     memory_mb_size=9692,
                     disk_gb_size=2100,
+                    pcpus_avail=16,
+                    pcpus_used=32,
+                    pcpus=48,
                 )
                 for i in range(3)
             },

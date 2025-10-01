@@ -43,9 +43,23 @@ class HypervisorProperties(PropEnum):
             HypervisorProperties.HYPERVISOR_STATUS: ["status"],
             HypervisorProperties.HYPERVISOR_DISABLED_REASON: ["disabled_reason"],
             HypervisorProperties.HYPERVISOR_UPTIME_DAYS: ["uptime"],
-            HypervisorProperties.VCPUS: ["vcpus"],
-            HypervisorProperties.VCPUS_USED: ["vcpus_used", "vcpus_in_use"],
-            HypervisorProperties.VCPUS_AVAIL: ["vcpus_avail", "vcpus_free"],
+            HypervisorProperties.VCPUS: ["vcpus", "cpus", "pcpus"],
+            HypervisorProperties.VCPUS_USED: [
+                "vcpus_used",
+                "vcpus_in_use",
+                "cpus_used",
+                "cpus_in_use",
+                "pcpus_used",
+                "pcpus_in_use",
+            ],
+            HypervisorProperties.VCPUS_AVAIL: [
+                "vcpus_avail",
+                "vcpus_free",
+                "cpus_avail",
+                "cpus_free",
+                "pcpus_avail",
+                "pcpus_free",
+            ],
             HypervisorProperties.MEMORY_MB_SIZE: [
                 "memory_mb_size",
                 "memory_size",
@@ -92,7 +106,6 @@ class HypervisorProperties(PropEnum):
             HypervisorProperties.HYPERVISOR_ID: lambda a: a.hv["id"],
             HypervisorProperties.HYPERVISOR_IP: lambda a: a.hv["host_ip"],
             HypervisorProperties.HYPERVISOR_NAME: lambda a: a.hv["name"],
-            # HypervisorProperties.HYPERVISOR_SERVER_COUNT: lambda a: a["runnning_vms"],
             HypervisorProperties.HYPERVISOR_STATE: lambda a: a.hv["state"],
             HypervisorProperties.HYPERVISOR_STATUS: lambda a: a.hv["status"],
             HypervisorProperties.HYPERVISOR_DISABLED_REASON: lambda a: a.hv["service"][
@@ -101,13 +114,15 @@ class HypervisorProperties(PropEnum):
             HypervisorProperties.HYPERVISOR_UPTIME_DAYS: lambda a: TimeUtils.extract_uptime(
                 a.hv["uptime"]
             ),
-            HypervisorProperties.VCPUS: lambda a: a.usage.vcpus,
-            HypervisorProperties.VCPUS_AVAIL: lambda a: a.usage.vcpus_avail,
+            HypervisorProperties.VCPUS: lambda a: a.usage.vcpus + a.usage.pcpus,
+            HypervisorProperties.VCPUS_AVAIL: lambda a: a.usage.vcpus_avail
+            + a.usage.pcpus_avail,
+            HypervisorProperties.VCPUS_USED: lambda a: a.usage.vcpus_used
+            + a.usage.pcpus_used,
             HypervisorProperties.MEMORY_MB_SIZE: lambda a: a.usage.memory_mb_size,
             HypervisorProperties.MEMORY_MB_AVAIL: lambda a: a.usage.memory_mb_avail,
             HypervisorProperties.DISK_GB_SIZE: lambda a: a.usage.disk_gb_size,
             HypervisorProperties.DISK_GB_AVAIL: lambda a: a.usage.disk_gb_avail,
-            HypervisorProperties.VCPUS_USED: lambda a: a.usage.vcpus_used,
             HypervisorProperties.MEMORY_MB_USED: lambda a: a.usage.memory_mb_used,
             HypervisorProperties.DISK_GB_USED: lambda a: a.usage.disk_gb_used,
         }
