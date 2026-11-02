@@ -4,7 +4,6 @@ from openstack.identity.v3.project import Project
 from openstackquery.enums.props.prop_enum import PropEnum
 from openstackquery.enums.query_presets import QueryPresets
 
-
 PropValue = Union[str, bool, int, None]
 
 # A type alias for a single openstack resource - i.e Server, Hypervisor etc

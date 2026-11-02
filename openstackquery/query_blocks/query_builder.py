@@ -18,7 +18,6 @@ from openstackquery.aliases import (
     ServerSideFilters,
 )
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -129,12 +128,10 @@ class QueryBuilder:
                 prop.name,
             )
 
-            raise QueryPropertyMappingError(
-                f"""
+            raise QueryPropertyMappingError(f"""
                 Error: failed to get property mapping, given property
                 {prop.name} is not supported in prop_handler
-                """
-            )
+                """)
 
         client_side_filter = self._client_side_handler.get_filter_func(
             preset=preset,
