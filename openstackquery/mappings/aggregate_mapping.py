@@ -55,7 +55,7 @@ class AggregateMapping(MappingInterface):
         return ServerSideHandler({})
 
     @staticmethod
-    def get_client_side_handlers() -> ClientSideHandler:
+    def get_client_side_handler() -> ClientSideHandler:
         """
         method to configure a set of client-side handlers which can be used to get local filter functions
         corresponding to valid preset-property pairs. These filter functions can be used to filter results after

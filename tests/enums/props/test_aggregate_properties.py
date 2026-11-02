@@ -42,6 +42,10 @@ from tests.mocks.mocked_props import MockProperties
             AggregateProperties.AGGREGATE_HOSTTYPE,
             ["aggregate_hosttype", "metadata_hosttype", "hosttype"],
         ),
+        (
+            AggregateProperties.AGGREGATE_NAME,
+            ["aggregate_name", "name"],
+        ),
         (AggregateProperties.AGGREGATE_ID, ["aggregate_id", "id", "uuid"]),
         (
             AggregateProperties.AGGREGATE_UPDATED_AT,
