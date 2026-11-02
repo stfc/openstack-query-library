@@ -72,6 +72,7 @@ class AggregateMapping(MappingInterface):
             AggregateProperties.AGGREGATE_HOST_IPS,
             AggregateProperties.AGGREGATE_METADATA,
             AggregateProperties.AGGREGATE_LOCAL_STORAGE_TYPE,
+            AggregateProperties.AGGREGATE_NAME,
         ]
 
         return ClientSideHandler(
