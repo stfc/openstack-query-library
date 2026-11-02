@@ -7,7 +7,7 @@ LONG_DESCRIPTION = (
 
 setup(
     name="openstackquery",
-    version="2.0.0",
+    version="2.1.0",
     author="STFC Cloud Team",
     author_email="<cloud-support@stfc.ac.uk>",
     description=DESCRIPTION,

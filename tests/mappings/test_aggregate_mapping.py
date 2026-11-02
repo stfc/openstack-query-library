@@ -41,13 +41,14 @@ def test_client_side_handlers(client_side_test_mappings):
         AggregateProperties.AGGREGATE_HOST_IPS,
         AggregateProperties.AGGREGATE_LOCAL_STORAGE_TYPE,
         AggregateProperties.AGGREGATE_METADATA,
+        AggregateProperties.AGGREGATE_NAME,
     ]
 
     integer_prop_list = [
         AggregateProperties.AGGREGATE_GPUNUM,
     ]
 
-    handler = AggregateMapping.get_client_side_handlers()
+    handler = AggregateMapping.get_client_side_handler()
     mappings = {
         QueryPresets.EQUAL_TO: ["*"],
         QueryPresets.NOT_EQUAL_TO: ["*"],
